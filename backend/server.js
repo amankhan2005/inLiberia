@@ -33,6 +33,10 @@ app.use(limiter);
 const allowedOrigins = [
   'http://localhost:5173',
   'https://autismpartner.netlify.app',
+    'https://autismabapartners.com',         // ✅ your live domain
+      'autismabapartners.com',         // ✅ your live domain
+
+
   ...(process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',').map((u) => u.trim())
     : []),
