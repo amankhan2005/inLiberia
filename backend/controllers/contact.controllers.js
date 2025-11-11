@@ -37,6 +37,7 @@ export const createInquiry = async (req, res) => {
 
   const required = ["parentName", "email", "phone", "message"];
   const missing = missingFields(req.body, required);
+
   if (missing.length > 0)
     return res.status(400).json({
       ok: false,
@@ -44,6 +45,7 @@ export const createInquiry = async (req, res) => {
     });
 
   try {
+    // Build contact object
     const saved = {
       parentName: parentName?.trim() || "",
       email: String(email).trim().toLowerCase(),
@@ -65,7 +67,7 @@ export const createInquiry = async (req, res) => {
       createdAt: new Date(),
     };
 
-    // ---------- Admin Mail ----------
+    // Prepare email content
     const adminSubject = `New Inquiry — ${saved.parentName}`;
     const adminHtml = `
       <h2 style="color:#ff7a00;">New Inquiry - Autism ABA Partners</h2>
@@ -73,24 +75,21 @@ export const createInquiry = async (req, res) => {
       <p><b>Email:</b> ${escapeHtml(saved.email)}</p>
       <p><b>Phone:</b> ${escapeHtml(saved.phone)}</p>
       <p><b>Child:</b> ${escapeHtml(saved.childName || "N/A")} (Age: ${
-      typeof saved.childAge !== "undefined" ? escapeHtml(String(saved.childAge)) : "N/A"
+      typeof saved.childAge !== "undefined"
+        ? escapeHtml(String(saved.childAge))
+        : "N/A"
     })</p>
       <p><b>Service Interest:</b> ${escapeHtml(saved.serviceInterest || "N/A")}</p>
       <p><b>Message:</b><br>${escapeHtml(saved.message)}</p>
-      <p><b>City/State:</b> ${escapeHtml([saved.city, saved.state].filter(Boolean).join(", "))}</p>
+      <p><b>City/State:</b> ${escapeHtml(
+        [saved.city, saved.state].filter(Boolean).join(", ")
+      )}</p>
       <hr>
-      <p><small>IP: ${escapeHtml(saved.ipAddress || "N/A")} | UA: ${escapeHtml(saved.userAgent || "N/A")}</small></p>
+      <p><small>IP: ${escapeHtml(saved.ipAddress || "N/A")} | UA: ${escapeHtml(
+      saved.userAgent || "N/A"
+    )}</small></p>
     `;
 
-    const adminText = `
-New Inquiry
-Parent: ${saved.parentName}
-Email: ${saved.email}
-Phone: ${saved.phone}
-Message: ${saved.message}
-    `.trim();
-
-    // ---------- User Mail ----------
     const userSubject = `Thank You — Autism ABA Partners`;
     const userHtml = `
       <div style="font-family:Arial;padding:20px;background:#fff;">
@@ -104,32 +103,32 @@ Message: ${saved.message}
       </div>
     `;
 
-    const userText = `
-Hello ${saved.parentName},
-Thanks for contacting Autism ABA Partners. We’ll get back to you soon!
-    `.trim();
+    // Send response to frontend immediately (non-blocking)
+    res.status(201).json({
+      ok: true,
+      message: "Inquiry processed successfully (emails queued)",
+      contact: saved,
+    });
 
-    // ---------- Send both concurrently ----------
-    await Promise.all([
+    // Send emails asynchronously (after response)
+    Promise.allSettled([
       sendMail({
         to: process.env.ADMIN_EMAIL,
         subject: adminSubject,
         html: adminHtml,
-        text: adminText,
+        text: `New inquiry from ${saved.parentName}: ${saved.message}`,
       }),
       sendMail({
         to: saved.email,
         subject: userSubject,
         html: userHtml,
-        text: userText,
+        text: `Hello ${saved.parentName}, thanks for contacting us.`,
       }),
-    ]);
-
-    return res.status(201).json({
-      ok: true,
-      message: "Inquiry processed successfully (emails sent)",
-      contact: saved,
-    });
+    ])
+      .then((results) => {
+        console.log("📧 Email send results:", results.map((r) => r.status));
+      })
+      .catch((err) => console.error("❌ Email send error:", err.message));
   } catch (error) {
     console.error("❌ Error creating inquiry:", error);
     return res.status(500).json({
