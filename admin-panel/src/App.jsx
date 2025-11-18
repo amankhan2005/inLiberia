@@ -8,8 +8,7 @@ import AdminFooter from "./components/AdminFooter";
 import AdminLogin from "./pages/Login";
 import AdminDashboard from "./pages/Dashboard";
 import GlobalSettings from "./pages/GlobalSettings";
-import SliderManager from "./pages/SliderManager";
-import ContactsManager from "./pages/ContactsManager";
+ import ContactsManager from "./pages/ContactsManager";
 import CareersManager from "./pages/CareersManager";
 
 /* ---------------------- AUTH WRAPPER ---------------------- */
@@ -127,14 +126,7 @@ function MainApp({
             }
           />
 
-          <Route
-            path="/admin/slider"
-            element={
-              <RequireAuth creds={creds}>
-                <SliderManager creds={creds} />
-              </RequireAuth>
-            }
-          />
+           
 
           <Route
             path="/admin/contacts"

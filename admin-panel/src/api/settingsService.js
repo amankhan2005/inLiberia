@@ -47,43 +47,7 @@ export async function updateSettings(creds, formData) {
 }
 
 /* ------------------- SLIDER ------------------- */
-export async function fetchSlides() {
-  return fetchJson("/slider");
-}
-
-export async function createSlide(creds, data) {
-  return fetchJson("/slider/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-user": creds.username,
-      "x-admin-pass": creds.password
-    },
-    body: JSON.stringify(data)
-  });
-}
-
-export async function updateSlide(creds, id, data) {
-  return fetchJson(`/slider/update/${id}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-user": creds.username,
-      "x-admin-pass": creds.password
-    },
-    body: JSON.stringify(data)
-  });
-}
-
-export async function deleteSlide(creds, id) {
-  return fetchJson(`/slider/delete/${id}`, {
-    method: "DELETE",
-    headers: {
-      "x-admin-user": creds.username,
-      "x-admin-pass": creds.password
-    }
-  });
-}
+ 
 
 /* ------------------- CONTACT ------------------- */
 export async function submitContact(data) {
