@@ -6,7 +6,7 @@ const SettingsContext = createContext();
 export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(null);
 
-  const API_BASE = import.meta.env.VITE_API_BASE || "https://decoderhealth.onrender.com/api";
+  const API_BASE = import.meta.env.VITE_API_BASE || "https://decoderhealth-cfkr.onrender.com/api";
   const ROOT = API_BASE.replace("/api", ""); // → http://localhost:5000
 
   useEffect(() => {1
