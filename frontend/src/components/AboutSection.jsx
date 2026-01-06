@@ -35,7 +35,7 @@ export default function AboutGentleHearts() {
   ];
 
   return (
-    <section className="relative bg-white py-24 overflow-hidden">
+    <section className="relative bg-white py-20 overflow-hidden">
       {/* Brand glow */}
       <div className="absolute -top-40 -left-40 w-[420px] h-[420px] bg-[#AF3059]/10 rounded-full blur-[140px]" />
       <div className="absolute bottom-0 -right-40 w-[420px] h-[420px] bg-[#0B3A6A]/10 rounded-full blur-[140px]" />

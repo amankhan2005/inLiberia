@@ -35,7 +35,7 @@ const points = [
 
 export default function WhyGentleHearts() {
   return (
-    <section className="py-28 bg-white">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6 space-y-28">
 
         {/* HEADER */}

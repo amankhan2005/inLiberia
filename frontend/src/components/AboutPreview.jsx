@@ -16,7 +16,7 @@ const GentleHeartsHero = () => {
       <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-[#AF3059]/10 rounded-full blur-[140px]" />
       <div className="absolute bottom-0 -right-40 w-[520px] h-[520px] bg-[#AF3059]/5 rounded-full blur-[140px]" />
 
-      <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-24">
+      <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-16">
 
           {/* LEFT CONTENT */}
