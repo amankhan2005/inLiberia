@@ -19,7 +19,7 @@ export default function Footer() {
   const logoUrl = defaultLogo;
 
   // -------- STATIC YOUTUBE --------
-  const youtube = "https://www.youtube.com/@DecoderHealth";
+  const youtube = "https://www.youtube.com/";
 
   // -------- DEFAULT VALUES (UPDATED) --------
   const defaultEmail = "info@gentleheartshomehealthcare.com";
