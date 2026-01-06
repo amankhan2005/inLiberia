@@ -8,6 +8,7 @@ export default function MainNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -38,16 +39,18 @@ export default function MainNavbar() {
 
   return (
     <>
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
       <motion.nav
-        initial={{ y: -18, opacity: 0 }}
+        initial={{ y: -16, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45 }}
+        transition={{ duration: 0.3 }}
         className={`w-full z-50 ${scrolled ? "fixed top-0" : "relative"}`}
       >
-        <div className={`w-full backdrop-blur-xl bg-[#AF3059]/95
+        <div
+          className={`w-full backdrop-blur-xl bg-[#AF3059]/95
           border-b border-white/20 shadow-[0_10px_40px_rgba(175,48,89,0.35)]
-          transition-all ${scrolled ? "py-3" : "py-5"}`}>
+          transition-all ${scrolled ? "py-3" : "py-5"}`}
+        >
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex items-center justify-between">
 
@@ -56,7 +59,7 @@ export default function MainNavbar() {
                 <img src={logo} alt="Gentle Hearts" className="h-20 rounded-xl" />
               </NavLink>
 
-              {/* DESKTOP NAV */}
+              {/* ================= DESKTOP NAV ================= */}
               <ul className="hidden lg:flex items-center gap-1">
                 <li><NavLink to="/" className={linkClass}>Home</NavLink></li>
                 <li><NavLink to="/about-us" className={linkClass}>About Us</NavLink></li>
@@ -74,10 +77,10 @@ export default function MainNavbar() {
                   <AnimatePresence>
                     {openDropdown === "services" && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.2 }}
                         className="absolute left-0 mt-4 w-[420px] rounded-2xl
                         bg-white/95 backdrop-blur-xl border border-gray-200
                         shadow-[0_25px_60px_rgba(0,0,0,0.15)] overflow-hidden"
@@ -101,21 +104,22 @@ export default function MainNavbar() {
               </ul>
 
               {/* CTA */}
-              <NavLink to="/contact" className="hidden lg:block">
+              <NavLink to="/contact-us" className="hidden lg:block">
                 <motion.button
-                  whileHover={{ scale: 1.06, y: -2 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className="px-8 py-3 rounded-full font-semibold
-                  bg-white text-[#AF3059] shadow-[0_12px_30px_rgba(255,255,255,0.35)]"
+                  bg-white text-[#AF3059]"
                 >
                   Contact Us
                 </motion.button>
               </NavLink>
 
-              {/* MOBILE MENU */}
+              {/* MOBILE MENU BUTTON */}
               <button
                 onClick={() => setMenuOpen(true)}
-                className="lg:hidden w-11 h-11 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center"
+                className="lg:hidden w-11 h-11 rounded-xl bg-white/20
+                flex items-center justify-center"
               >
                 <span className="w-6 h-0.5 bg-white block relative
                 before:absolute before:w-6 before:h-0.5 before:bg-white before:-top-2
@@ -126,7 +130,7 @@ export default function MainNavbar() {
         </div>
       </motion.nav>
 
-      {/* MOBILE DRAWER */}
+      {/* ================= MOBILE DRAWER ================= */}
       <AnimatePresence>
         {menuOpen && (
           <>
@@ -142,7 +146,7 @@ export default function MainNavbar() {
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ duration: 0.35 }}
+              transition={{ duration: 0.25 }}
               className="fixed top-0 right-0 h-full w-80 z-50 bg-[#AF3059]"
             >
               <div className="flex items-center justify-between p-6 border-b border-white/30">
@@ -156,14 +160,39 @@ export default function MainNavbar() {
                 <MobileLink to="/" setMenuOpen={setMenuOpen}>Home</MobileLink>
                 <MobileLink to="/about-us" setMenuOpen={setMenuOpen}>About Us</MobileLink>
 
-                {services.map(([label, to]) => (
-                  <MobileLink key={to} to={to} setMenuOpen={setMenuOpen}>
-                    {label}
-                  </MobileLink>
-                ))}
+                {/* MOBILE SERVICES */}
+                <button
+                  onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+                  className="w-full flex items-center justify-between px-4 py-4 rounded-xl hover:bg-white/20"
+                >
+                  <span>Services</span>
+                  <FaChevronDown className={`${mobileServicesOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                <AnimatePresence>
+                  {mobileServicesOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="ml-3 overflow-hidden"
+                    >
+                      {services.map(([label, to]) => (
+                        <NavLink
+                          key={to}
+                          to={to}
+                          onClick={() => setMenuOpen(false)}
+                          className="block px-4 py-3 rounded-lg text-sm hover:bg-white/20"
+                        >
+                          {label}
+                        </NavLink>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <MobileLink to="/faq" setMenuOpen={setMenuOpen}>FAQs</MobileLink>
-                <MobileLink to="/contact" setMenuOpen={setMenuOpen}>Contact Us</MobileLink>
+                <MobileLink to="/contact-us" setMenuOpen={setMenuOpen}>Contact Us</MobileLink>
               </nav>
             </motion.div>
           </>

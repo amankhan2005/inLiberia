@@ -1,13 +1,12 @@
  import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import TopNavbar from "./components/TopNavbar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import RouteScrollTop from "./components/RouteScrollTop";
 
-// Pages
+// ================= PAGES =================
 import Home from "./pages/Home";
 import About from "./pages/About";
 import FAQ from "./pages/faq";
@@ -18,41 +17,64 @@ import Messagefromceo from "./pages/MessageFromCEO";
 import Autismiscool from "./pages/AutismIsCool";
 import Campaign from "./pages/Campaign";
 
-// Services Pages
-import CulturallyResponsiveCare from "./pages/services/CulturallyResponsiveCare";
-import CompassionRespect from "./pages/services/CompassionRespect";
-import EvidenceBasedABA from "./pages/services/EvidenceBasedABA";
-import FlexibleSupport from "./pages/services/FlexibleSupport";
+// ================= SERVICES (NEW) =================
+import StrokeRecovery from "./pages/services/StrokeRecovery";
+import DementiaCare from "./pages/services/DementiaCare";
+import PostSurgicalRecovery from "./pages/services/PostSurgicalRecovery";
+import CareCoordination from "./pages/services/CareCoordination";
+import ConciergeCare from "./pages/services/ConciergeCare";
+import PrivatePay from "./pages/services/PrivatePay";
+import PhysicianPartnerships from "./pages/services/PhysicianPartnerships";
 
 export default function App() {
   return (
     <>
-      {/* 🔥 Scroll reset on route change */}
+      {/* 🔥 Auto scroll to top on route change */}
       <RouteScrollTop />
 
-       
       <Navbar />
 
       <Routes>
+        {/* ===== MAIN PAGES ===== */}
         <Route path="/" element={<Home />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/faq" element={<FAQ />} />
-        <Route path="/team" element={<TeamPage />} />
-        <Route path="/contact-us" element={<Contact />} />
-        <Route path="/careers" element={<CareerPage />} />
-        <Route path="/message-from-ceo" element={<Messagefromceo />} />
-        <Route path="/autism-is-cool" element={<Autismiscool />} />
-        <Route path="/campaigns" element={<Campaign />} />
-
-        <Route path="/services/culturally-responsive-care" element={<CulturallyResponsiveCare />} />
-        <Route path="/services/compassion-respect" element={<CompassionRespect />} />
-        <Route path="/services/evidence-based-aba" element={<EvidenceBasedABA />} />
-        <Route path="/services/flexible-support" element={<FlexibleSupport />} />
+         <Route path="/contact-us" element={<Contact />} />
+ 
+        {/* ===== SERVICES ===== */}
+        <Route
+          path="/services/stroke-recovery-neuro-rehab"
+          element={<StrokeRecovery />}
+        />
+        <Route
+          path="/services/dementia-alzheimers-care"
+          element={<DementiaCare />}
+        />
+        <Route
+          path="/services/post-surgical-recovery"
+          element={<PostSurgicalRecovery />}
+        />
+        <Route
+          path="/services/comprehensive-care-coordination"
+          element={<CareCoordination />}
+        />
+        <Route
+          path="/services/concierge-add-ons"
+          element={<ConciergeCare />}
+        />
+        <Route
+          path="/services/private-pay-model"
+          element={<PrivatePay />}
+        />
+        <Route
+          path="/services/physician-hospital-partnerships"
+          element={<PhysicianPartnerships />}
+        />
       </Routes>
 
       <Footer />
 
-      {/* ✅ Scroll button (global) */}
+      {/* ⬆️ Floating scroll-to-top button */}
       <ScrollToTop />
     </>
   );

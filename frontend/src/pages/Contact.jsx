@@ -1,13 +1,14 @@
- import React, { useState } from "react";
+ import React, { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
+import { motion } from "framer-motion";
 import { useSettings } from "../context/SettingsContext";
 
 export default function ContactUs() {
   const { settings } = useSettings();
 
-  const CONTACT_EMAIL = settings?.email || "info@decoderhealth.com";
+  const CONTACT_EMAIL = settings?.email || "info@gentlehearts.com";
   const CONTACT_PHONE = settings?.phone || "(571) 606-3898";
-  const CONTACT_ADDRESS = settings?.address || "Aldie, Virginia";
+  const CONTACT_ADDRESS = settings?.address || "Massachusetts, USA";
 
   const MAP_LINK =
     settings?.mapLink ||
@@ -25,44 +26,44 @@ export default function ContactUs() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  /* ================= CAPTCHA ================= */
+  const [num1, setNum1] = useState(0);
+  const [num2, setNum2] = useState(0);
+  const [captcha, setCaptcha] = useState("");
+  const [captchaValid, setCaptchaValid] = useState(false);
+
+  useEffect(() => {
+    setNum1(Math.floor(Math.random() * 9) + 1);
+    setNum2(Math.floor(Math.random() * 9) + 1);
+  }, []);
+
+  useEffect(() => {
+    setCaptchaValid(Number(captcha) === num1 + num2);
+  }, [captcha, num1, num2]);
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  /* ---------------- SUBMIT HANDLER (FIXED) ---------------- */
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!captchaValid) return;
+
     setLoading(true);
     setSuccess(false);
     setError("");
 
     try {
-      // ✅ SAFE API URL (fallback for dev)
       const API_BASE =
         import.meta.env.VITE_API_URL || "https://decoderhealth-cfkr.onrender.com";
 
       const res = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
-      // ✅ SAFE JSON PARSE (no crash on 404/empty)
-      let data = {};
-      const text = await res.text();
-      if (text) {
-        try {
-          data = JSON.parse(text);
-        } catch {
-          // non-JSON response (ignore)
-        }
-      }
-
-      if (!res.ok) {
-        throw new Error(data.message || `Request failed (${res.status})`);
-      }
+      if (!res.ok) throw new Error("Submission failed");
 
       setSuccess(true);
       setForm({
@@ -72,91 +73,99 @@ export default function ContactUs() {
         phone: "",
         message: "",
       });
+
+      setCaptcha("");
+      setNum1(Math.floor(Math.random() * 9) + 1);
+      setNum2(Math.floor(Math.random() * 9) + 1);
     } catch (err) {
-      console.error("Contact submit error:", err);
-      setError(err.message || "Something went wrong");
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="relative overflow-hidden bg-gradient-to-br from-[#F5F9FF] via-white to-[#EEF4FF] py-28">
-      {/* glow */}
-      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#1E63D9]/10 rounded-full blur-[140px]" />
-      <div className="absolute bottom-0 -right-40 w-[500px] h-[500px] bg-[#3F7FEF]/10 rounded-full blur-[140px]" />
+    <main className="relative overflow-hidden bg-[#FFF5F8] py-28">
+
+      {/* SOFT GLOW */}
+      <div className="absolute -top-40 -left-40 w-[520px] h-[520px] bg-[#AF3059]/10 rounded-full blur-[140px]" />
+      <div className="absolute bottom-0 -right-40 w-[520px] h-[520px] bg-[#AF3059]/10 rounded-full blur-[140px]" />
 
       <div className="relative max-w-7xl mx-auto px-6">
+
         {/* HEADER */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <span className="inline-flex px-6 py-2 bg-[#E7F0FF] text-[#1E63D9] rounded-full text-sm font-semibold mb-6">
-            Contact Us
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-3xl mx-auto mb-20"
+        >
+          <span className="inline-flex px-6 py-2 bg-[#AF3059]/10 text-[#AF3059] rounded-full text-sm font-semibold mb-6">
+            Contact Gentle Hearts
           </span>
 
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             Let’s Start a
-            <span className="block text-[#1E63D9]">Conversation</span>
+            <span className="block text-[#AF3059]">Caring Conversation</span>
           </h1>
 
           <p className="text-lg text-gray-600">
-            Have questions or need support? Our team is ready to help you.
+            Our private-pay care team is here to support you with clarity and compassion.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-14 items-start">
+
           {/* CONTACT INFO */}
           <div className="space-y-6">
-            {[
-              {
-                icon: Mail,
-                label: "Email Us",
-                value: CONTACT_EMAIL,
-                link: `mailto:${CONTACT_EMAIL}`,
-              },
-              {
-                icon: Phone,
-                label: "Call Us",
-                value: CONTACT_PHONE,
-                link: `tel:${CONTACT_PHONE}`,
-              },
-              {
-                icon: MapPin,
-                label: "Address",
-                value: CONTACT_ADDRESS,
-                link: MAP_LINK,
-              },
-            ].map((item, i) => {
+            {[{
+              icon: Mail,
+              label: "Email",
+              value: CONTACT_EMAIL,
+              link: `mailto:${CONTACT_EMAIL}`,
+            },{
+              icon: Phone,
+              label: "Phone",
+              value: CONTACT_PHONE,
+              link: `tel:${CONTACT_PHONE}`,
+            },{
+              icon: MapPin,
+              label: "Location",
+              value: CONTACT_ADDRESS,
+              link: MAP_LINK,
+            }].map((item, i) => {
               const Icon = item.icon;
               return (
-                <a
+                <motion.a
                   key={i}
+                  whileHover={{ y: -4 }}
                   href={item.link}
                   target={i === 2 ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  className="block bg-white/80 backdrop-blur-xl rounded-2xl p-6 border border-gray-200 shadow-lg hover:shadow-2xl transition"
+                  className="block bg-white rounded-2xl p-6 border border-gray-200 shadow-lg"
                 >
                   <div className="flex gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#1E63D9] to-[#3F7FEF] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#AF3059] rounded-xl flex items-center justify-center">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">{item.label}</p>
-                      <p className="font-semibold text-gray-900">
-                        {item.value}
-                      </p>
+                      <p className="font-semibold text-gray-900">{item.value}</p>
                     </div>
                   </div>
-                </a>
+                </motion.a>
               );
             })}
           </div>
 
           {/* FORM */}
-          <div className="lg:col-span-2 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-10 border border-gray-200">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="lg:col-span-2 bg-white rounded-3xl shadow-2xl p-10 border border-gray-200"
+          >
             {success && (
               <div className="mb-6 flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-xl">
                 <CheckCircle className="w-6 h-6" />
-                <span>Thank you! We’ll get back to you shortly.</span>
+                Message sent successfully.
               </div>
             )}
 
@@ -167,86 +176,63 @@ export default function ContactUs() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+
               <div className="grid md:grid-cols-2 gap-6">
+                <input name="firstName" placeholder="First Name" required onChange={handleChange} className="input" />
+                <input name="lastName" placeholder="Last Name" required onChange={handleChange} className="input" />
+              </div>
+
+              <input name="email" type="email" placeholder="Email" required onChange={handleChange} className="input" />
+              <input name="phone" placeholder="Phone" required onChange={handleChange} className="input" />
+              <textarea name="message" rows="4" placeholder="Your Message" required onChange={handleChange} className="input resize-none" />
+
+              {/* CAPTCHA */}
+              <div className="bg-[#AF3059]/5 border border-[#AF3059]/20 rounded-xl p-5">
+                <p className="text-sm font-semibold text-gray-700 mb-2">
+                  Security Check: {num1} + {num2} = ?
+                </p>
                 <input
-                  name="firstName"
-                  placeholder="First Name"
-                  value={form.firstName}
-                  onChange={handleChange}
-                  required
-                  className="input"
-                />
-                <input
-                  name="lastName"
-                  placeholder="Last Name"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  required
+                  value={captcha}
+                  onChange={(e) => setCaptcha(e.target.value)}
+                  placeholder="Enter answer"
                   className="input"
                 />
               </div>
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                value={form.email}
-                onChange={handleChange}
-                required
-                className="input"
-              />
-
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                value={form.phone}
-                onChange={handleChange}
-                required
-                className="input"
-              />
-
-              <textarea
-                rows="5"
-                name="message"
-                placeholder="Your Message"
-                value={form.message}
-                onChange={handleChange}
-                required
-                className="input resize-none"
-              />
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#1E63D9] to-[#3F7FEF] text-white py-4 rounded-xl font-semibold shadow-xl hover:shadow-2xl transition disabled:opacity-60"
-              >
-                {loading ? "Sending..." : "Send Message"}
-                <Send className="w-5 h-5" />
-              </button>
+              {captchaValid && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-3
+                  bg-[#AF3059] text-white py-4 rounded-xl font-semibold
+                  shadow-xl hover:scale-[1.02] transition"
+                >
+                  {loading ? "Sending..." : "Send Message"}
+                  <Send className="w-5 h-5" />
+                </motion.button>
+              )}
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* INPUT STYLES */}
-      <style>
-        {`
-          .input {
-            width: 100%;
-            border: 1px solid #D1D5DB;
-            border-radius: 0.75rem;
-            padding: 1rem;
-            font-size: 0.95rem;
-            outline: none;
-            background: #fff;
-          }
-          .input:focus {
-            border-color: #1E63D9;
-            box-shadow: 0 0 0 3px rgba(30,99,217,0.15);
-          }
-        `}
-      </style>
+      {/* INPUT STYLE */}
+      <style>{`
+        .input {
+          width: 100%;
+          border: 1px solid #E5E7EB;
+          border-radius: 0.75rem;
+          padding: 1rem;
+          font-size: 0.95rem;
+        }
+        .input:focus {
+          border-color: #AF3059;
+          box-shadow: 0 0 0 3px rgba(175,48,89,0.15);
+          outline: none;
+        }
+      `}</style>
     </main>
   );
 }

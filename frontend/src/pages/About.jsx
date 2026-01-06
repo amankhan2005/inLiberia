@@ -1,197 +1,214 @@
- import React, { useEffect, useState } from "react";
-
+ import { motion } from "framer-motion";
 import {
-  FaHeart,
-  FaHandsHelping,
-  FaBrain,
-  FaStar,
-  FaSeedling,
-  FaCheckCircle,
-} from "react-icons/fa";
-
- import familyCard from "../assets/Home/EveryChild.webp";
-import evidenceCard from "../assets/Home/evidence.webp";
+  HeartPulse,
+  ShieldCheck,
+  Users,
+  Stethoscope,
+  Target,
+  HandHeart,
+  Scale,
+  Globe,
+} from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export default function About() {
-  const [mapAddress, setMapAddress] = useState("");
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/map`)
-      .then((res) => res.json())
-      .then((data) => setMapAddress(data?.mapAddress || ""));
-  }, []);
-
-  const finalAddress =
-    mapAddress || "Arlington, WA";
-
   return (
-    <div className="bg-white text-gray-800">
+    <div className="bg-white overflow-hidden">
+
       {/* ================= HERO ================= */}
-      <section className="relative bg-gradient-to-r from-[#0B5ED7] via-[#1E6EEB] to-[#3B82F6] py-24 px-6 overflow-hidden">
-        <div className="absolute top-20 right-10 w-[500px] h-[500px] bg-[#93C5FD]/30 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-20 left-10 w-[400px] h-[400px] bg-[#BFDBFE]/40 rounded-full blur-3xl -z-10" />
+      <section className="relative bg-[#AF3059] text-white">
+        <div className="absolute inset-0 opacity-20">
+          <img
+            src="https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=1600"
+            alt="In Home Care"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-        <div className="max-w-7xl mx-auto text-center text-white">
-          <div className="inline-flex items-center gap-2 bg-white/20 px-5 py-2.5 rounded-full text-sm font-medium mb-6">
-            <FaHeart />
-            Our Story
-          </div>
+        <div className="relative max-w-7xl mx-auto px-6 py-28 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="inline-block mb-4 px-4 py-2 rounded-full bg-white/15 text-sm font-semibold">
+              About Gentle Hearts
+            </span>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            About Our <span className="text-white/90">Journey</span>
-          </h1>
+            <h1 className="text-4xl md:text-5xl xl:text-6xl font-bold leading-tight">
+              Compassionate, Private-Pay <br />
+              Home Health Care <br />
+              You Can Trust
+            </h1>
 
-          <div className="w-20 h-1.5 bg-white mx-auto mb-8 rounded-full" />
+            <p className="mt-6 text-lg text-white/90 max-w-xl">
+              Gentle Hearts Home Health Care Agency delivers refined, private-pay
+              in-home nursing and rehabilitation services designed around dignity,
+              comfort, and clinical excellence.
+            </p>
 
-          <p className="text-lg max-w-3xl mx-auto">
-            Empowering children and families through compassionate,
-            evidence-based ABA therapy
-          </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <NavLink
+                to="/contact"
+                className="px-8 py-4 rounded-full bg-white text-[#AF3059] font-semibold hover:scale-105 transition"
+              >
+                Request Private-Pay Consultation
+              </NavLink>
+              <NavLink
+                to="/services"
+                className="px-8 py-4 rounded-full border border-white font-semibold hover:bg-white hover:text-[#AF3059] transition"
+              >
+                Explore Our Services
+              </NavLink>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ================= MISSION ================= */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-          <div>
-            <span className="inline-flex items-center gap-2 border border-[#D6E4FF] text-[#0B5ED7] px-5 py-2.5 rounded-full text-sm font-medium mb-6">
-              <FaHeart /> Our Mission
-            </span>
+      {/* ================= WHO WE ARE ================= */}
+      <section className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.img
+            src="https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            alt="Compassionate Care"
+            className="rounded-3xl shadow-xl"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          />
 
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
-              Every Child Deserves to{" "}
-              <span className="text-[#0B5ED7]">Shine</span>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+              Who We Are
             </h2>
 
-            <div className="w-20 h-1.5 bg-[#0B5ED7] rounded-full mb-8" />
+            <p className="text-lg text-gray-600 mb-4">
+              Gentle Hearts Home Health Care Agency is a private-pay home health
+              care provider serving individuals and families who seek a higher
+              standard of in-home nursing and rehabilitation.
+            </p>
 
-            <p className="text-lg text-gray-700 mb-6">
-              <strong>DECODER Health</strong> is a minority woman-owned practice
-              providing evidence-based ABA services to children with autism in
-              their natural environments across Northern Virginia.
+            <p className="text-gray-600 mb-4">
+              Our approach is rooted in respect, dignity, and thoughtful clinical
+              decision-making. Exceptional care should feel personal, calm, and
+              deeply human.
             </p>
 
             <p className="text-gray-600">
-              Our Board-Certified Behavior Analysts design individualized
-              programs centered around daily routines, cultural values, and
-              real-life family priorities.
+              Through close collaboration with families and physicians, we
+              deliver care that aligns with medical needs, personal preferences,
+              and long-term recovery goals.
             </p>
-          </div>
-
-          <div className="relative">
-            <img
-              src={familyCard}
-              alt="Family Centered Care"
-              className="rounded-3xl shadow-2xl object-cover w-full h-[650px]"
-            />
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ================= VALUES ================= */}
-      <section className="py-20 px-6 bg-gradient-to-br from-[#F5F9FF] via-white to-[#EEF4FF]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 border border-[#D6E4FF] text-[#0B5ED7] px-5 py-2.5 rounded-full text-sm font-medium mb-6">
-              <FaStar /> What Drives Us
-            </span>
+      {/* ================= MISSION & VALUES ================= */}
+      <section className="bg-gray-50 py-24">
+        <div className="max-w-6xl mx-auto px-6">
 
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Our Core Values
+          {/* MISSION */}
+          <motion.div
+            className="text-center max-w-4xl mx-auto mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Target className="w-12 h-12 mx-auto text-[#AF3059] mb-4" />
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Our Mission
             </h2>
+            <p className="text-lg text-gray-600">
+              To provide dignified, compassionate, and clinically excellent
+              private-pay home health care that supports healing, independence,
+              and peace of mind — delivered in the comfort of home.
+            </p>
+          </motion.div>
 
-            <div className="w-20 h-1.5 bg-[#0B5ED7] mx-auto rounded-full" />
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
+          {/* VALUES */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
             {[
               {
+                icon: HandHeart,
                 title: "Compassion",
-                icon: <FaHeart />,
-                text: "We lead with empathy and dignity in every interaction.",
+                text: "Care delivered with empathy, patience, and genuine human connection.",
               },
               {
-                title: "Collaboration",
-                icon: <FaHandsHelping />,
-                text: "Working together with families and caregivers.",
+                icon: Stethoscope,
+                title: "Clinical Excellence",
+                text: "Evidence-based practices guided by physician collaboration.",
               },
               {
-                title: "Growth",
-                icon: <FaSeedling />,
-                text: "Celebrating every milestone, big or small.",
+                icon: Scale,
+                title: "Integrity",
+                text: "Honest, transparent care built on trust and accountability.",
               },
-            ].map((item, i) => (
-              <div
+              {
+                icon: Globe,
+                title: "Respect",
+                text: "Honoring cultural values, personal preferences, and individual dignity.",
+              },
+            ].map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={i}
+                  className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <Icon className="w-8 h-8 text-[#AF3059] mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {item.text}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= TRUST STRIP ================= */}
+      <section className="bg-white py-20">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-10 text-center">
+          {[
+            { icon: Users, title: "Trusted By", text: "Families, physicians, and premium care partners" },
+            { icon: Stethoscope, title: "Clinically Guided", text: "Physician-informed care plans" },
+            { icon: ShieldCheck, title: "Private-Pay Model", text: "Care without insurance limitations" },
+            { icon: HeartPulse, title: "Care Inquiries", text: "Responsive care team support" },
+          ].map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
                 key={i}
-                className="bg-white rounded-3xl p-10 border border-[#E5EEFF] hover:shadow-xl transition"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                viewport={{ once: true }}
               >
-                <div className="w-16 h-16 bg-[#0B5ED7] rounded-2xl flex items-center justify-center text-white text-2xl mb-6">
-                  {item.icon}
-                </div>
-                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                <p className="text-gray-600">{item.text}</p>
-              </div>
-            ))}
-          </div>
+                <Icon className="w-10 h-10 mx-auto text-[#AF3059] mb-4" />
+                <h3 className="font-semibold text-lg text-gray-900">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 text-sm mt-2">{item.text}</p>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
-      {/* ================= APPROACH ================= */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-          <img
-            src={evidenceCard}
-            alt="Evidence Based Care"
-            className="rounded-3xl shadow-2xl h-[650px] object-cover"
-          />
-
-          <div>
-            <span className="inline-flex items-center gap-2 border border-[#D6E4FF] text-[#0B5ED7] px-5 py-2.5 rounded-full text-sm font-medium mb-6">
-              <FaBrain /> Our Approach
-            </span>
-
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Evidence-Based Care
-            </h2>
-
-            <div className="w-20 h-1.5 bg-[#0B5ED7] rounded-full mb-8" />
-
-            <p className="text-lg text-gray-700 mb-8">
-              Our therapy integrates research-driven ABA techniques with
-              compassionate, culturally responsive care.
-            </p>
-
-            {[
-              "Communication & language development",
-              "Social & peer interaction",
-              "Emotional regulation",
-              "Daily living & independence skills",
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-4 mb-4">
-                <div className="bg-[#0B5ED7] p-2.5 rounded-xl text-white">
-                  <FaCheckCircle />
-                </div>
-                <p className="text-gray-700 font-medium">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= MAP ================= */}
-      {/* <section className="py-12 px-6 bg-white">
-        <iframe
-          title="Decoder Health Location"
-          src={`https://www.google.com/maps?q=${encodeURIComponent(
-            finalAddress
-          )}&z=13&output=embed`}
-          width="100%"
-          height="450"
-          className="rounded-2xl shadow-lg"
-          loading="lazy"
-        />
-      </section> */}
-
-     </div>
+    </div>
   );
 }
