@@ -9,10 +9,18 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+/* ================= MANUAL IMAGE IMPORTS ================= */
+import heroImg from "../../assets/dementia/hero.webp";
+import introImg from "../../assets/dementia/intro.jpg";
+
+/* ================= ANIMATION ================= */
+
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0 },
 };
+
+/* ================= COMPONENT ================= */
 
 export default function DementiaCare() {
   return (
@@ -21,9 +29,9 @@ export default function DementiaCare() {
       {/* ================= HERO ================= */}
       <section className="relative min-h-[70vh] flex items-center">
         <img
-          src="https://images.pexels.com/photos/3396209/pexels-photo-3396209.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          src={heroImg}
           className="absolute inset-0 w-full h-full object-cover"
-          alt=""
+          alt="Dementia & Alzheimer’s Care"
         />
         <div className="absolute inset-0 bg-[#AF3059]/80" />
 
@@ -66,9 +74,10 @@ export default function DementiaCare() {
             className="grid md:grid-cols-2 gap-14 items-center"
           >
             <img
-              src="https://images.pexels.com/photos/7551756/pexels-photo-7551756.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              src={introImg}
               className="rounded-3xl shadow-2xl"
-              alt=""
+              alt="Calm Dementia Care at Home"
+              loading="lazy"
             />
 
             <div className="space-y-6 text-gray-700 leading-relaxed">
@@ -79,20 +88,20 @@ export default function DementiaCare() {
               <p>
                 Dementia and Alzheimer’s disease affect memory, behavior, and
                 emotional stability. At Gentle Hearts Home Health Care Agency, we
-                provide consistent and reassuring support within the comfort of
-                familiar surroundings.
+                provide consistent and reassuring support within familiar
+                surroundings.
               </p>
 
               <p>
-                Maintaining daily routines and a familiar environment helps
-                reduce confusion and anxiety. Our caregivers focus on safety,
-                emotional reassurance, and dignity at every stage of care.
+                Maintaining routines and environment familiarity helps reduce
+                confusion and anxiety. Our caregivers focus on safety, emotional
+                reassurance, and dignity.
               </p>
 
               <p>
                 We work closely with families to understand personal history,
-                preferences, and triggers — ensuring care feels respectful,
-                comforting, and familiar.
+                preferences, and triggers — ensuring care feels respectful and
+                comforting.
               </p>
             </div>
           </motion.div>
@@ -138,30 +147,33 @@ export default function DementiaCare() {
                 },
                 {
                   icon: Brain,
-                  title: "Long-Term or Short-Term Care",
-                  desc: "Flexible care plans based on evolving needs.",
+                  title: "Flexible Care Plans",
+                  desc: "Short-term or long-term care based on evolving needs.",
                 },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition"
-                >
-                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#AF3059]/10 text-[#AF3059] mb-4">
-                    <item.icon className="w-6 h-6" />
-                  </div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                    {item.title}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {item.desc}
-                  </p>
-                </motion.div>
-              ))}
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={fadeUp}
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition"
+                  >
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#AF3059]/10 text-[#AF3059] mb-4">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      {item.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
@@ -175,28 +187,26 @@ export default function DementiaCare() {
               {[
                 {
                   q: "Can dementia care be provided at home?",
-                  a: "Yes. Home-based dementia care often improves comfort, familiarity, and emotional stability.",
+                  a: "Yes. Home-based dementia care often improves comfort and emotional stability.",
                 },
                 {
                   q: "How do you manage behavioral changes?",
-                  a: "Care is delivered with patience, routine, and personalized behavioral strategies.",
+                  a: "Care is delivered with patience, routine, and personalized strategies.",
                 },
                 {
                   q: "Are families involved in care planning?",
-                  a: "Absolutely. Families are actively included in care decisions and updates.",
+                  a: "Absolutely. Families are actively included in care decisions.",
                 },
                 {
                   q: "Is dementia care long-term?",
-                  a: "Care may be short-term or long-term depending on the individual’s needs.",
+                  a: "Care may be short-term or long-term depending on individual needs.",
                 },
               ].map((faq, i) => (
                 <div
                   key={i}
                   className="bg-gray-50 border border-gray-200 rounded-2xl p-6"
                 >
-                  <p className="font-semibold text-gray-900 mb-2">
-                    {faq.q}
-                  </p>
+                  <p className="font-semibold text-gray-900 mb-2">{faq.q}</p>
                   <p className="text-gray-600">{faq.a}</p>
                 </div>
               ))}

@@ -9,10 +9,18 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+/* ================= MANUAL IMAGE IMPORTS ================= */
+import heroImg from "../../assets/private-pay/hero.png";
+import introImg from "../../assets/private-pay/intro.jpg";
+
+/* ================= ANIMATION ================= */
+
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0 },
 };
+
+/* ================= COMPONENT ================= */
 
 export default function PrivatePay() {
   return (
@@ -21,9 +29,9 @@ export default function PrivatePay() {
       {/* ================= HERO ================= */}
       <section className="relative min-h-[70vh] flex items-center">
         <img
-          src="https://images.pexels.com/photos/3825584/pexels-photo-3825584.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          src={heroImg}
           className="absolute inset-0 w-full h-full object-cover"
-          alt="Private Pay Home Health Care"
+          alt="Private-Pay Home Health Care"
         />
         <div className="absolute inset-0 bg-[#AF3059]/80" />
 
@@ -66,9 +74,10 @@ export default function PrivatePay() {
             className="grid md:grid-cols-2 gap-14 items-center"
           >
             <img
-              src="https://images.pexels.com/photos/3825588/pexels-photo-3825588.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              src={introImg}
               className="rounded-3xl shadow-2xl"
               alt="Personalized private pay care"
+              loading="lazy"
             />
 
             <div className="space-y-6 text-gray-700 leading-relaxed">
@@ -77,15 +86,15 @@ export default function PrivatePay() {
               </h2>
 
               <p>
-                Our private-pay model is built for families who value
-                flexibility, personalization, and premium service quality.
-                By eliminating insurance constraints, we design care plans
-                that reflect real needs and goals.
+                Our private-pay model is built for families who value flexibility,
+                personalization, and premium service quality. By eliminating
+                insurance constraints, we design care plans that reflect real
+                needs and goals.
               </p>
 
               <p>
-                This model allows for longer visits, customized schedules,
-                and enhanced services that are often unavailable through
+                This model allows for longer visits, customized schedules, and
+                enhanced services that are often unavailable through
                 insurance-based care.
               </p>
 
@@ -140,27 +149,30 @@ export default function PrivatePay() {
                   title: "Care That Evolves",
                   desc: "Plans adjust as needs change over time.",
                 },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeUp}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition"
-                >
-                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#AF3059]/10 text-[#AF3059] mb-4">
-                    <item.icon className="w-6 h-6" />
-                  </div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                    {item.title}
-                  </h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {item.desc}
-                  </p>
-                </motion.div>
-              ))}
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={fadeUp}
+                    transition={{ delay: i * 0.08 }}
+                    className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm hover:shadow-xl transition"
+                  >
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#AF3059]/10 text-[#AF3059] mb-4">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                      {item.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
@@ -193,9 +205,7 @@ export default function PrivatePay() {
                   key={i}
                   className="bg-gray-50 border border-gray-200 rounded-2xl p-6"
                 >
-                  <p className="font-semibold text-gray-900 mb-2">
-                    {faq.q}
-                  </p>
+                  <p className="font-semibold text-gray-900 mb-2">{faq.q}</p>
                   <p className="text-gray-600">{faq.a}</p>
                 </div>
               ))}

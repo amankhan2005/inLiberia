@@ -2,50 +2,64 @@
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
+/* ================= MANUAL IMAGE IMPORTS ================= */
+/* Folder: src/assets/services/ */
+import strokeImg from "../assets/services/stroke.jpg";
+import dementiaImg from "../assets/services/dementia.jpg";
+import surgeryImg from "../assets/services/surgery.webp";
+import coordinationImg from "../assets/services/coordination.webp";
+import conciergeImg from "../assets/services/concierge.jpg";
+import privatePayImg from "../assets/services/privatepay.jpeg";
+import partnershipImg from "../assets/services/partnership.avif";
+
+/* ================= SERVICES DATA ================= */
+
 const services = [
   {
     title: "Stroke Recovery & Neuro-Rehabilitation",
     desc: "Specialized in-home rehabilitation focused on mobility, speech, strength, and neurological recovery.",
-    img: "https://images.pexels.com/photos/4167547/pexels-photo-4167547.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: strokeImg,
     link: "/services/stroke-recovery-neuro-rehab",
   },
   {
     title: "Dementia & Alzheimer’s Care",
     desc: "Compassionate memory care supporting safety, routine, dignity, and cognitive engagement at home.",
-    img: "https://images.pexels.com/photos/3396209/pexels-photo-3396209.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: dementiaImg,
     link: "/services/dementia-alzheimers-care",
   },
   {
     title: "Post-Surgical Recovery",
     desc: "Short-term nursing and therapy support to ensure a safe, comfortable recovery after surgery.",
-    img: "https://images.pexels.com/photos/4386461/pexels-photo-4386461.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: surgeryImg,
     link: "/services/post-surgical-recovery",
   },
   {
     title: "Comprehensive Care Coordination",
     desc: "Seamless coordination between physicians, therapists, caregivers, and families.",
-    img: "https://images.pexels.com/photos/3955370/pexels-photo-3955370.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: coordinationImg,
     link: "/services/comprehensive-care-coordination",
   },
   {
     title: "Concierge & White-Glove Add-Ons",
     desc: "Premium support services including extended visits, lifestyle assistance, and family updates.",
-    img: "https://images.pexels.com/photos/4860423/pexels-photo-4860423.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: conciergeImg,
     link: "/services/concierge-add-ons",
   },
   {
     title: "Private-Pay Model",
     desc: "Flexible private-pay care for families seeking personalized, high-quality home health services.",
-    img: "https://images.pexels.com/photos/3825584/pexels-photo-3825584.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: privatePayImg,
     link: "/services/private-pay-model",
   },
   {
     title: "Physician & Hospital Partnerships",
     desc: "Collaborative partnerships ensuring continuity of care and smooth transitions home.",
-    img: "https://images.pexels.com/photos/7680452/pexels-photo-7680452.jpeg?auto=compress&cs=tinysrgb&w=800",
+    img: partnershipImg,
     link: "/services/physician-hospital-partnerships",
   },
 ];
+
+/* ================= COMPONENT ================= */
 
 export default function ServicesCarousel() {
   const sliderRef = useRef(null);
@@ -61,7 +75,6 @@ export default function ServicesCarousel() {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-
         {/* HEADER */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold text-[#0B3A6A]">
@@ -76,7 +89,6 @@ export default function ServicesCarousel() {
 
         {/* SLIDER */}
         <div className="relative">
-
           {/* LEFT ARROW */}
           <button
             onClick={() => scroll(-1)}
@@ -111,6 +123,7 @@ export default function ServicesCarousel() {
                   <img
                     src={s.img}
                     alt={s.title}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-[#0B3A6A]/30" />

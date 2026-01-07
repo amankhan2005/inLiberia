@@ -11,12 +11,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import FAQ from "./pages/faq";
 import Contact from "./pages/Contact";
-import CareerPage from "./pages/Career";
-import TeamPage from "./pages/TeamPage";
-import Messagefromceo from "./pages/MessageFromCEO";
-import Autismiscool from "./pages/AutismIsCool";
-import Campaign from "./pages/Campaign";
-
+ 
 // ================= SERVICES (NEW) =================
 import StrokeRecovery from "./pages/services/StrokeRecovery";
 import DementiaCare from "./pages/services/DementiaCare";

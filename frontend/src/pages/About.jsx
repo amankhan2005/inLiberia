@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
+/* ================= MANUAL IMAGE IMPORTS ================= */
+import heroImg from "../assets/about/hero.jpeg";
+import whoWeAreImg from "../assets/about/who-we-are.webp";
+
 export default function About() {
   return (
     <div className="bg-white overflow-hidden">
@@ -19,7 +23,7 @@ export default function About() {
       <section className="relative bg-[#AF3059] text-white">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=1600"
+            src={heroImg}
             alt="In Home Care"
             className="w-full h-full object-cover"
           />
@@ -69,7 +73,7 @@ export default function About() {
       <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
           <motion.img
-            src="https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=1200"
+            src={whoWeAreImg}
             alt="Compassionate Care"
             className="rounded-3xl shadow-xl"
             initial={{ opacity: 0, x: -40 }}
