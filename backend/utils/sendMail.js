@@ -1,47 +1,38 @@
  // utils/sendMail.js
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-/* ------------------------------------------------ */
-/* Create transporter (Render + Gmail SAFE)         */
-/* ------------------------------------------------ */
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.ADMIN_EMAIL,
-      pass: process.env.ADMIN_EMAIL_PASSWORD,
-    },
+let resend = null;
 
-    // ⏱️ IMPORTANT: prevents hanging forever
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-  });
-};
-
-/* ------------------------------------------------ */
-/* Send Mail (background safe)                      */
-/* ------------------------------------------------ */
+// Lazy + safe initialization
 export const sendMail = async ({ to, subject, html, text, replyTo }) => {
-  const transporter = createTransporter();
-
-  const mailOptions = {
-    from: `"Gentle Hearts Home Health Care" <${process.env.ADMIN_EMAIL}>`,
-    to,
-    subject,
-    html,
-    text,
-    replyTo,
-  };
-
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Mail sent:", info.messageId);
-    return info;
+    if (!process.env.RESEND_API_KEY) {
+      console.warn("⚠️ RESEND_API_KEY missing. Email skipped.");
+      return;
+    }
+
+    if (!resend) {
+      resend = new Resend(process.env.RESEND_API_KEY);
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+      to,
+      subject,
+      html,
+      text,
+      reply_to: replyTo,
+    });
+
+    if (error) {
+      console.error("❌ Resend error:", error);
+      throw new Error(error.message);
+    }
+
+    console.log("✅ Email sent via Resend:", data.id);
+    return data;
   } catch (err) {
-    console.error("❌ Mail failed:", err.message);
-    throw err; // background me handle hoga
+    console.error("❌ Email failed:", err.message);
+    // background me fail ho jaayega, server crash nahi karega
   }
 };
