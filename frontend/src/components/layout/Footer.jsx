@@ -15,7 +15,7 @@ import logo from "../../assets/logo.png";
 
 export default function Footer() {
   return (
-    <footer className="bg-sky-400 text-white pt-24 pb-10 rounded-t-[3rem]">
+    <footer className="bg-sky-300 text-white pt-24 pb-10 rounded-t-[3rem]">
 
 
       {/* CTA Section */}
