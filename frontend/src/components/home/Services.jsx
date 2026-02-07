@@ -16,7 +16,7 @@ export default function Services() {
       title: "Registered Nurses (RN)",
       desc: "Advanced medical care and health monitoring at home and in hospitals.",
       img: rnImg,
-      link: "/services/registered-nurse",
+      link: "/services/rn",
     },
     {
       title: "Licensed Practical Nurses (LPN)",
@@ -40,14 +40,15 @@ export default function Services() {
       title: "PT / OT Therapy",
       desc: "Rehabilitation to improve strength, mobility, and independence.",
       img: ptImg,
-      link: "/services/pt-ot",
+      link: "/services/ptot",
     },
+    
     {
-      title: "Home & Hospital Care",
-      desc: "Complete healthcare services delivered with dignity and safety.",
-      img: homeImg,
-      link: "/services/home-care",
-    },
+  title: "Contact Us",
+  desc: "Get in touch with our care team for personalized healthcare support.",
+img: homeImg,  link: "/contact-us",
+},
+
   ];
 
   const [index, setIndex] = useState(0);

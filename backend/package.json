@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Gentle Hearts Home Health Care backend server built with Express and MongoDB",
+  "description": "Zenithcare Backend Service  server built with Express and MongoDB",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "Gentle Hearts Home Health Care",
+  "author": "Zenithcare Service",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",

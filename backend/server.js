@@ -47,15 +47,12 @@ app.use(
 
 /* -------------------- CORS -------------------- */
 const allowedOrigins = [
-  // Local
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:3000",
+  // Production (Zenithcare only)
+  "https://zenithcareservices.netlify.app",
+  "https://www.zenithcareservices.com",
 
-  // Production
-  "https://gentleheartshha.com",
-  "https://www.gentleheartshha.com",
-  "https://gentleheartshomecare.netlify.app",
+  // Optional: without www
+  "https://zenithcareservices.com",
 
   // Regex for preview deployments
   /\.netlify\.app$/,
@@ -128,7 +125,7 @@ app.use("/api/request", requestRoutes);
 app.get("/", (_req, res) => {
   res.json({
     ok: true,
-    service: "Gentle Hearts Home Health Care API",
+    service: " Zenithcare Backend Service API",
     env: process.env.NODE_ENV || "development",
     db: process.env.DISABLE_DB === "true" ? "disabled" : "enabled",
   });

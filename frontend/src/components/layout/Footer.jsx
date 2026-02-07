@@ -8,6 +8,7 @@ import {
   FaLinkedinIn,
   FaPhoneAlt,
   FaMapMarkerAlt,
+  FaEnvelope,
 } from "react-icons/fa";
 
 // Logo Import
@@ -145,38 +146,50 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-semibold mb-4 text-black">Contact</h4>
+  <h4 className="font-semibold mb-4 text-black">Contact</h4>
 
-            <div className="space-y-3 text-sm text-gray-800">
-
-
-              {/* Phone */}
-              <a
-                href="tel:2402748822"
-                className="flex items-center gap-2 hover:text-pink-500 transition"
-              >
-                <FaPhoneAlt className="text-pink-400" />
-                240-274-8822
-              </a>
+  <div className="space-y-3 text-sm text-gray-800">
 
 
-              {/* Address */}
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=703+Rainbow+Ct+Edgewood+MD+21040"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-start gap-2 hover:text-pink-500 transition"
-              >
-                <FaMapMarkerAlt className="text-pink-400 mt-1" />
+    {/* Phone */}
+    <a
+      href="tel:2402748822"
+      className="flex items-center gap-2 hover:text-pink-500 transition"
+    >
+      <FaPhoneAlt className="text-pink-400" />
+      240-274-8822
+    </a>
 
-                <span>
-                  703 Rainbow Ct,<br />
-                  Edgewood, MD 21040
-                </span>
-              </a>
 
-            </div>
-          </div>
+    {/* Email */}
+    <a
+      href="mailto:info@zenithcareservices.com"
+      className="flex items-center gap-2 hover:text-pink-500 transition"
+    >
+   <FaEnvelope size={16} className="text-pink-400 flex-shrink-0" />
+
+      info@zenithcareservices.com
+    </a>
+
+
+    {/* Address */}
+    <a
+      href="https://www.google.com/maps/search/?api=1&query=703+Rainbow+Ct+Edgewood+MD+21040"
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-start gap-2 hover:text-pink-500 transition"
+    >
+      <FaMapMarkerAlt className="text-pink-400 mt-1" />
+
+      <span>
+        703 Rainbow Ct,<br />
+        Edgewood, MD 21040
+      </span>
+    </a>
+
+  </div>
+</div>
+
 
 
           {/* Connect */}

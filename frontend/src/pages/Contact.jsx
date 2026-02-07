@@ -68,7 +68,7 @@ export default function ContactUs() {
 
     const API_BASE =
       import.meta.env.VITE_API_URL ||
-      "https://hearthomeagency.onrender.com";
+      "https://zenithcarebackendservice.onrender.com";
 
     try {
       const res = await fetch(`${API_BASE}/api/contact`, {
