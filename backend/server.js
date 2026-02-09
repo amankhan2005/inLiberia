@@ -146,7 +146,7 @@ app.use((err, _req, res, _next) => {
 });
 
 /* -------------------- DB + SERVER -------------------- */
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 const disableDb = process.env.DISABLE_DB === "true";
 const MONGO_URI = process.env.MONGO_URI;
 let server;
