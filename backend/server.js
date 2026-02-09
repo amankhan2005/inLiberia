@@ -1,4 +1,5 @@
  // server.js
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -9,43 +10,26 @@ import rateLimit from "express-rate-limit";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// Routes
 import contactRoutes from "./routes/contact.routes.js";
 import careerRoutes from "./routes/career.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
 import mapRoutes from "./routes/map.routes.js";
 import heroRoutes from "./routes/hero.routes.js";
- import requestRoutes from "./routes/request.routes.js";
-
-
+import requestRoutes from "./routes/request.routes.js";
 
 dotenv.config();
 
-/* -------------------- APP SETUP -------------------- */
+/* ================= APP ================= */
+
 const app = express();
 app.set("trust proxy", 1);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/* -------------------- SECURITY -------------------- */
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
-);
-
-app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
-
-/* -------------------- RATE LIMIT -------------------- */
-app.use(
-  rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 100,
-  })
-);
-
- /* -------------------- CORS -------------------- */
+/* ================= CORS (FIRST) ================= */
 
 const allowedOrigins = [
   "https://zenithcareservice.org",
@@ -55,77 +39,55 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow Postman / Server-to-server
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      console.log("❌ Blocked by CORS:", origin);
-      return callback(new Error("Not allowed by CORS"));
+      console.log("❌ CORS BLOCKED:", origin);
+      return callback(null, false);
     },
-
     credentials: true,
-
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 
+/* ================= SECURITY ================= */
 
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-
-      const allowed = allowedOrigins.some((o) =>
-        o instanceof RegExp ? o.test(origin) : o === origin
-      );
-
-      if (allowed) return callback(null, true);
-
-      console.warn("❌ CORS blocked:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-Requested-With",
-      "Accept",
-      "Origin",
-      "Referer",
-      "Cache-Control",
-      "x-admin-user",
-      "x-admin-pass",
-      "x-admin-token",
-    ],
-    credentials: true,
-    optionsSuccessStatus: 204,
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false,
   })
 );
 
-// Preflight
-app.options("*", cors());
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
-/* -------------------- BODY PARSER -------------------- */
+/* ================= RATE LIMIT ================= */
+
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    max: 100,
+  })
+);
+
+/* ================= BODY ================= */
+
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
 
-/* -------------------- STATIC UPLOADS -------------------- */
+/* ================= STATIC ================= */
+
 app.use(
   "/uploads",
-  express.static(path.join(__dirname, "uploads"), {
-    setHeaders: (res) => {
-      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    },
-  })
+  express.static(path.join(__dirname, "uploads"))
 );
 
-/* -------------------- ROUTES -------------------- */
+/* ================= ROUTES ================= */
+
 app.use("/api/contact", contactRoutes);
 app.use("/api/career", careerRoutes);
 app.use("/api/dashboard", dashboardRoutes);
@@ -134,87 +96,66 @@ app.use("/api/map", mapRoutes);
 app.use("/api/hero", heroRoutes);
 app.use("/api/request", requestRoutes);
 
-/* -------------------- HEALTH CHECK -------------------- */
-app.get("/", (_req, res) => {
+/* ================= HEALTH ================= */
+
+app.get("/", (req, res) => {
   res.json({
     ok: true,
-    service: " Zenithcare Backend Service API",
-    env: process.env.NODE_ENV || "development",
-    db: process.env.DISABLE_DB === "true" ? "disabled" : "enabled",
+    service: "Zenithcare Backend API",
+    env: process.env.NODE_ENV || "dev",
   });
 });
 
-/* -------------------- 404 -------------------- */
-app.use((_req, res) => {
-  res.status(404).json({ ok: false, message: "Not Found" });
+/* ================= 404 ================= */
+
+app.use((req, res) => {
+  res.status(404).json({
+    ok: false,
+    message: "Route not found",
+  });
 });
 
-/* -------------------- ERROR HANDLER -------------------- */
-app.use((err, _req, res, _next) => {
-  console.error("Unhandled Error:", err);
-  if (err.message?.toLowerCase().includes("cors")) {
-    return res.status(403).json({ ok: false, message: "CORS not allowed" });
-  }
-  res.status(500).json({ ok: false, message: "Internal Server Error" });
+/* ================= ERROR ================= */
+
+app.use((err, req, res, next) => {
+  console.error("SERVER ERROR:", err);
+
+  res.status(500).json({
+    ok: false,
+    message: "Server error",
+  });
 });
 
-/* -------------------- DB + SERVER -------------------- */
+/* ================= SERVER ================= */
+
 const PORT = process.env.PORT || 10000;
-const disableDb = process.env.DISABLE_DB === "true";
 const MONGO_URI = process.env.MONGO_URI;
-let server;
 
 async function startServer() {
   try {
-    if (!disableDb) {
-      if (!MONGO_URI) {
-        console.error("❌ MONGO_URI missing");
-        process.exit(1);
-      }
-
-      mongoose.set("strictQuery", false);
-
-      console.log("🔌 Connecting to MongoDB...");
-      await mongoose.connect(MONGO_URI, {
-        serverSelectionTimeoutMS: 5000,
-        connectTimeoutMS: 10000,
-        socketTimeoutMS: 45000,
-      });
-      console.log("✅ MongoDB connected");
+    if (!MONGO_URI) {
+      console.log("⚠️ MongoDB disabled (No URI)");
     } else {
-      console.log("⚠️ MongoDB disabled");
+      console.log("🔌 Connecting MongoDB...");
+      await mongoose.connect(MONGO_URI);
+      console.log("✅ MongoDB Connected");
     }
 
-    server = app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on ${PORT}`);
     });
+
   } catch (err) {
-    console.error("❌ Startup error:", err);
+    console.error("❌ Startup Error:", err);
     process.exit(1);
   }
 }
 
 startServer();
 
-/* -------------------- GRACEFUL SHUTDOWN -------------------- */
-async function shutdown(signal) {
-  console.log(`🛑 ${signal} received, shutting down...`);
-  try {
-    if (server) server.close();
-    if (!disableDb && mongoose.connection.readyState === 1) {
-      await mongoose.connection.close(false);
-    }
-    process.exit(0);
-  } catch {
-    process.exit(1);
-  }
-}
+/* ================= SHUTDOWN ================= */
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
-process.on("unhandledRejection", (r) =>
-  console.error("Unhandled Rejection:", r)
-);
-process.on("uncaughtException", (e) =>
-  console.error("Uncaught Exception:", e)
-);
+process.on("SIGINT", () => process.exit());
+process.on("SIGTERM", () => process.exit());
+process.on("unhandledRejection", console.error);
+process.on("uncaughtException", console.error);
