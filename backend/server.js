@@ -45,23 +45,36 @@ app.use(
   })
 );
 
-/* -------------------- CORS -------------------- */
+ /* -------------------- CORS -------------------- */
+
 const allowedOrigins = [
-  // Production (Zenithcare only)
-  "https://zenithcareservices.netlify.app",
-  "https://www.zenithcareservice.org",
-
-  // Optional: without www  - cors allow
   "https://zenithcareservice.org",
+  "https://www.zenithcareservice.org",
+  "https://zenithcareservices.netlify.app",
+];
 
-  // Regex for preview deployments
-  /\.netlify\.app$/,
-  /\.vercel\.app$/,
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow Postman / Server-to-server
+      if (!origin) return callback(null, true);
 
-  ...(process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-    : []),
-].filter(Boolean);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("❌ Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    },
+
+    credentials: true,
+
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 
 app.use(
   cors({
