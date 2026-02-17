@@ -105,70 +105,91 @@ export default function GetInTouch() {
 
 
 
-          <div className="mt-12 space-y-6">
+      <div className="mt-12 space-y-6">
 
 
-            <a href="tel:+14109882335" className="flex items-center gap-5 group">
+  {/* Emergency 911 */}
+  <a href="tel:911" className="flex items-center gap-5 group">
 
-              <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-[#F39C6B] transition">
+    <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-red-500 transition">
 
-                <Phone className="text-[#F39C6B] group-hover:text-white" size={20} />
+      <Phone className="text-red-500 group-hover:text-white" size={20} />
 
-              </div>
+    </div>
 
+    <span className="text-gray-900 text-lg group-hover:text-red-500 transition">
+      Medical Emergency: Call 911
+    </span>
 
-              <span className="text-gray-900 text-lg group-hover:text-[#F39C6B] transition">
-
- <span>+1 (410) 988-2335</span>
-              </span>
-
-            </a>
-
-
-
-            <a href="mailto:info@dovehealthservices.com" className="flex items-center gap-5 group">
-
-              <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-[#F39C6B] transition">
-
-                <Mail className="text-[#F39C6B] group-hover:text-white" size={20} />
-
-              </div>
-
-
-              <span className="text-gray-900 text-lg group-hover:text-[#F39C6B] transition">
-
-                info@dovehealthservices.com
-
-              </span>
-
-            </a>
+  </a>
 
 
 
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=2101+St+Paul+St+Baltimore+MD+21218"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-5 group"
-            >
+  {/* Mental Health Crisis 988 */}
+  <a href="tel:988" className="flex items-center gap-5 group">
 
-              <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-[#F39C6B] transition">
+    <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-orange-500 transition">
 
-                <MapPin className="text-[#F39C6B] group-hover:text-white" size={20} />
+      <Phone className="text-orange-500 group-hover:text-white" size={20} />
 
-              </div>
+    </div>
 
+    <span className="text-gray-900 text-lg group-hover:text-orange-500 transition">
+      Mental Health Crisis: Call or Text 988
+    </span>
 
-              <span className="text-gray-900 text-lg group-hover:text-[#F39C6B] transition">
-
-                2101 St Paul St, 1st FL Baltimore MD 21218
-
-              </span>
-
-            </a>
+  </a>
 
 
-          </div>
+
+  {/* Email */}
+  <a href="mailto:careteam@dovehealthservices.com" className="flex items-center gap-5 group">
+
+    <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-[#F39C6B] transition">
+
+      <Mail className="text-[#F39C6B] group-hover:text-white" size={20} />
+
+    </div>
+
+    <span className="text-gray-900 text-lg group-hover:text-[#F39C6B] transition">
+      careteam@dovehealthservices.com
+    </span>
+
+  </a>
+
+
+
+  {/* Address */}
+  <a
+    href="https://www.google.com/maps/search/?api=1&query=2101+St+Paul+St+Baltimore+MD+21218"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-5 group"
+  >
+
+    <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-[#F39C6B] transition">
+
+      <MapPin className="text-[#F39C6B] group-hover:text-white" size={20} />
+
+    </div>
+
+    <span className="text-gray-900 text-lg group-hover:text-[#F39C6B] transition">
+      2101 St Paul St, 1st FL Baltimore MD 21218
+    </span>
+
+  </a>
+
+
+
+  {/* Legal Disclaimer */}
+  <p className="text-sm text-gray-500 pt-4">
+    If you are experiencing a medical emergency, call 911 immediately.  
+    For mental health crisis support, call or text 988.
+  </p>
+
+
+</div>
+
 
 
         </div>

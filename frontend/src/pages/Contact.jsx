@@ -8,7 +8,7 @@ export default function ContactUs() {
   const { settings } = useSettings();
 
   const CONTACT_EMAIL =
-    settings?.email || "info@dovehealthservices.com";
+    settings?.email || "careteam@dovehealthservices.com";
 
   const CONTACT_PHONE =
     settings?.phone || " +1 (410) 988-2335";

@@ -138,7 +138,7 @@ export default function Footer() {
 
     {/* Email */}
    <a
-  href="mailto:info@dovehealthservices.com"
+  href="mailto:careteam@dovehealthservices.com"
   className="flex items-center gap-4 hover:text-orange-300 transition"
 >
   <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full shrink-0">
@@ -146,7 +146,7 @@ export default function Footer() {
   </div>
 
   <span className="whitespace-nowrap">
-    info@dovehealthservices.com
+    careteam@dovehealthservices.com
   </span>
 </a>
 
