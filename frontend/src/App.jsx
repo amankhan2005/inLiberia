@@ -1,68 +1,99 @@
-  import React from "react";
-import { Routes, Route } from "react-router-dom";
+ import { Routes, Route } from "react-router-dom";
 
-// Layout
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
-import TopBar from "./components/layout/TopBar";
 
-// Scroll
-import RouteScrollTop from "./components/RouteScrollTop";
-import ScrollToTop from "./components/ScrollToTop";
+// Layouts
+import MainLayout from "./layouts/MainLayout";
+import DashboardLayout from "./layouts/DashboardLayout";
 
-// Main Pages
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import FAQ from "./pages/faq";
-import TreatmentRecovery from "./pages/TreatmentRecovery";
-import BookAppointment from "./pages/BookAppointment";
 
-// Strategies Pages
-import PersonalObjective from "./pages/strategies/PersonalObjective";
-import WellnessRecovery from "./pages/strategies/WellnessRecovery";
-import DoctorVisits from "./pages/strategies/DoctorVisits";
+// Public Pages
+import Home from "./pages/public/Home";
+import BrowseListings from "./pages/public/BrowseListings";
+import ListingDetail from "./pages/public/ListingDetail";
+import Categories from "./pages/public/Categories";
+import SearchResult from "./pages/public/SearchResult";
+import NotFound from "./pages/public/NotFound";
 
-// Services Pages
-import OMHC from "./pages/services/OMHC";
-import Prp from "./pages/services/Prp";
-import FamilyCounselling from "./pages/services/FamilyCounselling";
-import PersonalCounselling from "./pages/services/PersonalCounselling";
+
+// Auth Pages
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+
+
+// Dashboard Pages
+import Dashboard from "./pages/dashboard/Dashboard";
+import AddListing from "./pages/dashboard/AddListing";
+import MyListings from "./pages/dashboard/MyListings";
+import Profile from "./pages/dashboard/Profile";
+import EditListing from "./pages/dashboard/EditListing";
+
+
 
 export default function App() {
+
   return (
-    <>
-      <RouteScrollTop />
 
-      <Header />
+    <Routes>
 
-      <main className="min-h-screen pt-24 ">
-        <Routes>
 
-          {/* Main */}
-          <Route path="/" element={<Home />} />
-          <Route path="/about-us" element={<About />} />
-          <Route path="/contact-us" element={<Contact />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/treatment-recovery" element={<TreatmentRecovery />} />
-          <Route path="/book-appointment" element={<BookAppointment />} />
+      {/* PUBLIC WEBSITE ROUTES */}
 
-          {/* Strategies */}
-          <Route path="/strategies/personal-objective" element={<PersonalObjective />} />
-          <Route path="/strategies/wellness-recovery" element={<WellnessRecovery />} />
-          <Route path="/strategies/doctor-visits" element={<DoctorVisits />} />
+      <Route element={<MainLayout />}>
 
-          {/* Services */}
-          <Route path="/services/omhc" element={<OMHC />} />
-          <Route path="/services/prp" element={<Prp />} />
-          <Route path="/services/family-counselling" element={<FamilyCounselling />} />
-          <Route path="/services/personal-counselling" element={<PersonalCounselling />} />
+        <Route path="/" element={<Home />} />
 
-        </Routes>
-      </main>
+        <Route path="/browse" element={<BrowseListings />} />
 
-      <Footer />
-      <ScrollToTop />
-    </>
+        <Route path="/listing/:id" element={<ListingDetail />} />
+
+        <Route path="/categories" element={<Categories />} />
+
+        <Route path="/search" element={<SearchResult />} />
+
+      </Route>
+
+
+
+      {/* AUTH ROUTES */}
+
+      <Route element={<MainLayout />}>
+
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/signup" element={<Signup />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      </Route>
+
+
+
+      {/* DASHBOARD ROUTES (PROTECTED INSIDE DashboardLayout) */}
+
+      <Route element={<DashboardLayout />}>
+
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/dashboard/add" element={<AddListing />} />
+
+        <Route path="/dashboard/my" element={<MyListings />} />
+
+        <Route path="/dashboard/profile" element={<Profile />} />
+
+        <Route path="/dashboard/edit/:id" element={<EditListing />} />
+
+      </Route>
+
+
+
+      {/* 404 PAGE */}
+
+      <Route path="*" element={<NotFound />} />
+
+
+    </Routes>
+
   );
+
 }
