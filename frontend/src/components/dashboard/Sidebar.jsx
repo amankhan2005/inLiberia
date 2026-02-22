@@ -1,53 +1,105 @@
  import { Link, useLocation } from "react-router-dom";
 
+import { FaHome, FaPlus, FaList, FaUser, FaTachometerAlt } from "react-icons/fa";
+
+
 export default function Sidebar() {
 
   const { pathname } = useLocation();
 
+
   const linkClass = (path) =>
-    `block px-4 py-2 rounded-lg ${
+    `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
       pathname === path
         ? "bg-red-600 text-white"
         : "text-gray-700 hover:bg-gray-200"
     }`;
 
+
   return (
 
-    <aside className="w-64 bg-white shadow h-screen p-4">
+    <aside className="w-64 bg-white shadow h-screen p-4 flex flex-col justify-between">
 
-      <h2 className="text-xl font-bold mb-6 text-red-600">
 
-        Dashboard
+      {/* TOP */}
 
-      </h2>
+      <div>
 
-      <nav className="space-y-2">
+        <h2 className="text-xl font-bold mb-6 text-red-600">
 
-        <Link to="/dashboard" className={linkClass("/dashboard")}>
+          Dashboard
 
-          Overview
+        </h2>
 
-        </Link>
 
-        <Link to="/dashboard/add" className={linkClass("/dashboard/add")}>
+        <nav className="space-y-2">
 
-          Add Listing
 
-        </Link>
+          {/* HOME BUTTON */}
 
-        <Link to="/dashboard/my" className={linkClass("/dashboard/my")}>
+          <Link to="/" className={linkClass("/")}>
 
-          My Listings
+            <FaHome />
 
-        </Link>
+            Home
 
-        <Link to="/dashboard/profile" className={linkClass("/dashboard/profile")}>
+          </Link>
 
-          Profile
 
-        </Link>
 
-      </nav>
+          <Link to="/dashboard" className={linkClass("/dashboard")}>
+
+            <FaTachometerAlt />
+
+            Overview
+
+          </Link>
+
+
+
+          <Link to="/dashboard/add" className={linkClass("/dashboard/add")}>
+
+            <FaPlus />
+
+            Add Listing
+
+          </Link>
+
+
+
+          <Link to="/dashboard/my" className={linkClass("/dashboard/my")}>
+
+            <FaList />
+
+            My Listings
+
+          </Link>
+
+
+
+          <Link to="/dashboard/profile" className={linkClass("/dashboard/profile")}>
+
+            <FaUser />
+
+            Profile
+
+          </Link>
+
+
+        </nav>
+
+      </div>
+
+
+
+      {/* BOTTOM OPTIONAL */}
+
+      <div className="text-xs text-gray-400">
+
+        © Ninebyt
+
+      </div>
+
 
     </aside>
 

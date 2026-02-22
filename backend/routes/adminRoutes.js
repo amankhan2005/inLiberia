@@ -2,6 +2,7 @@ import express from "express";
 
 import protect from "../middleware/authMiddleware.js";
 import adminMiddleware from "../middleware/adminMiddleware.js";
+import Enquiry from "../models/Enquiry.js";
 
 import {
 
@@ -44,6 +45,18 @@ router.put("/listings/:id/reject", rejectListing);
 
 router.delete("/listings/:id", deleteListingAdmin);
 
+
+// ENQUIRIES
+
+router.get("/enquiries", async (req, res) => {
+
+  const enquiries = await Enquiry
+    .find()
+    .populate("listing");
+
+  res.json(enquiries);
+
+});
 
 // DASHBOARD
 

@@ -2,8 +2,9 @@
 
 import { useNavigate } from "react-router-dom";
 
-import useDebounce from "../../hooks/useDebounce";
+import { FaSearch, FaTimes } from "react-icons/fa";
 
+import useDebounce from "../../hooks/useDebounce";
 
 
 export default function SearchBar() {
@@ -11,8 +12,6 @@ export default function SearchBar() {
   const [query, setQuery] = useState("");
 
   const navigate = useNavigate();
-
-
 
   const debouncedQuery = useDebounce(query, 500);
 
@@ -24,7 +23,17 @@ export default function SearchBar() {
 
     if (!query.trim()) return;
 
-    navigate(`/search?q=${query}`);
+    navigate(`/search?search=${query}`);
+
+  };
+
+
+
+  const clearSearch = () => {
+
+    setQuery("");
+
+    navigate("/");
 
   };
 
@@ -36,37 +45,75 @@ export default function SearchBar() {
 
       onSubmit={handleSearch}
 
-      className="flex bg-white rounded-xl shadow overflow-hidden"
+      className="flex items-center bg-white rounded-xl shadow overflow-hidden border"
 
     >
+
+
+      {/* SEARCH ICON */}
+
+      <div className="px-3 text-gray-400">
+
+        <FaSearch />
+
+      </div>
+
+
+
+      {/* INPUT */}
 
       <input
 
         type="text"
 
-        placeholder="Search location, property..."
+        placeholder="Search listings..."
 
         value={query}
 
         onChange={(e) => setQuery(e.target.value)}
 
-        className="flex-1 px-4 py-3 outline-none text-gray-700"
+        className="flex-1 px-2 py-3 outline-none text-gray-700"
 
       />
 
 
 
+      {/* CLEAR BUTTON */}
+
+      {query && (
+
+        <button
+
+          type="button"
+
+          onClick={clearSearch}
+
+          className="px-3 text-gray-400 hover:text-red-500"
+
+        >
+
+          <FaTimes />
+
+        </button>
+
+      )}
+
+
+
+      {/* SEARCH BUTTON */}
+
       <button
 
         type="submit"
 
-        className="bg-red-600 text-white px-6"
+        className="bg-red-600 hover:bg-red-700 text-white px-6 py-3"
 
       >
 
         Search
 
       </button>
+
 
     </form>
 

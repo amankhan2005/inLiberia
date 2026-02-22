@@ -1,16 +1,20 @@
-import { useState } from "react";
+ import { useState, useEffect } from "react";
+
+import { getCategories } from "../../services/categoryService";
+
+import { getLocations } from "../../services/listingService"; // ⭐ ADD THIS
 
 
+export default function FilterSidebar({ onFilter }) {
 
-export default function FilterSidebar({
+  const [categories, setCategories] = useState([]);
 
-  onFilter
-
-}) {
-
+  const [locations, setLocations] = useState([]); // ⭐ ADD THIS
 
 
   const [filters, setFilters] = useState({
+
+    category: "",
 
     minPrice: "",
 
@@ -19,6 +23,19 @@ export default function FilterSidebar({
     location: "",
 
   });
+
+
+
+  // Load categories
+
+  useEffect(() => {
+
+    getCategories().then(setCategories);
+
+    getLocations().then(setLocations); // ⭐ LOAD LOCATIONS
+
+  }, []);
+
 
 
 
@@ -44,13 +61,34 @@ export default function FilterSidebar({
 
 
 
+  const clearFilters = () => {
+
+    const empty = {
+
+      category: "",
+
+      minPrice: "",
+
+      maxPrice: "",
+
+      location: "",
+
+    };
+
+    setFilters(empty);
+
+    onFilter(empty);
+
+  };
+
+
+
   return (
 
-    <div className="bg-white shadow rounded-xl p-4">
+    <div className="bg-white shadow rounded-xl p-5 space-y-4">
 
-      
 
-      <h3 className="font-semibold mb-4">
+      <h3 className="font-semibold text-lg">
 
         Filters
 
@@ -58,72 +96,168 @@ export default function FilterSidebar({
 
 
 
-      {/* Location */}
+      {/* CATEGORY */}
 
-      <input
+      <div>
 
-        name="location"
+        <label className="text-sm text-gray-600">
 
-        placeholder="Location"
+          Category
 
-        value={filters.location}
+        </label>
 
-        onChange={handleChange}
+        <select
 
-        className="w-full border px-3 py-2 mb-3 rounded"
+          name="category"
 
-      />
+          value={filters.category}
 
+          onChange={handleChange}
 
+          className="w-full border px-3 py-2 rounded mt-1"
 
-      {/* Min Price */}
+        >
 
-      <input
+          <option value="">All Categories</option>
 
-        name="minPrice"
+          {categories.map(cat => (
 
-        placeholder="Min Price"
+            <option key={cat._id} value={cat._id}>
 
-        value={filters.minPrice}
+              {cat.name}
 
-        onChange={handleChange}
+            </option>
 
-        className="w-full border px-3 py-2 mb-3 rounded"
+          ))}
 
-      />
+        </select>
 
-
-
-      {/* Max Price */}
-
-      <input
-
-        name="maxPrice"
-
-        placeholder="Max Price"
-
-        value={filters.maxPrice}
-
-        onChange={handleChange}
-
-        className="w-full border px-3 py-2 mb-3 rounded"
-
-      />
+      </div>
 
 
 
-      <button
 
-        onClick={applyFilters}
+      {/* LOCATION DROPDOWN ⭐ UPDATED */}
 
-        className="w-full bg-red-600 text-white py-2 rounded"
+      <div>
 
-      >
+        <label className="text-sm text-gray-600">
 
-        Apply
+          Location
 
-      </button>
+        </label>
 
+        <select
+
+          name="location"
+
+          value={filters.location}
+
+          onChange={handleChange}
+
+          className="w-full border px-3 py-2 rounded mt-1"
+
+        >
+
+          <option value="">All Locations</option>
+
+          {locations.map((loc, index) => (
+
+            <option key={index} value={loc}>
+
+              {loc}
+
+            </option>
+
+          ))}
+
+        </select>
+
+      </div>
+
+
+
+
+      {/* PRICE RANGE */}
+
+      <div>
+
+        <label className="text-sm text-gray-600">
+
+          Price Range
+
+        </label>
+
+        <div className="flex gap-2 mt-1">
+
+          <input
+
+            name="minPrice"
+
+            placeholder="Min"
+
+            value={filters.minPrice}
+
+            onChange={handleChange}
+
+            className="w-full border px-3 py-2 rounded"
+
+          />
+
+
+          <input
+
+            name="maxPrice"
+
+            placeholder="Max"
+
+            value={filters.maxPrice}
+
+            onChange={handleChange}
+
+            className="w-full border px-3 py-2 rounded"
+
+          />
+
+        </div>
+
+      </div>
+
+
+
+
+      {/* BUTTONS */}
+
+      <div className="flex gap-2">
+
+
+        <button
+
+          onClick={applyFilters}
+
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded"
+
+        >
+
+          Apply
+
+        </button>
+
+
+        <button
+
+          onClick={clearFilters}
+
+          className="flex-1 bg-gray-200 hover:bg-gray-300 py-2 rounded"
+
+        >
+
+          Clear
+
+        </button>
+
+
+      </div>
 
 
     </div>

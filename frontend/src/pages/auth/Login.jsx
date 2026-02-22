@@ -1,16 +1,19 @@
- import { useState } from "react";
+import { useState } from "react";
 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link }
 
-import useAuth from "../../hooks/useAuth";
+from "react-router-dom";
 
+import useAuth
+
+from "../../hooks/useAuth";
 
 
 export default function Login() {
 
 
-
   const navigate = useNavigate();
+
 
   const { login } = useAuth();
 
@@ -28,6 +31,7 @@ export default function Login() {
 
   const [loading, setLoading] = useState(false);
 
+
   const [error, setError] = useState("");
 
 
@@ -38,7 +42,9 @@ export default function Login() {
 
       ...form,
 
-      [e.target.name]: e.target.value
+      [e.target.name]:
+
+      e.target.value
 
     });
 
@@ -48,9 +54,12 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
 
+
     e.preventDefault();
 
+
     setLoading(true);
+
 
     setError("");
 
@@ -58,13 +67,18 @@ export default function Login() {
 
     try {
 
+
       await login(form);
 
-      navigate("/dashboard");
+
+      navigate("/");
 
 
+    }
 
-    } catch (err) {
+
+    catch (err) {
+
 
       setError(
 
@@ -77,7 +91,6 @@ export default function Login() {
     }
 
 
-
     setLoading(false);
 
   };
@@ -86,21 +99,21 @@ export default function Login() {
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
 
-      
+
 
       <form
 
         onSubmit={handleSubmit}
 
-        className="bg-white shadow rounded-xl p-6 w-full max-w-md"
+        className="bg-white p-6 rounded-xl shadow w-full max-w-md"
 
       >
 
-        
 
-        <h2 className="text-2xl font-bold mb-6 text-center">
+
+        <h2 className="text-2xl font-bold mb-4">
 
           Login
 
@@ -110,7 +123,7 @@ export default function Login() {
 
         {error && (
 
-          <p className="text-red-600 mb-3">
+          <p className="text-red-600">
 
             {error}
 
@@ -122,17 +135,15 @@ export default function Login() {
 
         <input
 
-          type="email"
-
           name="email"
 
           placeholder="Email"
 
-          required
+          value={form.email}
 
           onChange={handleChange}
 
-          className="w-full border px-3 py-2 mb-4 rounded"
+          className="w-full border p-2 mb-3"
 
         />
 
@@ -140,17 +151,17 @@ export default function Login() {
 
         <input
 
-          type="password"
-
           name="password"
+
+          type="password"
 
           placeholder="Password"
 
-          required
+          value={form.password}
 
           onChange={handleChange}
 
-          className="w-full border px-3 py-2 mb-4 rounded"
+          className="w-full border p-2 mb-3"
 
         />
 
@@ -158,29 +169,21 @@ export default function Login() {
 
         <button
 
-          disabled={loading}
-
-          className="w-full bg-red-600 text-white py-2 rounded"
+          className="w-full bg-red-600 text-white py-2"
 
         >
 
-          {loading ? "Loading..." : "Login"}
+          Login
 
         </button>
 
 
 
-        <p className="mt-4 text-center">
+        <p className="mt-3">
 
-          Don't have account?
+          No account?
 
-          <Link
-
-            to="/signup"
-
-            className="text-red-600 ml-1"
-
-          >
+          <Link to="/signup">
 
             Signup
 
@@ -191,8 +194,6 @@ export default function Login() {
 
 
       </form>
-
-
 
     </div>
 

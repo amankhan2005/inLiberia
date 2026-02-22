@@ -1,63 +1,81 @@
  import { Link } from "react-router-dom";
-
 import formatPrice from "../../utils/formatPrice";
 
 export default function ListingCard({ listing }) {
+
+  const BACKEND_URL = "http://localhost:5000";
+
+  // Safe image handling
+
+  const imageUrl = listing.images?.length
+
+    ? `${BACKEND_URL}${listing.images[0]}`
+
+    : "https://via.placeholder.com/400x300?text=No+Image";
+
 
   return (
 
     <Link to={`/listing/${listing._id}`}>
 
-      <div className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+      <div className="bg-white rounded-xl shadow hover:shadow-xl transition duration-300 overflow-hidden">
 
-        
 
-        {/* Image */}
+        {/* IMAGE */}
 
         <img
 
-          src={listing.images?.[0] || "/images/placeholder.jpg"}
+          src={imageUrl}
 
           alt={listing.title}
 
-          className="h-48 w-full object-cover"
+          className="w-full h-52 object-cover"
 
         />
 
 
+        {/* CONTENT */}
 
-        {/* Content */}
+        <div className="p-4 space-y-1">
 
-        <div className="p-4">
 
-          
+          {/* PRICE */}
 
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-red-600 font-bold text-lg">
 
             {formatPrice(listing.price)}
 
           </h3>
 
 
+          {/* TITLE */}
 
-          <p className="text-gray-600 text-sm mt-1">
+          <p className="font-semibold text-gray-800 truncate">
 
             {listing.title}
 
           </p>
 
 
+          {/* LOCATION */}
 
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 text-sm">
 
             📍 {listing.location}
 
           </p>
 
 
+          {/* CATEGORY */}
+
+          <p className="text-blue-600 text-sm">
+
+            🏷 {listing.category?.name || "Property"}
+
+          </p>
+
 
         </div>
-
 
 
       </div>

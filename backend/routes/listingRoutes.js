@@ -2,8 +2,7 @@
 
 import protect from "../middleware/authMiddleware.js";
 
-import upload from "../config/multer.js";   // ⭐ ADD THIS
-
+import upload from "../config/multer.js";
 
 import {
 
@@ -17,6 +16,8 @@ import {
 
   deleteListing,
 
+  getLocations,
+
 } from "../controllers/listingController.js";
 
 
@@ -26,33 +27,17 @@ const router = express.Router();
 // ================= PUBLIC =================
 
 
-// Get all approved listings
+// Get all listings
 
 router.get("/", getListings);
 
 
-// Get single listing
+// ⭐ FIX: locations route BEFORE :id
 
-router.get("/:id", getListingById);
-
+router.get("/locations", getLocations);
 
 
 // ================= USER =================
-
-
-// Create listing WITH image upload
-
-router.post(
-
-  "/",
-
-  protect,
-
-  upload.array("images", 5),   // ⭐ IMPORTANT
-
-  createListing
-
-);
 
 
 // Get my listings
@@ -68,6 +53,21 @@ router.get(
 );
 
 
+// Create listing
+
+router.post(
+
+  "/",
+
+  protect,
+
+  upload.array("images", 5),
+
+  createListing
+
+);
+
+
 // Delete listing
 
 router.delete(
@@ -79,6 +79,12 @@ router.delete(
   deleteListing
 
 );
+
+
+// ⭐ ALWAYS KEEP :id LAST
+
+router.get("/:id", getListingById);
+
 
 
 export default router;

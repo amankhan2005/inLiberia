@@ -1,16 +1,13 @@
- // src/services/listingService.js
-
-import api from "./api";
+ import api from "./api";
 
 
-
-// Public listings
+// ================= GET ALL LISTINGS =================
 
 export const getListings = async (params = {}) => {
 
   const res = await api.get("/listings", {
 
-    params,
+    params
 
   });
 
@@ -20,7 +17,7 @@ export const getListings = async (params = {}) => {
 
 
 
-// Single listing
+// ================= GET SINGLE =================
 
 export const getListingById = async (id) => {
 
@@ -32,7 +29,7 @@ export const getListingById = async (id) => {
 
 
 
-// Featured listings
+// ================= FEATURED =================
 
 export const getFeaturedListings = async () => {
 
@@ -44,11 +41,11 @@ export const getFeaturedListings = async () => {
 
 
 
-// User listings
+// ================= MY LISTINGS =================
 
 export const getMyListings = async () => {
 
-  const res = await api.get("/listings/my");
+  const res = await api.get("/listings/my/listings");
 
   return res.data;
 
@@ -56,11 +53,31 @@ export const getMyListings = async () => {
 
 
 
-// Create listing
+// ================= GET LOCATIONS ⭐ ADD THIS =================
+
+export const getLocations = async () => {
+
+  const res = await api.get("/listings/locations");
+
+  return res.data;
+
+};
+
+
+
+// ================= CREATE =================
 
 export const createListing = async (data) => {
 
-  const res = await api.post("/listings", data);
+  const res = await api.post("/listings", data, {
+
+    headers: {
+
+      "Content-Type": "multipart/form-data",
+
+    },
+
+  });
 
   return res.data;
 
@@ -68,11 +85,19 @@ export const createListing = async (data) => {
 
 
 
-// Update listing
+// ================= UPDATE =================
 
 export const updateListing = async (id, data) => {
 
-  const res = await api.put(`/listings/${id}`, data);
+  const res = await api.put(`/listings/${id}`, data, {
+
+    headers: {
+
+      "Content-Type": "multipart/form-data",
+
+    },
+
+  });
 
   return res.data;
 
@@ -80,7 +105,7 @@ export const updateListing = async (id, data) => {
 
 
 
-// Delete listing
+// ================= DELETE =================
 
 export const deleteListing = async (id) => {
 

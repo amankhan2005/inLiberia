@@ -5,15 +5,16 @@ import { createContext, useState, useEffect } from "react";
 import {
   loginUser,
   signupUser,
-  getCurrentUser,
   logoutUser,
+  getCurrentUser
 } from "../services/authService";
+
 
 export const AuthContext = createContext();
 
 
-
 export const AuthProvider = ({ children }) => {
+
 
   const [user, setUser] = useState(null);
 
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
 
 
-  // Load user on app start
+  // ✅ RESTORE USER ON APP LOAD
 
   useEffect(() => {
 
@@ -29,30 +30,50 @@ export const AuthProvider = ({ children }) => {
 
       try {
 
-        const token = localStorage.getItem("token");
+        const token =
+          localStorage.getItem("token");
+
 
         if (token) {
 
-          const userData = await getCurrentUser();
+          const userData =
+            await getCurrentUser();
+
 
           setUser(userData);
 
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify(userData)
+          );
+
         }
 
-      } catch (error) {
+      }
 
-        console.error("Auth error:", error);
+      catch (error) {
 
-        localStorage.removeItem("token");
+        console.error(
+          "Auth restore failed",
+          error
+        );
 
-      } finally {
+
+        localStorage.clear();
+
+
+        setUser(null);
+
+      }
+
+      finally {
 
         setLoading(false);
 
       }
 
     };
-
 
 
     initAuth();
@@ -62,16 +83,35 @@ export const AuthProvider = ({ children }) => {
 
 
 
-
-  // LOGIN
+  // ✅ LOGIN
 
   const login = async (data) => {
 
-    const res = await loginUser(data);
 
-    localStorage.setItem("token", res.token);
+    const res =
+      await loginUser(data);
 
-    setUser(res.user);
+
+    localStorage.setItem(
+      "token",
+      res.token
+    );
+
+
+    // ⭐ ALWAYS GET USER FROM BACKEND
+
+    const userData =
+      await getCurrentUser();
+
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
+    );
+
+
+    setUser(userData);
+
 
     return res;
 
@@ -79,15 +119,34 @@ export const AuthProvider = ({ children }) => {
 
 
 
-  // SIGNUP
+
+  // ✅ SIGNUP
 
   const signup = async (data) => {
 
-    const res = await signupUser(data);
 
-    localStorage.setItem("token", res.token);
+    const res =
+      await signupUser(data);
 
-    setUser(res.user);
+
+    localStorage.setItem(
+      "token",
+      res.token
+    );
+
+
+    const userData =
+      await getCurrentUser();
+
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
+    );
+
+
+    setUser(userData);
+
 
     return res;
 
@@ -95,11 +154,17 @@ export const AuthProvider = ({ children }) => {
 
 
 
-  // LOGOUT
+
+  // ✅ LOGOUT
 
   const logout = () => {
 
+
     logoutUser();
+
+
+    localStorage.clear();
+
 
     setUser(null);
 
@@ -107,27 +172,28 @@ export const AuthProvider = ({ children }) => {
 
 
 
-  const value = {
-
-    user,
-
-    loading,
-
-    login,
-
-    signup,
-
-    logout,
-
-    isAuthenticated: !!user,
-
-  };
-
-
 
   return (
 
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+
+      value={{
+
+        user,
+
+        loading,
+
+        login,
+
+        signup,
+
+        logout,
+
+        isAuthenticated: !!user
+
+      }}
+
+    >
 
       {children}
 

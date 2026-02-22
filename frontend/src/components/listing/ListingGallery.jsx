@@ -1,71 +1,93 @@
- import { useState } from "react";
+//  import { useState, useEffect } from "react";
 
-export default function ListingGallery({
+// export default function ListingGallery({ images }) {
 
-  images
+//   const BACKEND = "http://localhost:5000";
 
-}) {
+//   const [active, setActive] = useState("");
 
+//   // fix initial image load
+//   useEffect(() => {
 
+//     if (images && images.length > 0) {
 
-  const [active,
+//       setActive(images[0]);
 
-    setActive] = useState(images[0]);
+//     }
 
-
-
-  return (
-
-    <div>
-
-      
-
-      {/* Main Image */}
-
-      <img
-
-        src={active}
-
-        className="w-full h-96 object-cover rounded-xl"
-
-      />
+//   }, [images]);
 
 
+//   const getImageUrl = (img) => {
 
-      {/* Thumbnails */}
+//     if (!img) return "";
 
-      <div className="flex gap-2 mt-4">
+//     return img.startsWith("http")
+//       ? img
+//       : BACKEND + img;
 
-        
-
-        {images.map(img => (
-
-          
-
-          <img
-
-            key={img}
-
-            src={img}
-
-            onClick={() => setActive(img)}
-
-            className="w-20 h-20 object-cover rounded cursor-pointer border"
-
-          />
+//   };
 
 
+//   return (
 
-        ))}
-
-
-
-      </div>
+//     <div>
 
 
+//       {/* Main Image */}
 
-    </div>
+//       <img
 
-  );
+//         src={getImageUrl(active)}
 
-}
+//         onError={(e) => {
+
+//           e.target.src =
+//             "https://via.placeholder.com/800x500?text=No+Image";
+
+//         }}
+
+//         className="w-full h-96 object-cover rounded-xl"
+
+//       />
+
+
+//       {/* Thumbnails */}
+
+//       <div className="flex gap-2 mt-4">
+
+//         {images?.map(img => (
+
+//           <img
+
+//             key={img}
+
+//             src={getImageUrl(img)}
+
+//             onClick={() => setActive(img)}
+
+//             className="w-20 h-20 object-cover rounded cursor-pointer border"
+
+//           />
+
+//         ))}
+
+//       </div>
+
+
+//     </div>
+
+//   );
+
+// }
+
+
+ import React from 'react'
+ 
+ function ListingGallery({ images }) {
+   return (
+     <div></div>
+   )
+ }
+ 
+ export default ListingGallery

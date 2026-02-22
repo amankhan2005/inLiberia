@@ -1,16 +1,26 @@
-// src/components/common/Navbar.jsx
-
-import { Link } from "react-router-dom";
+ import { Link } from "react-router-dom";
 
 import Container from "./Container";
 
 import useAuth from "../../hooks/useAuth";
 
 
-
 export default function Navbar() {
 
-  const { user, logout } = useAuth();
+
+  const {
+
+    user,
+
+    logout,
+
+    loading
+
+  } = useAuth();
+
+
+
+  if (loading) return null;
 
 
 
@@ -22,11 +32,17 @@ export default function Navbar() {
 
         <div className="flex justify-between items-center h-16">
 
-          
+
 
           {/* Logo */}
 
-          <Link to="/" className="text-xl font-bold text-red-600">
+          <Link
+
+            to="/"
+
+            className="text-xl font-bold text-red-600"
+
+          >
 
             inLiberia
 
@@ -38,15 +54,14 @@ export default function Navbar() {
 
           <nav className="hidden md:flex gap-6">
 
-            <Link to="/browse" className="hover:text-red-600">
+            <Link to="/browse">
 
               Browse
 
             </Link>
 
 
-
-            <Link to="/categories" className="hover:text-red-600">
+            <Link to="/categories">
 
               Categories
 
@@ -58,43 +73,10 @@ export default function Navbar() {
 
           {/* Right side */}
 
-          <div className="flex items-center gap-4">
-
-            
-
-            {user ? (
-
-              <>
-
-                <Link
-
-                  to="/dashboard"
-
-                  className="text-sm font-medium"
-
-                >
-
-                  Dashboard
-
-                </Link>
+          <div className="flex gap-4">
 
 
-
-                <button
-
-                  onClick={logout}
-
-                  className="text-sm text-red-600"
-
-                >
-
-                  Logout
-
-                </button>
-
-              </>
-
-            ) : (
+            {!user && (
 
               <>
 
@@ -105,12 +87,11 @@ export default function Navbar() {
                 </Link>
 
 
-
                 <Link
 
                   to="/signup"
 
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                  className="bg-red-600 text-white px-4 py-2 rounded"
 
                 >
 
@@ -122,7 +103,40 @@ export default function Navbar() {
 
             )}
 
+
+
+            {user && (
+
+              <>
+
+                <Link to="/dashboard/profile">
+
+                  My Profile
+
+                </Link>
+
+
+                <button
+
+                  onClick={logout}
+
+                  className="text-red-600"
+
+                >
+
+                  Logout
+
+                </button>
+
+              </>
+
+            )}
+
+
+
           </div>
+
+
 
         </div>
 
