@@ -1,91 +1,124 @@
- import Container from "../common/Container";
-
-import { Link } from "react-router-dom";
-
+ import { Link } from "react-router-dom";
 import { useContext } from "react";
-
 import { AuthContext } from "../../context/AuthContext";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 
 export default function RegisterCTA() {
 
-
-  const {
-
-    isAuthenticated,
-
-    setRedirectAfterLogin
-
-  } = useContext(AuthContext);
+const { isAuthenticated, setRedirectAfterLogin } = useContext(AuthContext);
 
 
+const handleClick = () => {
 
-  const handleClick = () => {
+if (!isAuthenticated) {
 
-    if (!isAuthenticated) {
+setRedirectAfterLogin("/dashboard/add");
 
-      setRedirectAfterLogin("/dashboard/add");
+}
 
-    }
-
-  };
+};
 
 
 
-  return (
+return (
 
-    <section className="bg-red-600 text-white">
-
-
-      <Container className="py-16 text-center">
+<section className="max-w-7xl mb-5   mx-auto px-4 sm:px-6 lg:px-8">
 
 
-        <h2 className="text-3xl font-bold mb-4">
-
-          Ready to list your property?
-
-        </h2>
+<div className="w-full bg-[#d8232a] text-white text-center rounded-2xl py-20  md:px-12">
 
 
+{/* HEADING */}
 
-        <Link
+<h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
 
-          to={
+List Your Property.
 
-            isAuthenticated
+<span className="block">
 
-              ? "/dashboard/add"
+Connect with Real Investors.
 
-              : "/login"
+</span>
 
-          }
-
-          onClick={handleClick}
-
-          className="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
-
-        >
+</h2>
 
 
-          {
 
-            isAuthenticated
+{/* SUB HEADING */}
 
-              ? "Add Listing"
+<p className="text-red-100 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
 
-              : "Get Started"
+Publish your listing and start receiving investor interest today.
 
-          }
-
-
-        </Link>
+</p>
 
 
-      </Container>
+
+{/* BUTTON */}
+
+ <Link
+to={isAuthenticated ? "/dashboard/add" : "/login"}
+onClick={handleClick}
+className="
+
+group
+
+inline-flex
+
+items-center
+
+gap-2
+
+bg-white
+
+text-red-600
+
+font-semibold
+
+px-8 py-4
+
+rounded-full
+
+hover:bg-gray-100
+
+transition-all
+
+duration-300
+
+"
+
+>
+
+{isAuthenticated ? "Add Property" : "Get Started"}
 
 
-    </section>
+<ArrowRightIcon
 
-  );
+className="
+
+w-5 h-5
+
+transition-transform
+
+duration-300
+
+group-hover:translate-x-1
+
+"
+
+/>
+
+
+</Link>
+
+
+
+</div>
+
+
+</section>
+
+);
 
 }

@@ -4,6 +4,8 @@ import CategorySection from "../../components/home/CategorySection";
 
 import FeaturedListings from "../../components/home/FeaturedListings";
 
+import FeaturedSection from "../../components/home/FeaturedSection";
+
 import TopLocations from "../../components/home/TopLocations";
 
 import HowItWorks from "../../components/home/HowItWorks";
@@ -23,6 +25,7 @@ export default function Home() {
       <CategorySection />
 
       <FeaturedListings />
+      <FeaturedSection />
 
       <TopLocations />
 
