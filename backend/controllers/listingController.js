@@ -1,4 +1,4 @@
-//  import Listing from "../models/Listing.js";
+// import Listing from "../models/Listing.js";
 
 
 // // ================= CREATE LISTING =================
@@ -6,8 +6,6 @@
 // export const createListing = async (req, res) => {
 
 //   try {
-
-//     // FIX 1: Save uploaded images
 
 //     const images = req.files?.map(
 
@@ -18,9 +16,19 @@
 
 //     const listing = await Listing.create({
 
-//       ...req.body,
+//       title: req.body.title,
 
-//       images,                 // ⭐ ADD THIS
+//       location: req.body.location,
+
+//       description: req.body.description,
+
+//       category: req.body.category,
+
+//       contactEmail: req.body.contactEmail,
+
+//       contactPhone: req.body.contactPhone,
+
+//       images,
 
 //       user: req.user._id,
 
@@ -31,7 +39,9 @@
 
 //     res.status(201).json(listing);
 
-//   } catch (error) {
+//   }
+
+//   catch (error) {
 
 //     res.status(500).json({
 
@@ -45,36 +55,121 @@
 
 
 
-// // ================= GET ALL APPROVED =================
+
+// // ================= GET ALL LISTINGS =================
 
 // export const getListings = async (req, res) => {
 
 //   try {
 
-//     const listings = await Listing.find({
+//     const {
 
-//       status: "approved",
+//       category,
 
-//     })
+//       sort,
 
-//     .populate("category", "name")   // ⭐ IMPORTANT
+//       search,
 
-//     .populate("user", "name email");
+//       location,
+
+//       page = 1,
+
+//       limit = 12
+
+//     } = req.query;
 
 
-//     res.json(listings);
 
-//   } catch (error) {
+//     let query = {
+
+//       status: "approved"
+
+//     };
+
+
+
+//     // CATEGORY
+
+//     if (category)
+
+//       query.category = category;
+
+
+
+//     // LOCATION
+
+//     if (location)
+
+//       query.location = location;
+
+
+
+//     // SEARCH
+
+//     if (search)
+
+//       query.title = {
+
+//         $regex: search,
+
+//         $options: "i"
+
+//       };
+
+
+
+//     let listings = Listing.find(query)
+
+//       .populate("category", "name icon")
+
+//       .populate("user", "name email");
+
+
+
+//     // SORT (no price now)
+
+//     if (sort === "newest")
+
+//       listings = listings.sort({
+
+//         createdAt: -1
+
+//       });
+
+
+
+//     // PAGINATION
+
+//     const skip = (page - 1) * limit;
+
+//     listings = listings
+
+//       .skip(skip)
+
+//       .limit(Number(limit));
+
+
+
+//     const result = await listings;
+
+
+
+//     res.json(result);
+
+//   }
+
+//   catch (error) {
 
 //     res.status(500).json({
 
-//       message: error.message,
+//       message: error.message
 
 //     });
 
 //   }
 
 // };
+
 
 
 
@@ -84,39 +179,40 @@
 
 //   try {
 
-//     const listing = await Listing.findById(
+//     const listing = await Listing.findById(req.params.id)
 
-//       req.params.id
+//       .populate("category", "name icon")
 
-//     )
+//       .populate("user", "name email");
 
-//     .populate("category", "name")  // ⭐ IMPORTANT
-
-//     .populate("user", "name email");
 
 
 //     if (!listing)
 
 //       return res.status(404).json({
 
-//         message: "Listing not found",
+//         message: "Listing not found"
 
 //       });
 
 
+
 //     res.json(listing);
 
-//   } catch (error) {
+//   }
+
+//   catch (error) {
 
 //     res.status(500).json({
 
-//       message: error.message,
+//       message: error.message
 
 //     });
 
 //   }
 
 // };
+
 
 
 
@@ -128,26 +224,75 @@
 
 //     const listings = await Listing.find({
 
-//       user: req.user._id,
+//       user: req.user._id
 
 //     })
 
-//     .populate("category", "name");
+//       .populate("category", "name icon")
+
+//       .sort({
+
+//         createdAt: -1
+
+//       });
+
 
 
 //     res.json(listings);
 
-//   } catch (error) {
+//   }
+
+//   catch (error) {
 
 //     res.status(500).json({
 
-//       message: error.message,
+//       message: error.message
 
 //     });
 
 //   }
 
 // };
+
+
+
+
+// // ================= GET LOCATIONS =================
+
+// export const getLocations = async (req, res) => {
+
+//   try {
+
+//     const locations = await Listing.distinct(
+
+//       "location",
+
+//       {
+
+//         status: "approved"
+
+//       }
+
+//     );
+
+
+
+//     res.json(locations);
+
+//   }
+
+//   catch (error) {
+
+//     res.status(500).json({
+
+//       message: error.message
+
+//     });
+
+//   }
+
+// };
+
 
 
 
@@ -164,42 +309,50 @@
 //     );
 
 
+
 //     if (!listing)
 
 //       return res.status(404).json({
 
-//         message: "Listing not found",
+//         message: "Listing not found"
 
 //       });
 
 
+
 //     if (
 
-//       listing.user.toString() !== req.user._id.toString()
+//       listing.user.toString()
+
+//       !== req.user._id.toString()
 
 //     )
 
 //       return res.status(403).json({
 
-//         message: "Not authorized",
+//         message: "Not authorized"
 
 //       });
+
 
 
 //     await listing.deleteOne();
 
 
+
 //     res.json({
 
-//       message: "Listing deleted",
+//       message: "Listing deleted"
 
 //     });
 
-//   } catch (error) {
+//   }
+
+//   catch (error) {
 
 //     res.status(500).json({
 
-//       message: error.message,
+//       message: error.message
 
 //     });
 
@@ -207,7 +360,10 @@
 
 // };
 
+
  import Listing from "../models/Listing.js";
+import Category from "../models/Category.js";
+
 
 
 // ================= CREATE LISTING =================
@@ -217,15 +373,15 @@ export const createListing = async (req, res) => {
   try {
 
     const images = req.files?.map(
+
       file => `/uploads/listings/${file.filename}`
+
     ) || [];
 
 
     const listing = await Listing.create({
 
       title: req.body.title,
-
-      price: req.body.price,
 
       location: req.body.location,
 
@@ -275,15 +431,13 @@ export const getListings = async (req, res) => {
 
       category,
 
-      sort,
+      categoryName,
 
       search,
 
-      location,   // ⭐ added
+      location,
 
-      minPrice,   // ⭐ added
-
-      maxPrice,   // ⭐ added
+      sort,
 
       page = 1,
 
@@ -301,39 +455,55 @@ export const getListings = async (req, res) => {
 
 
 
-    // CATEGORY
+    // FILTER BY CATEGORY ID
 
-    if (category)
+    if (category) {
 
       query.category = category;
 
+    }
 
 
-    // LOCATION ⭐
 
-    if (location)
+    // ⭐ FILTER BY CATEGORY NAME (Residence / Business)
+
+    if (categoryName) {
+
+      const categoryDoc = await Category.findOne({
+
+        name: categoryName
+
+      });
+
+
+      // agar category exist nahi karti
+
+      if (!categoryDoc) {
+
+        return res.json([]);
+
+      }
+
+
+      query.category = categoryDoc._id;
+
+    }
+
+
+
+    // LOCATION FILTER
+
+    if (location) {
 
       query.location = location;
 
-
-
-    // PRICE RANGE ⭐
-
-    if (minPrice || maxPrice)
-
-      query.price = {
-
-        ...(minPrice && { $gte: Number(minPrice) }),
-
-        ...(maxPrice && { $lte: Number(maxPrice) })
-
-      };
+    }
 
 
 
-    // SEARCH
+    // SEARCH FILTER
 
-    if (search)
+    if (search) {
 
       query.title = {
 
@@ -343,9 +513,13 @@ export const getListings = async (req, res) => {
 
       };
 
+    }
 
 
-    let listings = Listing.find(query)
+
+    // QUERY BUILD
+
+    let listingsQuery = Listing.find(query)
 
       .populate("category", "name icon")
 
@@ -355,37 +529,36 @@ export const getListings = async (req, res) => {
 
     // SORT
 
-    if (sort === "price_asc")
+    if (sort === "newest") {
 
-      listings = listings.sort({ price: 1 });
+      listingsQuery = listingsQuery.sort({
 
+        createdAt: -1
 
+      });
 
-    else if (sort === "price_desc")
-
-      listings = listings.sort({ price: -1 });
-
-
-
-    else if (sort === "newest")
-
-      listings = listings.sort({ createdAt: -1 });
+    }
 
 
 
     // PAGINATION
 
-    const skip = (page - 1) * limit;
-
-    listings = listings.skip(skip).limit(Number(limit));
+    const skip = (Number(page) - 1) * Number(limit);
 
 
+    listingsQuery = listingsQuery
 
-    const result = await listings;
+      .skip(skip)
+
+      .limit(Number(limit));
 
 
 
-    res.json(result);
+    const listings = await listingsQuery;
+
+
+
+    res.json(listings);
 
   }
 
@@ -417,7 +590,6 @@ export const getListingById = async (req, res) => {
       .populate("user", "name email");
 
 
-
     if (!listing)
 
       return res.status(404).json({
@@ -425,7 +597,6 @@ export const getListingById = async (req, res) => {
         message: "Listing not found"
 
       });
-
 
 
     res.json(listing);
@@ -461,8 +632,11 @@ export const getMyListings = async (req, res) => {
 
       .populate("category", "name icon")
 
-      .sort({ createdAt: -1 });
+      .sort({
 
+        createdAt: -1
+
+      });
 
 
     res.json(listings);
@@ -490,12 +664,17 @@ export const getLocations = async (req, res) => {
 
   try {
 
-    const locations = await Listing.distinct("location", {
+    const locations = await Listing.distinct(
 
-      status: "approved"
+      "location",
 
-    });
+      {
 
+        status: "approved"
+
+      }
+
+    );
 
 
     res.json(locations);
@@ -523,8 +702,11 @@ export const deleteListing = async (req, res) => {
 
   try {
 
-    const listing = await Listing.findById(req.params.id);
+    const listing = await Listing.findById(
 
+      req.params.id
+
+    );
 
 
     if (!listing)
@@ -536,10 +718,11 @@ export const deleteListing = async (req, res) => {
       });
 
 
-
     if (
 
-      listing.user.toString() !== req.user._id.toString()
+      listing.user.toString()
+
+      !== req.user._id.toString()
 
     )
 
@@ -550,9 +733,7 @@ export const deleteListing = async (req, res) => {
       });
 
 
-
     await listing.deleteOne();
-
 
 
     res.json({

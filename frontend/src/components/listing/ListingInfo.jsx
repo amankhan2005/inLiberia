@@ -41,11 +41,11 @@ export default function ListingInfo({ listing }) {
 
       {/* PRICE */}
 
-      <p className="text-red-600 text-xl font-bold mb-2">
+      {/* <p className="text-red-600 text-xl font-bold mb-2">
 
         {formatPrice(listing.price)}
 
-      </p>
+      </p> */}
 
 
       {/* LOCATION */}

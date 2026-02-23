@@ -11,7 +11,9 @@ import Home from "./pages/public/Home";
 import BrowseListings from "./pages/public/BrowseListings";
 import ListingDetail from "./pages/public/ListingDetail";
 import Categories from "./pages/public/Categories";
-import SearchResult from "./pages/public/SearchResult";
+
+import CategoryPage from "./pages/public/CategoryPage";
+ import SearchResult from "./pages/public/SearchResult";
 import NotFound from "./pages/public/NotFound";
 
 
@@ -47,7 +49,9 @@ export default function App() {
 
         <Route path="/listing/:id" element={<ListingDetail />} />
 
-        <Route path="/categories" element={<Categories />} />
+     <Route path="/categories" element={<Categories />} />
+
+<Route path="/categories/:category" element={<CategoryPage />} />
 
         <Route path="/search" element={<SearchResult />} />
 

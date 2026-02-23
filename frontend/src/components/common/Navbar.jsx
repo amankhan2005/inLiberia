@@ -61,6 +61,34 @@ export default function Navbar() {
             </Link>
 
 
+          <Link
+
+            to="/categories/Residence"
+
+            className="hover:text-red-600"
+
+          >
+
+            Residences
+
+          </Link>
+
+
+
+          {/* ⭐ BUSINESS */}
+
+          <Link
+
+            to="/categories/Business"
+
+            className="hover:text-red-600"
+
+          >
+
+            Business
+
+          </Link>
+
             <Link to="/categories">
 
               Categories

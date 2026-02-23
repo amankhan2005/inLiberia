@@ -41,11 +41,11 @@ export default function ListingCard({ listing }) {
 
           {/* PRICE */}
 
-          <h3 className="text-red-600 font-bold text-lg">
+          {/* <h3 className="text-red-600 font-bold text-lg">
 
             {formatPrice(listing.price)}
 
-          </h3>
+          </h3> */}
 
 
           {/* TITLE */}
