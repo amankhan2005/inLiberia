@@ -101,69 +101,69 @@ export default function Navbar() {
 
           {/* Right side */}
 
-          <div className="flex gap-4">
+         {/* Right side */}
+<div className="flex gap-4 items-center">
+
+  {!user && (
+
+    <>
+
+      <Link to="/login">
+        Login
+      </Link>
 
 
-            {!user && (
+      <Link
+        to="/signup"
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+      >
+        Post Property
+      </Link>
 
-              <>
+    </>
 
-                <Link to="/login">
-
-                  Login
-
-                </Link>
-
-
-                <Link
-
-                  to="/signup"
-
-                  className="bg-red-600 text-white px-4 py-2 rounded"
-
-                >
-
-                  Post Property
-
-                </Link>
-
-              </>
-
-            )}
+  )}
 
 
 
-            {user && (
+  {user && (
 
-              <>
+    <>
 
-                <Link to="/dashboard/profile">
-
-                  My Profile
-
-                </Link>
-
-
-                <button
-
-                  onClick={logout}
-
-                  className="text-red-600"
-
-                >
-
-                  Logout
-
-                </button>
-
-              </>
-
-            )}
+      {/* ⭐ ADD LISTING BUTTON */}
+      <Link
+        to="/dashboard/add"
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+      >
+        + Add Listing
+      </Link>
 
 
 
-          </div>
+      <Link to="/dashboard/profile">
 
+        My Profile
+
+      </Link>
+
+
+      <button
+
+        onClick={logout}
+
+        className="text-red-600"
+
+      >
+
+        Logout
+
+      </button>
+
+    </>
+
+  )}
+
+</div>
 
 
         </div>
