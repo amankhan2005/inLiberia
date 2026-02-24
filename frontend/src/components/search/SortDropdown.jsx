@@ -26,19 +26,19 @@ export default function SortDropdown({
 
 
 
-      <option value="price_asc">
+      {/* <option value="price_asc">
 
         Price Low → High
 
-      </option>
+      </option> */}
 
 
 
-      <option value="price_desc">
+      {/* <option value="price_desc">
 
         Price High → Low
 
-      </option>
+      </option> */}
 
 
 

@@ -36,13 +36,36 @@ export default function CategoryPage() {
 
   return (
 
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto py-18 px-4">
 
-      <h1 className="text-3xl font-bold mb-6">
+    <div className="mb-8">
 
-        {category}
+  {/* SMALL LABEL */}
 
-      </h1>
+  <p className="text-sm font-semibold tracking-wide text-red-600 mb-2">
+
+    INVESTMENT OPPORTUNITIES
+
+  </p>
+
+
+
+  {/* MAIN HEADING */}
+
+  <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight">
+
+    {category}
+
+  </h1>
+
+
+
+  {/* UNDERLINE */}
+
+  <div className="w-12 h-[3px] bg-red-600 mt-3 rounded-full"></div>
+
+
+</div>
 
 
       <ListingGrid listings={listings} loading={loading} />

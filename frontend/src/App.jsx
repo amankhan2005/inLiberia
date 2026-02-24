@@ -49,7 +49,7 @@ export default function App() {
 
         <Route path="/listing/:id" element={<ListingDetail />} />
 
-     <Route path="/categories" element={<Categories />} />
+     {/* <Route path="/categories" element={<Categories />} /> */}
 
 <Route path="/categories/:category" element={<CategoryPage />} />
 

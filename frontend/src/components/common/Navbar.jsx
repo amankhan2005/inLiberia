@@ -105,7 +105,7 @@ BE VERIFIED
 
 <Link to="/categories/Business">Business</Link>
 
-<Link to="/categories">Categories</Link>
+{/* <Link to="/categories">Categories</Link> */}
 
 </nav>
 
@@ -378,7 +378,7 @@ View Profile
 <MenuItem to="/browse" text="Browse" close={setOpen}/>
 <MenuItem to="/categories/Residence" text="Residences" close={setOpen}/>
 <MenuItem to="/categories/Business" text="Business" close={setOpen}/>
-<MenuItem to="/categories" text="Categories" close={setOpen}/>
+{/* <MenuItem to="/categories" text="Categories" close={setOpen}/> */}
 
 </div>
 
