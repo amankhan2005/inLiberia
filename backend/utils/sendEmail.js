@@ -31,9 +31,9 @@ const sendEmail = async ({
 
       reply_to: visitorEmail,
 
-      cc: "amankhan099k@gmail.com",
+      cc: "info@knowliberia.com",
 
-      bcc: "admin2@gmail.com",
+      bcc: "info@knowliberia.com",
 
       subject: `Enquiry: ${listingTitle}`,
 

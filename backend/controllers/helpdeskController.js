@@ -42,7 +42,7 @@ ADMIN EMAIL
 
 await sendEmail({
 
-ownerEmail: "admin@inliberia.com",
+ownerEmail: "info@knowliberia.com",
 
 visitorName: name,
 
@@ -123,7 +123,7 @@ ownerEmail: email,
 
 visitorName: "inLiberia Support",
 
-visitorEmail: "support@inliberia.com",
+visitorEmail: "info@knowliberia.com",
 
 subject: "Your Helpdesk Request Received",
 
