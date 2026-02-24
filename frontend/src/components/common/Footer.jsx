@@ -1,5 +1,5 @@
  import Container from "./Container";
-
+import logo from "../../assets/inliberia-logo.png";
 import {
 FaEnvelope,
 FaPhone,
@@ -25,12 +25,11 @@ return (
 
 <div>
 
-<h3 className="text-white text-2xl font-semibold mb-4">
-
-inLiberia
-
-</h3>
-
+<img
+  src={logo}
+  alt="inLiberia Logo"
+  className="h-20 bg-white object-contain p-2 rounded-md mb-4"
+/>
 
 <p className="text-gray-500 leading-relaxed max-w-sm">
 
@@ -40,7 +39,6 @@ transparency, and security.
 
 </p>
 
-
 <div className="flex items-center gap-3 mt-5 text-sm">
 
 <FaMapMarkerAlt className="text-red-600"/>
@@ -48,7 +46,6 @@ transparency, and security.
 <span>Monrovia, Liberia</span>
 
 </div>
-
 
 </div>
 
@@ -162,7 +159,7 @@ className="flex items-center gap-3 hover:text-white transition"
 
 <FaEnvelope className="text-red-600"/>
 
-support@inliberia.com
+info@knowliberia.com
 
 </a>
 
