@@ -95,7 +95,7 @@ import formatPrice from "../../utils/formatPrice";
 
 export default function ListingCard({ listing }) {
 
-  const BACKEND_URL = "http://localhost:5000";
+  const BACKEND_URL = "https://liberiabackendservice.onrender.com";
 
   const imageUrl =
     listing.images?.length

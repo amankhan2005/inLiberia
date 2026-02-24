@@ -31,7 +31,9 @@ const app = express();
 
       "http://localhost:5173",
 
-      "http://localhost:5174"
+      "http://localhost:5174",
+      "https://knowliberia.com/admin",
+      "https://knowliberia.com",
 
     ],
 

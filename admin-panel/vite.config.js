@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "",                // <-- IMPORTANT FOR NETLIFY /admin PROXY
+  base: "/admin/",     // ✅ MUST for knowliberia.com/admin
   plugins: [
     tailwindcss(),
     react()

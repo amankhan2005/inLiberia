@@ -1,39 +1,60 @@
- import React from "react";
+//  import React from "react";
 
-import ReactDOM from "react-dom/client";
 
-import App from "./App";
 
-import {
+// import ReactDOM from "react-dom/client";
 
-  BrowserRouter
+// import App from "./App";
 
-} from "react-router-dom";
+// import {
 
-import {
+//   BrowserRouter
 
-  AdminAuthProvider
+// } from "react-router-dom";
 
-} from "./context/AdminAuthContext";
-import "./style.css";
+// import {
+
+//   AdminAuthProvider
+
+// } from "./context/AdminAuthContext";
+// import "./style.css";
 
  
 
+// ReactDOM.createRoot(
+
+// document.getElementById("root")
+
+// ).render(
+
+
+// <BrowserRouter>
+
+// <AdminAuthProvider>
+
+// <App />
+
+// </AdminAuthProvider>
+
+// </BrowserRouter>
+
+// );
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+import { BrowserRouter } from "react-router-dom";
+import { AdminAuthProvider } from "./context/AdminAuthContext";
+
+import "./style.css";
+
 ReactDOM.createRoot(
-
-document.getElementById("root")
-
+  document.getElementById("root")
 ).render(
-
-
-<BrowserRouter>
-
-<AdminAuthProvider>
-
-<App />
-
-</AdminAuthProvider>
-
-</BrowserRouter>
-
+  <BrowserRouter basename="/admin">   {/* ⭐ IMPORTANT FIX */}
+    <AdminAuthProvider>
+      <App />
+    </AdminAuthProvider>
+  </BrowserRouter>
 );

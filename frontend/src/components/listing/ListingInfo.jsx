@@ -110,7 +110,7 @@ import {
 
 export default function ListingInfo({ listing }) {
 
-  const BACKEND = "http://localhost:5000";
+  const BACKEND = "https://liberiabackendservice.onrender.com";
 
   if (!listing) return null;
 
