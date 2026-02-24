@@ -1,62 +1,165 @@
-import {
+// import {
 
-  Navigate
+//   Navigate
 
-} from "react-router-dom";
+// } from "react-router-dom";
 
- import useAdminAuth from "../../hooks/useAdminAuth";
+//  import useAdminAuth from "../../hooks/useAdminAuth";
 
+// import AdminSidebar from "./AdminSidebar";
+
+// import AdminNavbar from "./AdminNavbar";
+
+
+// export default function AdminLayout({
+
+//   children
+
+// }) {
+
+
+//   const {
+
+//     isAdmin,
+
+//     loading
+
+//   } = useAdminAuth();
+
+
+//   if (loading)
+
+//     return null;
+
+
+//   if (!isAdmin)
+
+//     return <Navigate to="/login" />;
+
+
+
+//   return (
+
+//     <div className="flex">
+
+
+//       <AdminSidebar />
+
+
+//       <div className="flex-1">
+
+
+//         <AdminNavbar />
+
+
+//         <main className="p-6">
+
+//           {children}
+
+//         </main>
+
+
+//       </div>
+
+
+//     </div>
+
+//   );
+
+// }
+
+import { Navigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import useAdminAuth from "../../hooks/useAdminAuth";
 import AdminSidebar from "./AdminSidebar";
-
 import AdminNavbar from "./AdminNavbar";
 
+export default function AdminLayout({ children }) {
 
-export default function AdminLayout({
+  const { isAdmin, loading } = useAdminAuth();
 
-  children
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
-}) {
+  const location = useLocation();
 
+  // Mobile auto close
+  useEffect(() => {
 
-  const {
+    if (window.innerWidth < 768) {
 
-    isAdmin,
+      setSidebarOpen(false);
 
-    loading
+    }
 
-  } = useAdminAuth();
-
-
-  if (loading)
-
-    return null;
+  }, [location]);
 
 
-  if (!isAdmin)
 
-    return <Navigate to="/login" />;
+  if (loading) return null;
+
+  if (!isAdmin) return <Navigate to="/login" />;
+
+
+
+  const toggleSidebar = () => {
+
+    setSidebarOpen(!sidebarOpen);
+
+  };
 
 
 
   return (
 
-    <div className="flex">
+    <div className="flex h-screen bg-gray-100">
 
 
-      <AdminSidebar />
+      {/* Overlay Mobile */}
+      {sidebarOpen && window.innerWidth < 768 && (
+
+        <div
+
+          className="fixed inset-0 bg-black/50 z-40"
+
+          onClick={toggleSidebar}
+
+        />
+
+      )}
 
 
-      <div className="flex-1">
+
+      {/* Sidebar */}
+       <AdminSidebar
+
+  sidebarOpen={sidebarOpen}
+
+  toggleSidebar={toggleSidebar}
+
+/>
 
 
-        <AdminNavbar />
+
+      {/* Content */}
+      <div className="flex-1 flex flex-col">
 
 
-        <main className="p-6">
+        {/* Navbar */}
+        <AdminNavbar
+
+          toggleSidebar={toggleSidebar}
+
+        />
+
+
+
+        {/* Main */}
+        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
 
           {children}
 
         </main>
+
 
 
       </div>
