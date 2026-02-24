@@ -25,20 +25,18 @@ const app = express();
 
 // CORS
 
- app.use(
+app.use(
   cors({
     origin: [
-
       "http://localhost:5173",
-
       "http://localhost:5174",
-      "https://knowliberia.com/admin",
+
       "https://knowliberia.com",
+      "https://www.knowliberia.com",
 
+      "https://knowliberia.netlify.app"  // ✅ Netlify frontend
     ],
-
     credentials: true,
-
   })
 );
 
