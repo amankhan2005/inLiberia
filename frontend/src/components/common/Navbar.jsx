@@ -104,6 +104,7 @@ BE VERIFIED
 <Link to="/categories/Residence">Residences</Link>
 
 <Link to="/categories/Business">Business</Link>
+<Link to="/helpdesk">Support</Link>
 
 {/* <Link to="/categories">Categories</Link> */}
 
@@ -378,6 +379,7 @@ View Profile
 <MenuItem to="/browse" text="Browse" close={setOpen}/>
 <MenuItem to="/categories/Residence" text="Residences" close={setOpen}/>
 <MenuItem to="/categories/Business" text="Business" close={setOpen}/>
+<MenuItem to="/helpdesk" text="Support" close={setOpen}/>
 {/* <MenuItem to="/categories" text="Categories" close={setOpen}/> */}
 
 </div>

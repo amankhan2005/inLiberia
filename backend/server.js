@@ -12,6 +12,7 @@ import listingRoutes from "./routes/listingRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import helpdeskRoutes from "./routes/helpdeskRoutes.js";
 
 import errorMiddleware from "./middleware/errorMiddleware.js";
 
@@ -63,6 +64,7 @@ app.use("/api/listings", listingRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/helpdesk", helpdeskRoutes);
 
 
 app.get("/", (req, res) => {
