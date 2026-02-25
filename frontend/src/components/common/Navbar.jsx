@@ -519,7 +519,7 @@ export default function Navbar() {
               <img
                 src={logo}
                 alt="inLIBERIA Logo"
-                className="h-10 md:h-14 lg:h-16 w-auto object-contain"
+                className="h-15 md:h-14 lg:h-18 w-auto object-contain"
               />
             </Link>
           </div>

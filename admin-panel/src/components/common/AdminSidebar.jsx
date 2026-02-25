@@ -6,7 +6,7 @@ import {
   Tag,
   ShieldCheck
 } from "lucide-react";
-
+import logo from "../../assets/inliberia-logo.png";
 export default function AdminSidebar({ sidebarOpen, toggleSidebar }) {
 
   const { pathname } = useLocation();
@@ -54,25 +54,32 @@ export default function AdminSidebar({ sidebarOpen, toggleSidebar }) {
       `}
     >
 
-      {/* Logo Header */}
-      <div className="flex items-center justify-center h-20 border-b border-gray-200 px-4">
-        <div className="flex items-center gap-2">
-          <div className="bg-[#144474] p-2 rounded-lg shadow-sm">
-            <ShieldCheck className="w-5 h-5 text-white" />
-          </div>
-          
-          {sidebarOpen && (
-            <div className="flex flex-col leading-tight">
-              <span className="text-[#144474] font-bold text-lg tracking-wide">
-                inLIBERIA
-              </span>
-              <span className="text-[10px] text-gray-400 uppercase tracking-wider">
-                Admin Panel
-              </span>
-            </div>
-          )}
-        </div>
+     <div className="flex items-center justify-center h-20 border-b border-gray-200 px-4">
+  <div className="flex items-center gap-2">
+
+    {/* LOGO */}
+    <div className="bg-[#144474] p-1 rounded-lg shadow-sm">
+      <img
+        src={logo}
+        alt="Know Liberia"
+        className="w-8 h-8 object-contain"
+      />
+    </div>
+
+    {sidebarOpen && (
+      <div className="flex flex-col leading-tight">
+        <span className="text-[#144474] font-bold text-lg tracking-wide">
+          Know LIBERIA
+        </span>
+
+        <span className="text-[10px] text-gray-400 uppercase tracking-wider">
+          Admin Panel
+        </span>
       </div>
+    )}
+
+  </div>
+</div>
 
       {/* Menu Navigation */}
       <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">

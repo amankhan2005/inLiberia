@@ -26,7 +26,7 @@ export default function AdminNavbar({ toggleSidebar }) {
           </div>
           <div className="flex flex-col leading-tight">
             <h1 className="text-white font-bold text-lg md:text-xl tracking-wide">
-              inLIBERIA
+              Know Liberia
             </h1>
             <span className="text-[10px] text-blue-200 uppercase tracking-widest hidden sm:block">
               Admin Panel

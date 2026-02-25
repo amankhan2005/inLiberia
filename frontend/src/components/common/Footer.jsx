@@ -21,7 +21,7 @@ export default function Footer() {
               <img
                 src={logo}
                 alt="inLiberia Logo"
-                className="h-12 object-contain" // Removed bg-white block for a cleaner native look, or keep bg-white if logo requires it. Assuming logo has transparency or light background.
+                className="h-18 object-contain" // Removed bg-white block for a cleaner native look, or keep bg-white if logo requires it. Assuming logo has transparency or light background.
               />
             </div>
             <p className="text-gray-500 leading-relaxed max-w-sm text-base">
