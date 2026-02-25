@@ -191,7 +191,7 @@ className="
 
 bg-white
 
-text-green-600
+text-blue-600
 
 hover:bg-gray-100
 
@@ -366,7 +366,7 @@ MANAGE
 
 font-semibold
 
-text-green-600
+text-[#144474]
 
 ">
 
@@ -386,7 +386,7 @@ className="
 
 text-gray-500
 
-hover:text-green-600
+hover:text-[#144474]
 
 transition
 
@@ -578,9 +578,9 @@ font-medium
 
 ${pathname === to
 
-? "bg-green-600 text-white shadow"
+? "bg-[#144474] text-white shadow"
 
-: "text-gray-700 hover:bg-green-50 hover:text-green-600"
+: "text-gray-700 hover:bg-[#144474]/10 hover:text-[#144474]"
 
 }
 

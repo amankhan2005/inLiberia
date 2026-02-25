@@ -11,7 +11,7 @@
 //   const linkClass = (path) =>
 //     `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
 //       pathname === path
-//         ? "bg-green-600 text-white"
+//         ? "bg-[#144474]-600 text-white"
 //         : "text-gray-700 hover:bg-gray-200"
 //     }`;
 
@@ -25,7 +25,7 @@
 
 //       <div>
 
-//         <h2 className="text-xl font-bold mb-6 text-green-600">
+//         <h2 className="text-xl font-bold mb-6 text-[#144474]-600">
 
 //           Dashboard
 
@@ -142,9 +142,9 @@ font-medium
 ${
 pathname === path
 
-? "bg-green-600 text-white shadow-md"
+? "bg-[#144474] text-white shadow-md"
 
-: "text-gray-700 hover:bg-green-50 hover:text-green-600"
+: "text-gray-700 hover:bg-[#144474]/10 hover:text-[#144474]"
 
 }
 
@@ -163,7 +163,7 @@ pathname === path
 
 ? "text-white"
 
-: "text-gray-400 group-hover:text-green-600"
+: "text-gray-400 group-hover:text-[#144474]-600"
 
 }
 
@@ -208,13 +208,13 @@ sticky top-0
 
 text-lg font-bold
 
-text-green-600
+text-[#144474]
 
 tracking-wide
 
 ">
 
-inLIBERIA
+Know Liberia
 
 </h2>
 
@@ -231,7 +231,7 @@ mt-1
 
 ">
 
-BE VERIFIED
+ 
 
 </p>
 
@@ -253,7 +253,7 @@ BE VERIFIED
 
 absolute left-0 top-0 h-full w-1
 
-bg-green-600 rounded-r
+bg-[#144474] rounded-r
 
 ${pathname === "/" ? "opacity-100" : "opacity-0"}
 
@@ -274,7 +274,7 @@ Home
 
 absolute left-0 top-0 h-full w-1
 
-bg-green-600 rounded-r
+bg-[#144474] rounded-r
 
 ${pathname === "/dashboard" ? "opacity-100" : "opacity-0"}
 
@@ -295,7 +295,7 @@ Overview
 
 absolute left-0 top-0 h-full w-1
 
-bg-green-600 rounded-r
+bg-[#144474] rounded-r
 
 ${pathname === "/dashboard/add" ? "opacity-100" : "opacity-0"}
 
@@ -316,7 +316,7 @@ Add Listing
 
 absolute left-0 top-0 h-full w-1
 
-bg-green-600 rounded-r
+bg-[#144474] rounded-r
 
 ${pathname === "/dashboard/my" ? "opacity-100" : "opacity-0"}
 
@@ -337,7 +337,7 @@ My Listings
 
 absolute left-0 top-0 h-full w-1
 
-bg-green-600 rounded-r
+bg-[#144474] rounded-r
 
 ${pathname === "/dashboard/profile" ? "opacity-100" : "opacity-0"}
 
@@ -379,13 +379,13 @@ leading-relaxed
 
 ">
 
-© inLIBERIA
+© Know Liberia
 
 <br/>
 
 <span className="tracking-widest">
 
-BE VERIFIED
+ 
 
 </span>
 
