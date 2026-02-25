@@ -12,6 +12,8 @@ import {
 
   getListingById,
 
+    getListingBySlug,
+
   getMyListings,
 
   deleteListing,
@@ -36,6 +38,8 @@ router.get("/", getListings);
 
 router.get("/locations", getLocations);
 
+// ⭐ SLUG ROUTE (IMPORTANT: BEFORE :id)
+router.get("/slug/:slug", getListingBySlug);
 
 // ================= USER =================
 

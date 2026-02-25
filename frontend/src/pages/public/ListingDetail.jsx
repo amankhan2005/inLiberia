@@ -1,183 +1,365 @@
- import { useParams } from "react-router-dom";
+//  import { useParams } from "react-router-dom";
+
+// import { useEffect, useState } from "react";
+
+// import {
+
+//   getListingById,
+
+//   getListings
+
+// } from "../../services/listingService";
+
+
+
+// import ListingGallery
+
+// from "../../components/listing/ListingGallery";
+
+
+
+// import ListingInfo
+
+// from "../../components/listing/ListingInfo";
+
+
+
+// import ContactCard
+
+// from "../../components/listing/ContactCard";
+
+
+
+// import SimilarListings
+
+// from "../../components/listing/SimilarListings";
+
+
+
+// export default function ListingDetail() {
+
+  
+
+//   const { id } = useParams();
+
+
+
+//   const [listing, setListing] = useState(null);
+
+//   const [similar, setSimilar] = useState([]);
+
+
+
+
+
+//   useEffect(() => {
+
+//     loadListing();
+
+//   }, [id]);
+
+
+
+
+
+//   // const loadListing = async () => {
+
+    
+
+//   //   try{
+
+
+//   //   const res = await getListingById(id);
+
+
+//   //   const currentListing = res.listing || res;
+
+
+//   //   setListing(currentListing);
+
+
+
+
+
+//   //   const allRes = await getListings();
+
+
+//   //   const allListings = allRes.listings || [];
+
+
+
+//   //   const filtered = allListings.filter(
+
+//   //     l =>
+
+//   //     l.category?._id === currentListing.category?._id
+
+//   //     &&
+
+//   //     l._id !== id
+
+//   //   );
+
+
+
+//   //   setSimilar(filtered.slice(0, 3));
+
+
+//   //   }
+
+
+//   //   catch(err){
+
+//   //     console.log(err);
+
+//   //   }
+
+
+
+//   // };
+
+//   const loadListing = async () => {
+
+//   try {
+
+//     // ⭐ GET SINGLE LISTING
+
+//     const res = await getListingById(id);
+
+//     const currentListing = res.listing || res;
+
+//     setListing(currentListing);
+
+
+
+//     // ⭐ GET ALL LISTINGS
+
+//     const allRes = await getListings();
+
+//     const allListings = allRes.listings || [];
+
+
+
+//     // ⭐ FILTER SIMILAR
+
+//     const filtered = allListings.filter(
+
+//       l =>
+
+//         l.category?._id === currentListing.category?._id
+
+//         &&
+
+//         l._id !== id
+
+//     );
+
+
+
+//     setSimilar(filtered.slice(0,3));
+
+//   }
+
+//   catch(err){
+
+//     console.log(err);
+
+//   }
+
+// };
+
+
+
+
+//   if (!listing)
+
+//     return (
+
+//       <div className="text-center py-20">
+
+//         Loading...
+
+//       </div>
+
+//     );
+
+
+
+
+
+//   return (
+
+//     <div className="max-w-7xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-6">
+
+      
+
+//       <div className="md:col-span-2">
+
+        
+
+//         <ListingGallery
+
+//           images={listing.images}
+
+//         />
+
+
+
+//         <ListingInfo listing={listing} />
+
+
+
+//         <SimilarListings listings={similar} />
+
+
+
+//       </div>
+
+
+
+//       <ContactCard listing={listing} />
+
+
+
+//     </div>
+
+//   );
+
+// }
+
+import { useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 
 import {
 
-  getListingById,
+  getListingBySlug,
 
   getListings
 
 } from "../../services/listingService";
 
 
+import ListingGallery from "../../components/listing/ListingGallery";
 
-import ListingGallery
+import ListingInfo from "../../components/listing/ListingInfo";
 
-from "../../components/listing/ListingGallery";
+import ContactCard from "../../components/listing/ContactCard";
 
-
-
-import ListingInfo
-
-from "../../components/listing/ListingInfo";
-
-
-
-import ContactCard
-
-from "../../components/listing/ContactCard";
-
-
-
-import SimilarListings
-
-from "../../components/listing/SimilarListings";
+import SimilarListings from "../../components/listing/SimilarListings";
 
 
 
 export default function ListingDetail() {
 
-  
-
-  const { id } = useParams();
 
 
+  // ⭐ GET SLUG FROM URL
+  const { slug } = useParams();
 
+
+
+  // ⭐ STATES
   const [listing, setListing] = useState(null);
 
   const [similar, setSimilar] = useState([]);
 
+  const [loading, setLoading] = useState(true);
 
 
 
 
+
+  // ⭐ LOAD ON PAGE OPEN
   useEffect(() => {
 
-    loadListing();
+    if (slug) {
 
-  }, [id]);
+      loadListing();
 
+    }
 
-
-
-
-  // const loadListing = async () => {
-
-    
-
-  //   try{
-
-
-  //   const res = await getListingById(id);
-
-
-  //   const currentListing = res.listing || res;
-
-
-  //   setListing(currentListing);
+  }, [slug]);
 
 
 
 
 
-  //   const allRes = await getListings();
-
-
-  //   const allListings = allRes.listings || [];
-
-
-
-  //   const filtered = allListings.filter(
-
-  //     l =>
-
-  //     l.category?._id === currentListing.category?._id
-
-  //     &&
-
-  //     l._id !== id
-
-  //   );
-
-
-
-  //   setSimilar(filtered.slice(0, 3));
-
-
-  //   }
-
-
-  //   catch(err){
-
-  //     console.log(err);
-
-  //   }
-
-
-
-  // };
-
+  // ⭐ MAIN LOAD FUNCTION
   const loadListing = async () => {
 
-  try {
+    try {
 
-    // ⭐ GET SINGLE LISTING
-
-    const res = await getListingById(id);
-
-    const currentListing = res.listing || res;
-
-    setListing(currentListing);
+      setLoading(true);
 
 
 
-    // ⭐ GET ALL LISTINGS
+      // ================= GET CURRENT LISTING BY SLUG =================
 
-    const allRes = await getListings();
-
-    const allListings = allRes.listings || [];
+      const currentListing = await getListingBySlug(slug);
 
 
 
-    // ⭐ FILTER SIMILAR
-
-    const filtered = allListings.filter(
-
-      l =>
-
-        l.category?._id === currentListing.category?._id
-
-        &&
-
-        l._id !== id
-
-    );
-
-
-
-    setSimilar(filtered.slice(0,3));
-
-  }
-
-  catch(err){
-
-    console.log(err);
-
-  }
-
-};
+      setListing(currentListing);
 
 
 
 
-  if (!listing)
+      // ================= GET ALL LISTINGS =================
+
+      const allListings = await getListings();
+
+
+
+
+      // ================= FILTER SIMILAR =================
+
+      const filtered = allListings.filter(
+
+        (item) =>
+
+          item.category?._id === currentListing.category?._id
+
+          &&
+
+          item.slug !== slug
+
+      );
+
+
+
+      setSimilar(filtered.slice(0, 3));
+
+
+
+    }
+
+    catch (error) {
+
+      console.log("Error loading listing:", error);
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+
+
+
+
+  // ⭐ LOADING STATE
+  if (loading)
 
     return (
 
-      <div className="text-center py-20">
+      <div className="text-center py-20 text-gray-500">
 
-        Loading...
+        Loading listing...
 
       </div>
 
@@ -187,15 +369,38 @@ export default function ListingDetail() {
 
 
 
+  // ⭐ NOT FOUND
+  if (!listing)
+
+    return (
+
+      <div className="text-center py-20 text-red-500">
+
+        Listing not found
+
+      </div>
+
+    );
+
+
+
+
+
+  // ⭐ MAIN UI
   return (
 
     <div className="max-w-7xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-6">
 
-      
 
-      <div className="md:col-span-2">
 
-        
+
+      {/* LEFT SIDE */}
+
+      <div className="md:col-span-2 space-y-6">
+
+
+
+        {/* IMAGE GALLERY */}
 
         <ListingGallery
 
@@ -205,11 +410,23 @@ export default function ListingDetail() {
 
 
 
-        <ListingInfo listing={listing} />
+        {/* LISTING INFO */}
+
+        <ListingInfo
+
+          listing={listing}
+
+        />
 
 
 
-        <SimilarListings listings={similar} />
+        {/* SIMILAR LISTINGS */}
+
+        <SimilarListings
+
+          listings={similar}
+
+        />
 
 
 
@@ -217,7 +434,21 @@ export default function ListingDetail() {
 
 
 
-      <ContactCard listing={listing} />
+
+
+      {/* RIGHT SIDE */}
+
+      <div>
+
+        <ContactCard
+
+          listing={listing}
+
+        />
+
+      </div>
+
+
 
 
 

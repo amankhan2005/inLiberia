@@ -5,20 +5,97 @@ import Category from "../models/Category.js";
 
 // ================= CREATE LISTING =================
 
+// export const createListing = async (req, res) => {
+
+//   try {
+
+//     const images = req.files?.map(
+
+//       file => `/uploads/listings/${file.filename}`
+
+//     ) || [];
+
+
+//     const listing = await Listing.create({
+
+//       title: req.body.title,
+
+//       location: req.body.location,
+
+//       description: req.body.description,
+
+//       category: req.body.category,
+
+//       contactEmail: req.body.contactEmail,
+
+//       contactPhone: req.body.contactPhone,
+
+//       images,
+
+//       user: req.user._id,
+
+//       status: "pending",
+
+//     });
+
+
+//     res.status(201).json(listing);
+
+//   }
+
+//   catch (error) {
+
+//     res.status(500).json({
+
+//       message: error.message,
+
+//     });
+
+//   }
+
+// };
+
+
+ 
 export const createListing = async (req, res) => {
 
   try {
 
     const images = req.files?.map(
-
       file => `/uploads/listings/${file.filename}`
-
     ) || [];
 
 
+    // ⭐ YAHAN ADD KARO (slug logic)
+    let slug = req.body.slug;
+
+    if (!slug || slug.trim() === "") {
+
+      slug = req.body.title
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]+/g, "");
+
+    }
+
+
+    // duplicate check
+    const exists = await Listing.findOne({ slug });
+
+    if (exists)
+      return res.status(400).json({
+        message: "Slug already exists"
+      });
+
+
+
+    // ⭐ YAHAN slug save karo
     const listing = await Listing.create({
 
       title: req.body.title,
+
+      slug: slug,   // ⭐ ADD THIS LINE
 
       location: req.body.location,
 
@@ -46,15 +123,12 @@ export const createListing = async (req, res) => {
   catch (error) {
 
     res.status(500).json({
-
       message: error.message,
-
     });
 
   }
 
 };
-
 
 
 
@@ -249,7 +323,38 @@ export const getListingById = async (req, res) => {
 };
 
 
+// ================= GET BY SLUG =================
 
+export const getListingBySlug = async (req, res) => {
+
+  try {
+
+    const listing = await Listing.findOne({
+      slug: req.params.slug
+    })
+    .populate("category", "name icon")
+    .populate("user", "name email");
+
+
+    if (!listing)
+      return res.status(404).json({
+        message: "Listing not found"
+      });
+
+
+    res.json(listing);
+
+  }
+
+  catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
 
 // ================= GET MY LISTINGS =================
 

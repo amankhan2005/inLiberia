@@ -49,7 +49,8 @@ export default function App() {
         <Route path="/browse" element={<BrowseListings />} />
         <Route path="/helpdesk" element={<Helpdesk />} />
 
-        <Route path="/listing/:id" element={<ListingDetail />} />
+        {/* <Route path="/listing/:id" element={<ListingDetail />} /> */}
+        <Route path="/listing/:slug" element={<ListingDetail />} />
 
      <Route path="/categories" element={<Categories />} />
 

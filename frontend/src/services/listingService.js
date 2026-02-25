@@ -15,6 +15,15 @@ export const getListings = async (params = {}) => {
 
 };
 
+// ================= GET BY SLUG =================
+
+export const getListingBySlug = async (slug) => {
+
+  const res = await api.get(`/listings/slug/${slug}`);
+
+  return res.data;
+
+};
 
 
 // ================= GET SINGLE =================
