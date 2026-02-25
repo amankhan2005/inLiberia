@@ -243,7 +243,67 @@ export const createCategory = async (req, res) => {
 
 };
 
+// ================= UPDATE CATEGORY =================
 
+export const updateCategory = async (req, res) => {
+
+  try {
+
+    const { name, icon } = req.body;
+
+    // check category exists
+    const category = await Category.findById(req.params.id);
+
+    if (!category)
+      return res.status(404).json({
+        message: "Category not found"
+      });
+
+
+    // optional: prevent duplicate name
+    if (name) {
+
+      const exists = await Category.findOne({
+        name: name.trim(),
+        _id: { $ne: req.params.id }
+      });
+
+      if (exists)
+        return res.status(400).json({
+          message: "Category name already exists"
+        });
+
+      category.name = name.trim();
+
+    }
+
+
+    // update icon if provided
+    if (icon !== undefined) {
+      category.icon = icon;
+    }
+
+
+    await category.save();
+
+
+    res.json({
+      message: "Category updated successfully",
+      category
+    });
+
+  }
+
+  catch (error) {
+
+    res.status(500).json({
+      message: "Update failed",
+      error: error.message
+    });
+
+  }
+
+};
 
 
 // ================= DELETE CATEGORY =================

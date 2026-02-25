@@ -45,7 +45,7 @@ import {
   getCategoryById,   // ⭐ ADD THIS
 
   createCategory,
-
+  updateCategory,
   deleteCategory,
 
 } from "../controllers/categoryController.js";
@@ -83,6 +83,13 @@ router.post(
 
   createCategory
 
+);
+// ⭐  
+router.put(
+  "/:id",
+  protect,
+  adminMiddleware,
+  updateCategory
 );
 
 

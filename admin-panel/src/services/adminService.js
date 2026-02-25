@@ -138,7 +138,23 @@ export const addCategory = async (data) => {
 
 };
 
+/* ============================
+   UPDATE CATEGORY
+============================ */
 
+export const updateCategory = async (id, data) => {
+
+  const res = await api.put(
+
+    `/categories/${id}`,
+
+    data
+
+  );
+
+  return res.data;
+
+};
 
 export const deleteCategory = async (id) => {
 
