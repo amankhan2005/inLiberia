@@ -298,11 +298,9 @@ export default function PremiumHero() {
                   return (
 
 
-                    <Link
-
-                      to={`/listing/${item._id}`}
-
-                      key={item._id}
+                   <Link
+  to={`/listing/${item.slug || item._id}`}
+  key={item._id}
 
                       className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors duration-150 cursor-pointer group"
 
