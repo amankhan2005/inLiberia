@@ -36,9 +36,9 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 md:p-8">
+          <div className="bg-[#144474] p-6 md:p-8">
             <h1 className="text-2xl md:text-3xl font-bold text-white">My Profile</h1>
-            <p className="text-red-100 mt-1">Manage your account settings and information</p>
+            <p className="text-blue-100 mt-1">Manage your account settings and information</p>
           </div>
           
           {/* Profile Content */}
@@ -46,8 +46,8 @@ export default function Profile() {
             <div className="flex flex-col md:flex-row gap-8">
               {/* Avatar */}
               <div className="flex flex-col items-center">
-                <div className="w-24 h-24 md:w-32 md:h-32 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                  <span className="text-3xl md:text-4xl font-bold text-red-600">
+                <div className="w-24 h-24 md:w-32 md:h-32 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                  <span className="text-3xl md:text-4xl font-bold text-blue-600">
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </span>
                 </div>

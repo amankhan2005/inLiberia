@@ -52,7 +52,7 @@ py-6 sm:py-8
 
 <p className="
 
-text-red-600
+text-green-600
 
 font-semibold
 
@@ -82,7 +82,7 @@ text-gray-900
 
 Welcome back,
 
-<span className="text-red-600">
+<span className="text-green-600">
 
 {" "} {user?.name}
 
@@ -141,7 +141,7 @@ value={count}
 
 icon={<FaList/>}
 
-color="red"
+color="green"
 
 />
 

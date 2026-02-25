@@ -42,7 +42,7 @@ export default function CategoryPage() {
 
   {/* SMALL LABEL */}
 
-  <p className="text-sm font-semibold tracking-wide text-red-600 mb-2">
+  <p className="text-sm font-semibold tracking-wide text-[#144474] mb-2">
 
     INVESTMENT OPPORTUNITIES
 
@@ -62,7 +62,7 @@ export default function CategoryPage() {
 
   {/* UNDERLINE */}
 
-  <div className="w-12 h-[3px] bg-red-600 mt-3 rounded-full"></div>
+  <div className="w-12 h-[3px] bg-[#144474] mt-3 rounded-full"></div>
 
 
 </div>

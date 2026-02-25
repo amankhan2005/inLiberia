@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-
-
 import {
 
   getListingById,
@@ -52,6 +50,8 @@ export default function ListingDetail() {
 
 
 
+
+
   useEffect(() => {
 
     loadListing();
@@ -60,35 +60,130 @@ export default function ListingDetail() {
 
 
 
-  const loadListing = async () => {
+
+
+  // const loadListing = async () => {
 
     
 
-    const data = await getListingById(id);
-
-    setListing(data);
+  //   try{
 
 
+  //   const res = await getListingById(id);
 
-    const all = await getListings();
 
-    const filtered = all.filter(
+  //   const currentListing = res.listing || res;
 
-      l => l.category === data.category && l._id !== id
+
+  //   setListing(currentListing);
+
+
+
+
+
+  //   const allRes = await getListings();
+
+
+  //   const allListings = allRes.listings || [];
+
+
+
+  //   const filtered = allListings.filter(
+
+  //     l =>
+
+  //     l.category?._id === currentListing.category?._id
+
+  //     &&
+
+  //     l._id !== id
+
+  //   );
+
+
+
+  //   setSimilar(filtered.slice(0, 3));
+
+
+  //   }
+
+
+  //   catch(err){
+
+  //     console.log(err);
+
+  //   }
+
+
+
+  // };
+
+  const loadListing = async () => {
+
+  try {
+
+    // ⭐ GET SINGLE LISTING
+
+    const res = await getListingById(id);
+
+    const currentListing = res.listing || res;
+
+    setListing(currentListing);
+
+
+
+    // ⭐ GET ALL LISTINGS
+
+    const allRes = await getListings();
+
+    const allListings = allRes.listings || [];
+
+
+
+    // ⭐ FILTER SIMILAR
+
+    const filtered = allListings.filter(
+
+      l =>
+
+        l.category?._id === currentListing.category?._id
+
+        &&
+
+        l._id !== id
 
     );
 
 
 
-    setSimilar(filtered.slice(0, 3));
+    setSimilar(filtered.slice(0,3));
+
+  }
+
+  catch(err){
+
+    console.log(err);
+
+  }
+
+};
 
 
 
-  };
+
+  if (!listing)
+
+    return (
+
+      <div className="text-center py-20">
+
+        Loading...
+
+      </div>
+
+    );
 
 
-
-  if (!listing) return null;
 
 
 

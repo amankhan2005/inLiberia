@@ -82,7 +82,7 @@ return(
 
 <header className="
 
-bg-red-600
+bg-[#144474]
 
 px-4 sm:px-6
 
@@ -191,7 +191,7 @@ className="
 
 bg-white
 
-text-red-600
+text-green-600
 
 hover:bg-gray-100
 
@@ -366,7 +366,7 @@ MANAGE
 
 font-semibold
 
-text-red-600
+text-green-600
 
 ">
 
@@ -386,7 +386,7 @@ className="
 
 text-gray-500
 
-hover:text-red-600
+hover:text-green-600
 
 transition
 
@@ -520,9 +520,9 @@ block
 
 px-4 py-3
 
-hover:bg-red-50
+hover:bg-green-50
 
-hover:text-red-600
+hover:text-green-600
 
 transition
 
@@ -578,9 +578,9 @@ font-medium
 
 ${pathname === to
 
-? "bg-red-600 text-white shadow"
+? "bg-green-600 text-white shadow"
 
-: "text-gray-700 hover:bg-red-50 hover:text-red-600"
+: "text-gray-700 hover:bg-green-50 hover:text-green-600"
 
 }
 

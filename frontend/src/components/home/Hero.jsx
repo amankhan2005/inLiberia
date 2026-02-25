@@ -1,348 +1,383 @@
  import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   MagnifyingGlassIcon,
-  BuildingOfficeIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  MapPinIcon
 } from "@heroicons/react/24/outline";
 
 import { getCategories } from "../../services/categoryService";
+import { getListings } from "../../services/listingService";
 
+export default function PremiumHero() {
 
-export default function Hero(){
+  const BACKEND_URL = "http://localhost:5000";
 
-const navigate = useNavigate();
+  const boxRef = useRef();
 
-const [categories,setCategories] = useState([]);
-const [category,setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
 
-const [open,setOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
-const dropdownRef = useRef();
+  const [suggestions, setSuggestions] = useState([]);
 
+  const [show, setShow] = useState(false);
 
-useEffect(()=>{
+  const [open, setOpen] = useState(false);
 
-getCategories().then(setCategories);
 
-},[]);
+  // LOAD CATEGORIES
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
 
 
+  // LOAD SUGGESTIONS
+  useEffect(() => {
 
-useEffect(()=>{
+    if (!category && !search) {
+      setShow(false);
+      return;
+    }
 
-function close(e){
+    const timer = setTimeout(async () => {
 
-if(dropdownRef.current && !dropdownRef.current.contains(e.target)){
+      try {
 
-setOpen(false);
+        const params = {};
 
-}
+        if (category) params.category = category;
+        if (search) params.search = search;
 
-}
+        params.limit = 8;
 
-document.addEventListener("click",close);
+        const res = await getListings(params);
 
-return ()=> document.removeEventListener("click",close);
+        setSuggestions(res || []);
 
-},[]);
+        setShow(true);
 
+      }
+      catch (err) {
 
+        console.log(err);
 
+      }
 
-const handleSearch = ()=>{
+    }, 300);
 
-const params = new URLSearchParams();
+    return () => clearTimeout(timer);
 
-if(category){
+  }, [search, category]);
 
-params.append("category",category);
 
-}
+  // CLOSE OUTSIDE
+  useEffect(() => {
 
-navigate(`/browse?${params.toString()}`);
+    const close = (e) => {
 
-};
+      if (boxRef.current && !boxRef.current.contains(e.target)) {
 
+        setShow(false);
 
+        setOpen(false);
 
-const selectedName =
-categories.find(c=>c._id===category)?.name;
+      }
 
+    };
 
+    document.addEventListener("click", close);
 
-return(
+    return () => document.removeEventListener("click", close);
 
-<section className="bg-gray-50">
+  }, []);
 
 
-<div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24 text-center">
 
+  return (
 
-{/* TAGLINE */}
+    <section className="bg-slate-50 min-h-[70vh] flex items-center justify-center py-20 px-4 relative ">
 
-<p className="text-red-600 font-semibold tracking-wide mb-4 text-sm sm:text-base">
 
-INVESTMENT PLATFORM • LIBERIA
+      {/* background */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-50 to-transparent opacity-60 pointer-events-none"></div>
 
-</p>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-t from-blue-50 to-transparent opacity-40 pointer-events-none"></div>
 
 
 
-{/* HEADING */}
+      <div className="max-w-4xl mx-auto text-center relative z-10">
 
-<h1 className="font-semibold text-gray-900 leading-tight max-w-4xl mx-auto text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
 
-Invest Smarter with
 
-<span className="block mt-2 text-red-600">
+        {/* badge */}
+        <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-[#144474] text-sm font-semibold px-5 py-2 rounded-full mb-8 tracking-wide shadow-sm">
 
-#InvestInLiberia
+          <span className="w-2 h-2 bg-[#144474] rounded-full animate-pulse"></span>
 
-</span>
+          INVESTMENT PLATFORM • LIBERIA
 
-</h1>
+        </div>
 
 
 
-{/* SUBTEXT */}
+        {/* heading */}
 
-<p className="mt-5 text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
+        <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">
 
-Discover verified hospitals, schools, restaurants,
-and businesses ready for investment across Liberia.
+          Invest Smarter with
 
-</p>
+        </h1>
 
 
 
+        <h2 className="text-4xl md:text-6xl font-extrabold text-[#144474] mt-2 tracking-tight">
 
+          #InvestInLiberia
 
-{/* SEARCH BAR */}
+        </h2>
 
-<div className="mt-10 flex justify-center">
 
 
-<div
-ref={dropdownRef}
-className="
+        {/* description */}
 
-relative
+        <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mt-6 mb-12 leading-relaxed">
 
-flex items-center
+          Discover verified hospitals, schools, restaurants, and businesses ready for investment across Liberia.
 
-w-full
-max-w-xl
+        </p>
 
-bg-white
 
-border border-gray-300
 
-rounded-full
 
-shadow-sm
+        {/* SEARCH BOX CONTAINER */}
+        {/* FIX: z-40 added */}
+        <div className="relative max-w-3xl mx-auto z-40" ref={boxRef}>
 
-hover:shadow-md
 
-transition
 
-px-2 py-2
+          {/* SEARCH BAR */}
+          <div className="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-2xl shadow-xl p-2 transition-all duration-300 hover:shadow-2xl hover:border-gray-300">
 
-"
 
->
 
+            {/* CATEGORY */}
+            <div className="relative w-full md:w-auto">
 
-{/* ICON */}
 
-<div className="pl-3 pr-2">
+              <button
 
-<BuildingOfficeIcon className="w-5 h-5 text-red-500"/>
+                onClick={() => setOpen(!open)}
 
-</div>
+                className="flex items-center justify-between w-full md:w-auto px-6 py-3 text-gray-700 font-medium bg-gray-50 hover:bg-gray-100 rounded-xl md:rounded-l-xl md:rounded-r-none transition-colors duration-200 min-w-[180px]"
 
+              >
 
+                <span className="truncate">
 
-{/* SELECT BUTTON */}
+                  {categories.find(c => c._id === category)?.name || "All Categories"}
 
-<button
-onClick={()=>setOpen(!open)}
-className="
+                </span>
 
-flex-1
 
-text-left
+                <ChevronDownIcon
 
-text-gray-800
+                  className={`w-4 h-4 ml-2 text-gray-400 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
 
-font-medium
+                />
 
-outline-none
+              </button>
 
-px-2
 
-text-sm sm:text-base
 
-"
->
 
-{selectedName || "Select investment category"}
+              {/* CATEGORY DROPDOWN */}
+              {/* FIX: z-50 */}
+              {open && (
 
-</button>
+                <div className="absolute top-full left-0 w-full md:w-auto bg-white border border-gray-100 rounded-xl mt-2 shadow-2xl z-50 py-2 max-h-64 overflow-y-auto animate-fadeIn mb-4">
 
 
+                  {categories.map(cat => (
 
+                    <div
 
-{/* SEARCH BUTTON */}
+                      key={cat._id}
 
-<button
+                      className="px-5 py-3 hover:bg-blue-50 hover:text-[#144474] cursor-pointer transition-colors duration-150 text-gray-700 text-left"
 
-onClick={handleSearch}
+                      onClick={() => {
 
-className="
+                        setCategory(cat._id);
 
-bg-red-600
-hover:bg-red-700
+                        setOpen(false);
 
-text-white
+                      }}
 
-rounded-full
+                    >
 
-w-11 h-11
+                      {cat.name}
 
-flex items-center justify-center
+                    </div>
 
-shadow
+                  ))}
 
-transition
+                </div>
 
-"
+              )}
 
->
 
-<MagnifyingGlassIcon className="w-5 h-5"/>
+            </div>
 
-</button>
 
 
 
+            {/* INPUT */}
 
+            <input
 
-{/* DROPDOWN */}
+              className="flex-1 w-full md:w-auto px-6 py-3 outline-none text-gray-800 placeholder-gray-400 text-lg bg-transparent"
 
-{open &&(
+              placeholder="Search investment opportunities..."
 
-<div className="
+              value={search}
 
-absolute
+              onChange={(e) => setSearch(e.target.value)}
 
-top-full
-mt-2
+            />
 
-w-full
 
-bg-white
 
-border border-gray-200
 
-rounded-xl
+            {/* BUTTON */}
 
-shadow-lg
+            <button className="w-full md:w-auto mt-2 md:mt-0 bg-[#144474] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#0f345a] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
 
-overflow-hidden
 
-z-50
+              <MagnifyingGlassIcon className="w-5 h-5" />
 
-text-left
+              <span>Search</span>
 
-"
 
->
+            </button>
 
 
-{categories.map(cat=>(
 
-<div
-key={cat._id}
-onClick={()=>{
-setCategory(cat._id);
-setOpen(false);
-}}
-className="
+          </div>
 
-px-5 py-3
 
-cursor-pointer
 
-hover:bg-gray-50
 
-hover:text-red-600
 
-transition
+          {/* SUGGESTIONS */}
+          {/* FIX: z-30 */}
+          {show && suggestions.length > 0 && (
 
-"
->
+            <div className="absolute top-full left-0 right-0 bg-white border border-gray-100 rounded-2xl shadow-2xl mt-3 z-30 overflow-hidden animate-fadeIn mb-4">
 
-{cat.name}
 
-</div>
+              <div className="p-2">
 
-))}
 
+                {suggestions.map(item => {
 
-</div>
 
-)}
 
+                  const imageUrl =
 
+                    item.images?.length
 
-</div>
+                      ? `${BACKEND_URL}${item.images[0]}`
 
+                      : "https://via.placeholder.com/60";
 
-</div>
 
 
+                  return (
 
 
+                    <Link
 
- 
+                      to={`/listing/${item._id}`}
 
+                      key={item._id}
 
+                      className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors duration-150 cursor-pointer group"
 
-</div>
+                    >
 
 
-</section>
 
-);
+                      <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 border">
 
-}
+                        <img
 
+                          src={imageUrl}
 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
 
+                          alt={item.title}
 
+                        />
 
-function Stat({number,label}){
+                      </div>
 
-return(
 
-<div className="flex flex-col items-center">
 
-<p className="font-semibold text-gray-900 text-lg sm:text-xl">
+                      <div className="flex flex-col justify-center text-left overflow-hidden">
 
-{number}
 
-</p>
+                        <p className="font-semibold text-gray-900 truncate">
 
-<p className="text-gray-500 text-xs sm:text-sm">
+                          {item.title}
 
-{label}
+                        </p>
 
-</p>
 
-</div>
+                        <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
 
-);
+                          <MapPinIcon className="w-4 h-4 text-[#144474]" />
+
+                          <span className="truncate">
+
+                            {item.location}
+
+                          </span>
+
+                        </div>
+
+
+                      </div>
+
+
+                    </Link>
+
+
+                  );
+
+
+                })}
+
+
+              </div>
+
+
+            </div>
+
+          )}
+
+
+
+        </div>
+
+
+      </div>
+
+
+    </section>
+
+  );
 
 }

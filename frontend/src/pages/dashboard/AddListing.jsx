@@ -452,7 +452,7 @@
 
 //                   onClick={() => removeImage(index)}
 
-//                   className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6"
+//                   className="absolute top-1 right-1 bg-green-500 text-white rounded-full w-6 h-6"
 
 //                 >
 
@@ -477,7 +477,7 @@
 
 //       <button
 
-//         className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded w-full"
+//         className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded w-full"
 
 //       >
 
@@ -614,8 +614,8 @@ export default function AddListing() {
                   name="title"
                   placeholder="Enter service title"
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  requigreen
                 />
               </div>
               
@@ -629,8 +629,8 @@ export default function AddListing() {
                   name="location"
                   placeholder="Enter location"
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  requigreen
                 />
               </div>
               
@@ -643,8 +643,8 @@ export default function AddListing() {
                   id="category"
                   name="category"
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  requigreen
                 >
                   <option value="">Select Category</option>
                   {categories.map(cat => (
@@ -666,8 +666,8 @@ export default function AddListing() {
                   type="email"
                   placeholder="Enter email address"
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  requigreen
                 />
               </div>
               
@@ -681,8 +681,8 @@ export default function AddListing() {
                   name="contactPhone"
                   placeholder="Enter phone number"
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  requigreen
                 />
               </div>
             </div>
@@ -698,8 +698,8 @@ export default function AddListing() {
                 placeholder="Describe your service..."
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                requigreen
               />
             </div>
             
@@ -740,7 +740,7 @@ export default function AddListing() {
                       <button
                         type="button"
                         onClick={() => removeImage(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 bg-green-500 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         ×
                       </button>
@@ -754,7 +754,7 @@ export default function AddListing() {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
                 Create Listing
               </button>
@@ -778,7 +778,7 @@ export default function AddListing() {
             </p>
             <button
               onClick={closeModalAndRedirect}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
             >
               Got it
             </button>
