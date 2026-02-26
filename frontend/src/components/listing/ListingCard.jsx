@@ -309,12 +309,10 @@ import formatPrice from "../../utils/formatPrice";
 
 export default function ListingCard({ listing }) {
 
-  const BACKEND_URL = "https://liberiabackendservice.onrender.com";
-
-  const imageUrl =
-    listing.images?.length
-      ? `${BACKEND_URL}${listing.images[0]}`
-      : "https://via.placeholder.com/400x300?text=No+Image";
+const imageUrl =
+  listing.images?.length
+    ? listing.images[0]
+    : "https://via.placeholder.com/400x300?text=No+Image";
 
   return (
 

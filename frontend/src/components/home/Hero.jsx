@@ -12,8 +12,7 @@ import { getListings } from "../../services/listingService";
 
 export default function PremiumHero() {
 
-  const BACKEND_URL = "http://localhost:5000";
-
+ 
   const boxRef = useRef();
 
   const [categories, setCategories] = useState([]);
@@ -285,13 +284,10 @@ export default function PremiumHero() {
 
 
 
-                  const imageUrl =
-
-                    item.images?.length
-
-                      ? `${BACKEND_URL}${item.images[0]}`
-
-                      : "https://via.placeholder.com/60";
+                const imageUrl =
+  item.images?.length
+    ? item.images[0]
+    : "https://via.placeholder.com/60";
 
 
 

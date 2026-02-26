@@ -3,70 +3,21 @@ import Category from "../models/Category.js";
 
 
 
-// ================= CREATE LISTING =================
-
-// export const createListing = async (req, res) => {
-
-//   try {
-
-//     const images = req.files?.map(
-
-//       file => `/uploads/listings/${file.filename}`
-
-//     ) || [];
-
-
-//     const listing = await Listing.create({
-
-//       title: req.body.title,
-
-//       location: req.body.location,
-
-//       description: req.body.description,
-
-//       category: req.body.category,
-
-//       contactEmail: req.body.contactEmail,
-
-//       contactPhone: req.body.contactPhone,
-
-//       images,
-
-//       user: req.user._id,
-
-//       status: "pending",
-
-//     });
-
-
-//     res.status(201).json(listing);
-
-//   }
-
-//   catch (error) {
-
-//     res.status(500).json({
-
-//       message: error.message,
-
-//     });
-
-//   }
-
-// };
-
+ 
 
  
-export const createListing = async (req, res) => {
+ export const createListing = async (req, res) => {
 
   try {
 
+    // ✅ CLOUDINARY URL SAVE
     const images = req.files?.map(
-      file => `/uploads/listings/${file.filename}`
+      file => file.path
     ) || [];
 
 
-    // ⭐ YAHAN ADD KARO (slug logic)
+
+    // ⭐ SLUG LOGIC
     let slug = req.body.slug;
 
     if (!slug || slug.trim() === "") {
@@ -80,6 +31,7 @@ export const createListing = async (req, res) => {
     }
 
 
+
     // duplicate check
     const exists = await Listing.findOne({ slug });
 
@@ -90,12 +42,12 @@ export const createListing = async (req, res) => {
 
 
 
-    // ⭐ YAHAN slug save karo
+    // CREATE LISTING
     const listing = await Listing.create({
 
       title: req.body.title,
 
-      slug: slug,   // ⭐ ADD THIS LINE
+      slug: slug,
 
       location: req.body.location,
 
@@ -107,7 +59,7 @@ export const createListing = async (req, res) => {
 
       contactPhone: req.body.contactPhone,
 
-      images,
+      images: images, // ✅ Cloudinary URLs
 
       user: req.user._id,
 
@@ -129,7 +81,6 @@ export const createListing = async (req, res) => {
   }
 
 };
-
 
 
 // ================= GET ALL LISTINGS =================

@@ -566,16 +566,15 @@ import {
 import { useState } from "react";
 
 export default function ListingInfo({ listing }) {
-  const BACKEND = "https://liberiabackendservice.onrender.com";
-  const [copied, setCopied] = useState(false);
+   const [copied, setCopied] = useState(false);
 
   if (!listing) return null;
 
   // ================= IMAGE =================
-  const imageUrl =
-    listing.images?.length
-      ? BACKEND + listing.images[0]
-      : "https://via.placeholder.com/800x500?text=No+Image";
+const imageUrl =
+  listing.images?.length
+    ? listing.images[0]
+    : "https://via.placeholder.com/800x500?text=No+Image";
 
   // ================= PUBLIC URL =================
   const publicUrl = `${window.location.origin}/listing/${listing.slug || listing._id}`;
