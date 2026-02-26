@@ -41,7 +41,33 @@ export const deleteUser = async (id) => {
   return res.data;
 
 };
+// ⭐ NEW — MAKE ADMIN
 
+export const makeAdmin = async (id) => {
+
+  const res = await api.put(
+
+    `/admin/make-admin/${id}`
+
+  );
+
+  return res.data;
+
+};
+
+// ⭐ NEW — REMOVE ADMIN
+
+export const removeAdmin = async (id) => {
+
+  const res = await api.put(
+
+    `/admin/remove-admin/${id}`
+
+  );
+
+  return res.data;
+
+};
 
 
 

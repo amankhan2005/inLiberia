@@ -1,7 +1,7 @@
  import User from "../models/User.js";
 import Listing from "../models/Listing.js";
 import Category from "../models/Category.js";
-
+import { sendListingStatusEmail } from "../utils/sendEmail.js";
 
 // ================= USERS =================
 
@@ -39,27 +39,136 @@ export const deleteUser = async (req, res) => {
     const user = await User.findById(req.params.id);
 
     if (!user)
-
       return res.status(404).json({
-
         message: "User not found",
-
       });
+
+
+    // prevent self delete
+
+    if (req.user._id.toString() === user._id.toString()) {
+
+      return res.status(400).json({
+        message: "You cannot delete yourself",
+      });
+
+    }
+
 
     await user.deleteOne();
 
     res.json({
-
       message: "User deleted",
-
     });
 
   } catch {
 
     res.status(500).json({
-
       message: "Delete failed",
+    });
 
+  }
+
+};
+
+ 
+
+// MAKE ADMIN
+
+export const makeAdmin = async (req, res) => {
+
+  try {
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+
+      return res.status(404).json({
+        message: "User not found",
+      });
+
+    }
+
+
+    // already admin check
+
+    if (user.role === "admin") {
+
+      return res.json({
+        message: "User is already admin",
+      });
+
+    }
+
+
+    user.role = "admin";
+
+    await user.save();
+
+
+    res.json({
+
+      message: "User promoted to admin successfully",
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+
+      message: "Failed to make admin",
+
+    });
+
+  }
+
+};
+
+
+
+
+
+// REMOVE ADMIN
+
+
+export const removeAdmin = async (req, res) => {
+
+  try {
+
+    const user = await User.findById(req.params.id);
+
+    if (!user)
+      return res.status(404).json({
+        message: "User not found",
+      });
+
+
+    // prevent self remove
+
+    if (req.user._id.toString() === user._id.toString()) {
+
+      return res.status(400).json({
+        message: "You cannot remove yourself",
+      });
+
+    }
+
+
+    user.role = "user";
+
+    await user.save();
+
+    res.json({
+      message: "Admin role removed",
+    });
+
+  } catch {
+
+    res.status(500).json({
+      message: "Failed",
     });
 
   }
@@ -101,40 +210,52 @@ export const getAllListings = async (req, res) => {
 
 // APPROVE LISTING
 
-export const approveListing = async (req, res) => {
+ export const approveListing = async (req, res) => {
 
   try {
 
-    const listing = await Listing.findById(
+    const listing =
+      await Listing.findById(req.params.id)
+      .populate("user", "email name");
 
-      req.params.id
-
-    );
 
     if (!listing)
-
       return res.status(404).json({
-
         message: "Listing not found",
-
       });
+
 
     listing.status = "approved";
 
     await listing.save();
 
-    res.json({
 
-      message: "Listing approved",
+    // ✅ SEND EMAIL
+
+    await sendListingStatusEmail({
+
+      ownerEmail: listing.user.email,
+      ownerName: listing.user.name,
+
+      listingTitle: listing.title,
+
+      listingId: listing._id,
+
+      status: "approved"
 
     });
 
-  } catch {
+
+    res.json({
+      message: "Listing approved",
+    });
+
+  }
+
+  catch {
 
     res.status(500).json({
-
       message: "Approve failed",
-
     });
 
   }
@@ -142,30 +263,44 @@ export const approveListing = async (req, res) => {
 };
 
 
-
 // REJECT LISTING
 
-export const rejectListing = async (req, res) => {
+ export const rejectListing = async (req, res) => {
 
   try {
 
-    const listing = await Listing.findById(
+    const listing =
+      await Listing.findById(req.params.id)
+      .populate("user", "email name");
 
-      req.params.id
-
-    );
 
     if (!listing)
-
       return res.status(404).json({
-
         message: "Listing not found",
-
       });
+
 
     listing.status = "rejected";
 
     await listing.save();
+
+
+    // ✅ SEND EMAIL
+
+    await sendListingStatusEmail({
+
+      ownerEmail: listing.user.email,
+
+      ownerName: listing.user.name,
+
+      listingTitle: listing.title,
+
+      listingId: listing._id,
+
+      status: "rejected"
+
+    });
+
 
     res.json({
 
@@ -173,7 +308,9 @@ export const rejectListing = async (req, res) => {
 
     });
 
-  } catch {
+  }
+
+  catch {
 
     res.status(500).json({
 
@@ -227,7 +364,7 @@ export const deleteListingAdmin = async (req, res) => {
 
 };
 
-
+ 
 
 // ================= DASHBOARD STATS =================
 

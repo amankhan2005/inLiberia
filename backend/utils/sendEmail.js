@@ -88,3 +88,98 @@ const sendEmail = async ({
 };
 
 export default sendEmail;
+
+// ✅ LISTING STATUS EMAIL
+
+export const sendListingStatusEmail = async ({
+
+  ownerEmail,
+  ownerName,
+  listingTitle,
+  listingId,
+  status
+
+}) => {
+
+  try {
+
+    const listingLink =
+      `${process.env.FRONTEND_URL}/listing/${listingId}`;
+
+
+    const isApproved = status === "approved";
+
+
+    const subject = isApproved
+      ? "✅ Your listing has been approved"
+      : "❌ Your listing has been rejected";
+
+
+    const html = `
+
+      <div style="font-family:Arial;padding:20px">
+
+        <h2>
+          ${
+            isApproved
+              ? "Your listing has been approved 🎉"
+              : "Your listing has been rejected"
+          }
+        </h2>
+
+        <p>Hello ${ownerName},</p>
+
+        <p>
+          Listing:
+          <strong>${listingTitle}</strong>
+        </p>
+
+        <p>
+          ${
+            isApproved
+              ? "Your listing is now live on Know Liberia."
+              : "Your listing did not meet our guidelines."
+          }
+        </p>
+
+        <a href="${listingLink}">
+          View Listing
+        </a>
+
+        <br><br>
+
+        <p>
+          Know Liberia Team
+        </p>
+
+      </div>
+
+    `;
+
+
+    await resend.emails.send({
+
+      from: process.env.EMAIL_FROM,
+
+      to: ownerEmail,
+
+      subject,
+
+      html,
+
+    });
+
+
+    console.log("📧 STATUS EMAIL SENT:", ownerEmail);
+
+  }
+
+  catch (error) {
+
+    console.error("❌ STATUS EMAIL FAILED");
+
+    console.error(error.message);
+
+  }
+
+};

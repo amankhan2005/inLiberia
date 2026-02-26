@@ -114,9 +114,15 @@ export default function AdminSidebar({ sidebarOpen, toggleSidebar }) {
               <Icon size={20} className={`flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-500 group-hover:text-[#144474]'}`} />
 
               {sidebarOpen && (
-                <span className="font-medium text-sm">
-                  {item.name}
-                </span>
+                 <span
+    className={`font-medium text-sm ${
+      isActive
+        ? "text-white"
+        : "text-gray-700 group-hover:text-[#144474]"
+    }`}
+  >
+    {item.name}
+  </span>
               )}
               
               {/* Tooltip for collapsed state */}
