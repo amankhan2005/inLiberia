@@ -435,7 +435,7 @@ export default function HelpDesk() {
 
             <div className="bg-[#144474] rounded-xl p-6 text-white">
               <h3 className="font-semibold text-lg mb-2">Need immediate help?</h3>
-              <p className="text-green-100 text-sm mb-4">Call our support team for urgent issues</p>
+              <p className="text-green-100 text-sm mb-4">Email our support team for urgent issues</p>
        <div className="flex items-center">
 
   {/* MAIL ICON */}
