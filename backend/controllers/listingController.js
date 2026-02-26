@@ -1,4 +1,4 @@
- import Listing from "../models/Listing.js";
+  import Listing from "../models/Listing.js";
 import Category from "../models/Category.js";
 
 
