@@ -121,7 +121,7 @@ await sendEmail({
 
 ownerEmail: email,
 
-visitorName: "inLiberia Support",
+visitorName: "Know Liberia Support",
 
 visitorEmail: "info@knowliberia.com",
 
