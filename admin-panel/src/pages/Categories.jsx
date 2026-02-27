@@ -1,6 +1,5 @@
  import { useState, useEffect } from "react";
 import CategoryTable from "../components/categories/CategoryTable";
-
 import {
   getCategories,
   addCategory,
@@ -8,29 +7,45 @@ import {
   updateCategory
 } from "../services/adminService";
 
-export default function Categories() {
+// --- Icons ---
+const FolderIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+  </svg>
+);
 
+const PlusIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
+export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [form, setForm] = useState({
-    name: "",
-    icon: ""
-  });
-
+  const [form, setForm] = useState({ name: "", icon: null });
+  const [preview, setPreview] = useState(null);
   const [editing, setEditing] = useState(null);
+  const [editPreview, setEditPreview] = useState(null);
   const [updating, setUpdating] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  /* ================= LOAD ================= */
+  // ================= LOAD =================
   const loadCategories = async () => {
     try {
+      setLoading(true);
       const data = await getCategories();
-      setCategories(data);
-    }
-    catch (err) {
+      setCategories(Array.isArray(data) ? data : []);
+    } catch (err) {
       console.error(err);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -39,274 +54,299 @@ export default function Categories() {
     loadCategories();
   }, []);
 
-  /* ================= ADD ================= */
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+  // ================= ADD FILE CHANGE =================
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setForm({ ...form, icon: file });
+    setPreview(URL.createObjectURL(file));
   };
 
+  // ================= EDIT FILE CHANGE =================
+  const handleEditFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setEditing({ ...editing, icon: file });
+    setEditPreview(URL.createObjectURL(file));
+  };
+
+  // ================= ADD CATEGORY =================
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name.trim()) return;
 
-    const newCategory = await addCategory(form);
+    setSubmitting(true);
+    
+    const formData = new FormData();
+    formData.append("name", form.name);
+    if (form.icon) {
+      formData.append("icon", form.icon);
+    }
 
-    // instant UI update (no reload)
-    setCategories([newCategory, ...categories]);
-
-    setForm({
-      name: "",
-      icon: ""
-    });
+    try {
+      const newCategory = await addCategory(formData);
+      if (newCategory && newCategory._id) {
+        setCategories((prev) => [newCategory, ...prev]);
+      }
+      setForm({ name: "", icon: null });
+      setPreview(null);
+    } catch (err) {
+      console.error("Failed to add category", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  /* ================= DELETE ================= */
+  // ================= DELETE =================
   const handleDelete = async (id) => {
-    await deleteCategory(id);
-    setCategories(
-      categories.filter(c => c._id !== id)
-    );
+    try {
+      await deleteCategory(id);
+      setCategories((prev) => prev.filter((c) => c._id !== id));
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
   };
 
-  /* ================= UPDATE ================= */
+  // ================= UPDATE =================
   const handleUpdate = async () => {
     if (!editing.name.trim()) return;
     setUpdating(true);
+    
+    const formData = new FormData();
+    formData.append("name", editing.name);
+    if (editing.icon instanceof File) {
+      formData.append("icon", editing.icon);
+    }
 
-    const updated = await updateCategory(
-      editing._id,
-      editing
-    );
-
-    setCategories(
-      categories.map(cat =>
-        cat._id === editing._id
-          ? updated.category || updated
-          : cat
-      )
-    );
-
-    setUpdating(false);
-    setEditing(null);
+    try {
+      const updatedCategory = await updateCategory(editing._id, formData);
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat._id === updatedCategory._id ? updatedCategory : cat
+        )
+      );
+      setEditing(null);
+      setEditPreview(null);
+    } catch (err) {
+      console.error("Failed to update", err);
+    } finally {
+      setUpdating(false);
+    }
   };
 
-  // Professional Loading Skeleton
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 p-6 md:p-8">
-        <div className="animate-pulse">
-          {/* Hero Skeleton */}
-          <div className="h-40 bg-slate-200 rounded-3xl mb-8"></div>
-          {/* Form Skeleton */}
-          <div className="h-24 bg-white rounded-2xl mb-6 shadow-sm"></div>
-          {/* Table Skeleton */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <div className="space-y-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-12 bg-slate-100 rounded w-full"></div>
-              ))}
-            </div>
-          </div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-[#144474] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-500 font-medium animate-pulse">Loading Categories...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-gray-800">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
       
       {/* Header Section */}
-      <div className="relative bg-gradient-to-r from-[#144474] to-[#0f345a] text-white overflow-hidden">
-        {/* Abstract Pattern Overlay */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl pointer-events-none"></div>
-        </div>
-
-        <div className="relative p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                Categories
-              </h1>
-              <p className="text-blue-100 mt-1 text-sm md:text-base max-w-2xl">
-                Organize and manage property classifications for better searchability.
-              </p>
-            </div>
-
-            {/* Count Badge */}
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-xl border border-white/20 shadow-lg">
-              <span className="text-xs font-semibold uppercase tracking-wider text-blue-100">Total</span>
-              <span className="bg-white text-[#144474] text-lg font-bold px-3 py-1 rounded-lg shadow-sm">
-                {categories.length}
-              </span>
-            </div>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="bg-[#144474] p-2 rounded-lg text-white">
+            <FolderIcon />
           </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Categories Management</h1>
         </div>
+        <p className="text-gray-500 ml-14">Organize and manage your property categories.</p>
       </div>
 
-      {/* Main Content Area */}
-      <div className="p-6 md:p-8 pt-0 -mt-4 space-y-6">
-        
-        {/* Add Form Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-          
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-[#144474] rounded-full"></span>
-            Add New Category
-          </h3>
+      {/* ================= ADD FORM CARD ================= */}
+      <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 mb-8 transition-all hover:shadow-md">
+        <h2 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <PlusIcon /> Create New Category
+        </h2>
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-4 relative z-10"
-          >
-            <div className="flex-grow">
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Category Name (e.g., Residences)"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#144474]/20 focus:border-[#144474] transition-all text-gray-800"
-              />
-            </div>
-
-            <div className="sm:w-32">
-              <input
-                name="icon"
-                value={form.icon}
-                onChange={handleChange}
-                placeholder="🏠"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-center text-xl focus:ring-2 focus:ring-[#144474]/20 focus:border-[#144474] transition-all"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="bg-[#144474] hover:bg-[#0f345a] text-white px-8 py-3 rounded-xl font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-              Add
-            </button>
-          </form>
-        </div>
-
-        {/* Table Card Container */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-          
-          {/* Card Header */}
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-            <h3 className="text-lg font-bold text-gray-800">Existing Categories</h3>
-            <span className="text-xs text-gray-500 font-medium">Manage icons and names</span>
-          </div>
-
-          {/* Table Area */}
-          <div className="overflow-x-auto">
-            <CategoryTable
-              categories={categories}
-              onDelete={handleDelete}
-              onEdit={setEditing}
-            />
-          </div>
-        </div>
-
-      </div>
-
-      {/* ================= PREMIUM EDIT MODAL ================= */}
-      {editing && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 transition-opacity duration-300">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-95 animate-fadeIn">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
             
-            {/* Modal Header */}
-            <div className="bg-[#144474] px-6 py-4 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-white">Edit Category</h3>
-              <button 
-                onClick={() => setEditing(null)}
-                className="text-white/70 hover:text-white transition p-1 hover:bg-white/10 rounded-full"
+            {/* Name Input */}
+            <div className="md:col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="e.g. Residential"
+                className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#144474] focus:border-[#144474] transition-all bg-gray-50 focus:bg-white"
+                required
+              />
+            </div>
+
+            {/* File Input */}
+            <div className="md:col-span-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Upload Icon</label>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                />
+                <div className="border border-dashed border-gray-300 px-4 py-3 rounded-xl text-gray-500 bg-gray-50 hover:bg-gray-100 hover:border-[#144474] transition-colors text-center cursor-pointer truncate">
+                  {form.icon ? form.icon.name : "Choose Image..."}
+                </div>
+              </div>
+            </div>
+
+            {/* Preview & Button */}
+            <div className="md:col-span-1 flex items-center gap-4">
+              {preview && (
+                <div className="relative group">
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-12 h-12 object-cover rounded-xl border-2 border-white shadow-md"
+                  />
+                  <div className="absolute inset-0 bg-black/40 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                     <span className="text-white text-xs">New</span>
+                  </div>
+                </div>
+              )}
+              
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{ backgroundColor: '#144474' }}
+                className="flex-1 flex items-center justify-center gap-2 text-white font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition-all disabled:opacity-50 shadow-md"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                {submitting ? (
+                   <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                   </svg>
+                ) : (
+                  <PlusIcon />
+                )}
+                <span>{submitting ? "Adding..." : "Add Category"}</span>
               </button>
             </div>
+          </div>
+        </form>
+      </div>
 
-            {/* Modal Body */}
-            <div className="p-6">
-              {/* Icon Preview */}
-              <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 flex items-center justify-center text-4xl border-2 border-gray-100 rounded-2xl bg-blue-50 shadow-inner">
-                  {editing.icon || "🏷️"}
+      {/* ================= TABLE CONTAINER ================= */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Table Header */}
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+           <h2 className="font-bold text-gray-800">Existing Categories</h2>
+           <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">
+             {categories.length} items
+           </span>
+        </div>
+
+        <CategoryTable
+          categories={categories}
+          onDelete={handleDelete}
+          onEdit={(cat) => {
+            setEditing(cat);
+            setEditPreview(cat.icon);
+          }}
+        />
+      </div>
+
+      {/* ================= EDIT MODAL ================= */}
+      {editing && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-8 rounded-3xl w-full max-w-md shadow-2xl relative animate-fade-in">
+            
+            {/* Close Button */}
+            <button 
+              onClick={() => setEditing(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors p-1 hover:bg-gray-100 rounded-full"
+            >
+              <CloseIcon />
+            </button>
+
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Edit Category</h2>
+              <p className="text-gray-500 text-sm mt-1">Update the details below.</p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Edit Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                  value={editing.name}
+                  onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+                  className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#144474] focus:border-[#144474] transition-all"
+                />
+              </div>
+
+              {/* Edit File */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Change Icon</label>
+                <div className="relative border border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleEditFileChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
+                  <div className="flex items-center justify-center gap-3 text-gray-500 text-sm pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>Click to replace image</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Name Input */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Category Name
-                </label>
-                <input
-                  value={editing.name}
-                  onChange={(e) =>
-                    setEditing({
-                      ...editing,
-                      name: e.target.value
-                    })
-                  }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#144474]/20 focus:border-[#144474] transition-all text-gray-800"
-                />
-              </div>
+              {/* Preview Image */}
+              {editPreview && (
+                <div className="flex justify-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                  <img
+                    src={editPreview}
+                    alt="Preview"
+                    className="w-20 h-20 object-cover rounded-xl shadow-md border-2 border-white"
+                  />
+                </div>
+              )}
+            </div>
 
-              {/* Icon Input */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Icon (Emoji)
-                </label>
-                <input
-                  value={editing.icon}
-                  onChange={(e) =>
-                    setEditing({
-                      ...editing,
-                      icon: e.target.value
-                    })
-                  }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-center text-2xl focus:ring-2 focus:ring-[#144474]/20 focus:border-[#144474] transition-all"
-                />
-              </div>
-
-              {/* Buttons */}
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setEditing(null)}
-                  className="px-5 py-2.5 border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  onClick={handleUpdate}
-                  disabled={updating}
-                  className="px-6 py-2.5 bg-[#144474] text-white rounded-xl font-semibold hover:bg-[#0f345a] transition disabled:bg-gray-400 shadow-lg flex items-center gap-2"
-                >
-                  {updating ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Updating
-                    </>
-                  ) : "Save Changes"}
-                </button>
-              </div>
+            <div className="flex gap-3 mt-8">
+              <button
+                onClick={() => setEditing(null)}
+                className="flex-1 bg-gray-100 text-gray-700 font-semibold p-3 rounded-xl hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                disabled={updating}
+                style={{ backgroundColor: '#144474' }}
+                className="flex-1 text-white font-semibold p-3 rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+              >
+                {updating ? (
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                ) : null}
+                <span>{updating ? "Saving..." : "Save Changes"}</span>
+              </button>
             </div>
           </div>
         </div>
       )}
 
+      <style>{`
+        @keyframes fade-in {
+          0% { opacity: 0; transform: scale(0.95); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }

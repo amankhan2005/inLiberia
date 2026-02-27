@@ -138,57 +138,81 @@ export const deleteListing = async (id) => {
 
 export const getCategories = async () => {
 
-  const res = await api.get(
-
-    "/categories"
-
-  );
+  const res = await api.get("/categories");
 
   return res.data;
 
 };
 
 
+
+ /* ============================
+   ADD CATEGORY
+============================ */
 
 export const addCategory = async (data) => {
 
-  const res = await api.post(
+const res = await api.post(
 
-    "/categories",
+"/categories",
 
-    data
+data,
 
-  );
+{
 
-  return res.data;
+headers: {
+
+"Content-Type": "multipart/form-data"
+
+}
+
+}
+
+);
+
+return res.data;
 
 };
 
+
 /* ============================
-   UPDATE CATEGORY
+   UPDATE CATEGORY FIXED
 ============================ */
 
 export const updateCategory = async (id, data) => {
 
-  const res = await api.put(
+const res = await api.put(
 
-    `/categories/${id}`,
+`/categories/${id}`,
 
-    data
+data,
 
-  );
+{
 
-  return res.data;
+headers: {
+
+"Content-Type": "multipart/form-data"
+
+}
+
+}
+
+);
+
+return res.data;
 
 };
 
+
+
+
+/* ============================
+   DELETE CATEGORY
+============================ */
+
 export const deleteCategory = async (id) => {
 
-  const res = await api.delete(
-
-    `/categories/${id}`
-
-  );
+  const res = await api.delete(`/categories/${id}`);
 
   return res.data;
 

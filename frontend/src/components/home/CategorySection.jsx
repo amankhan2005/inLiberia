@@ -11,15 +11,16 @@ export default function CategorySection() {
     getCategories().then(setCategories);
   }, []);
 
-  // show only 4
   const visibleCategories = categories.slice(0, 4);
 
   return (
+
     <section className="bg-slate-50 pt-20 pb-24">
 
       <Container>
 
         {/* HEADER */}
+
         <div className="text-center mb-16">
 
           <span className="inline-block px-4 py-1.5 bg-blue-100 text-[#144474] rounded-full text-sm font-bold tracking-wide mb-4">
@@ -37,8 +38,8 @@ export default function CategorySection() {
         </div>
 
 
-
         {/* CATEGORY GRID */}
+
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
 
           {visibleCategories.map((cat) => (
@@ -46,32 +47,58 @@ export default function CategorySection() {
             <Link
               key={cat._id}
               to={`/browse?category=${cat._id}`}
-              className="group relative bg-[#144474] rounded-2xl p-6 pt-10 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out hover:-translate-y-1"
+              className="group relative bg-[#144474] rounded-2xl p-6 pt-10 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
 
-              <div className="w-20 h-20 bg-white/10 group-hover:bg-white/20 rounded-2xl flex items-center justify-center mb-5 transition-colors duration-300">
+              {/* ICON CONTAINER */}
 
-                <span className="text-4xl transform group-hover:scale-110 transition-transform duration-300">
-                  {cat.icon || "🏢"}
-                </span>
+              <div className="w-20 h-20 bg-white/10 group-hover:bg-white/20 rounded-2xl flex items-center justify-center mb-5 transition">
+
+                {cat.icon ? (
+
+                  <img
+                    src={cat.icon}
+                    alt={cat.name}
+                    className="w-15 h-15 object-contain transform group-hover:scale-110 transition"
+                  />
+
+                ) : (
+
+                  <span className="text-4xl">
+                    🏢
+                  </span>
+
+                )}
 
               </div>
 
 
+              {/* NAME */}
 
               <h3 className="font-bold text-lg text-white text-center">
                 {cat.name}
               </h3>
 
 
+              {/* CTA */}
 
               <div className="flex items-center gap-2 mt-2 text-sm font-medium text-blue-100 group-hover:text-white">
 
                 <span>Invest Now</span>
 
-                <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg
+                  className="w-4 h-4 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
 
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
 
                 </svg>
 
@@ -84,24 +111,18 @@ export default function CategorySection() {
         </div>
 
 
+        {/* BUTTON */}
 
-        {/* EXPLORE MORE BUTTON */}
         {categories.length > 4 && (
 
           <div className="text-center mt-12">
 
             <Link
               to="/browse"
-              className="inline-flex items-center gap-2 bg-[#144474] text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:bg-[#0f345a] hover:shadow-xl transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#144474] text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:bg-[#0f345a] transition"
             >
 
               Explore More Categories
-
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-
-              </svg>
 
             </Link>
 
@@ -109,11 +130,10 @@ export default function CategorySection() {
 
         )}
 
-
-
       </Container>
 
     </section>
+
   );
 
 }

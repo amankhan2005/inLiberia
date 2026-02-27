@@ -1,115 +1,4 @@
-// import Category from "../models/Category.js";
-
-
-// // GET ALL CATEGORIES (Public)
-
-// export const getCategories = async (req, res) => {
-
-//   try {
-
-//     const categories = await Category.find().sort({
-
-//       createdAt: -1,
-
-//     });
-
-//     res.json(categories);
-
-//   } catch {
-
-//     res.status(500).json({
-
-//       message: "Failed to fetch categories",
-
-//     });
-
-//   }
-
-// };
-
-
-
-// // CREATE CATEGORY (Admin)
-
-// export const createCategory = async (req, res) => {
-
-//   try {
-
-//     const { name, icon } = req.body;
-
-//     const exists = await Category.findOne({ name });
-
-//     if (exists)
-
-//       return res.status(400).json({
-
-//         message: "Category already exists",
-
-//       });
-
-//     const category = await Category.create({
-
-//       name,
-
-//       icon,
-
-//     });
-
-//     res.status(201).json(category);
-
-//   } catch {
-
-//     res.status(500).json({
-
-//       message: "Failed to create category",
-
-//     });
-
-//   }
-
-// };
-
-
-
-// // DELETE CATEGORY (Admin)
-
-// export const deleteCategory = async (req, res) => {
-
-//   try {
-
-//     const category = await Category.findById(
-
-//       req.params.id
-
-//     );
-
-//     if (!category)
-
-//       return res.status(404).json({
-
-//         message: "Category not found",
-
-//       });
-
-//     await category.deleteOne();
-
-//     res.json({
-
-//       message: "Category deleted",
-
-//     });
-
-//   } catch {
-
-//     res.status(500).json({
-
-//       message: "Delete failed",
-
-//     });
-
-//   }
-
-// };
+ 
 
 
 import Category from "../models/Category.js";
@@ -184,124 +73,101 @@ export const getCategoryById = async (req, res) => {
 
 // ================= CREATE CATEGORY =================
 
-export const createCategory = async (req, res) => {
+ export const createCategory = async (req, res) => {
 
-  try {
+try {
 
-    const { name, icon } = req.body;
+const { name } = req.body;
 
+if (!name)
+return res.status(400).json({
+message: "Category name required"
+});
 
-    if (!name)
+const exists = await Category.findOne({
+name: name.trim()
+});
 
-      return res.status(400).json({
+if (exists)
+return res.status(400).json({
+message: "Category already exists"
+});
 
-        message: "Category name required"
+const iconUrl = req.file?.path || "";
 
-      });
+const category = await Category.create({
 
+name: name.trim(),
 
-    const exists = await Category.findOne({
+icon: iconUrl
 
-      name: name.trim()
-
-    });
-
-
-    if (exists)
-
-      return res.status(400).json({
-
-        message: "Category already exists"
-
-      });
-
-
-    const category = await Category.create({
-
-      name: name.trim(),
-
-      icon
-
-    });
+});
 
 
-    res.status(201).json(category);
+// ⭐ SEND FULL OBJECT
 
-  }
+res.status(201).json(category);
 
-  catch (error) {
+}
 
-    res.status(500).json({
+catch (error) {
 
-      message: "Failed to create category",
+res.status(500).json({
 
-      error: error.message
+message: "Failed to create category",
 
-    });
+error: error.message
 
-  }
+});
+
+}
 
 };
-
 // ================= UPDATE CATEGORY =================
 
 export const updateCategory = async (req, res) => {
 
-  try {
+try {
 
-    const { name, icon } = req.body;
+const category =
+await Category.findById(req.params.id);
 
-    // check category exists
-    const category = await Category.findById(req.params.id);
-
-    if (!category)
-      return res.status(404).json({
-        message: "Category not found"
-      });
+if (!category)
+return res.status(404).json({
+message: "Category not found"
+});
 
 
-    // optional: prevent duplicate name
-    if (name) {
-
-      const exists = await Category.findOne({
-        name: name.trim(),
-        _id: { $ne: req.params.id }
-      });
-
-      if (exists)
-        return res.status(400).json({
-          message: "Category name already exists"
-        });
-
-      category.name = name.trim();
-
-    }
+if (req.body.name)
+category.name =
+req.body.name.trim();
 
 
-    // update icon if provided
-    if (icon !== undefined) {
-      category.icon = icon;
-    }
+if (req.file)
+category.icon =
+req.file.path;
 
 
-    await category.save();
+await category.save();
 
 
-    res.json({
-      message: "Category updated successfully",
-      category
-    });
+// ✅ FIX
 
-  }
+res.json(category);
 
-  catch (error) {
+}
 
-    res.status(500).json({
-      message: "Update failed",
-      error: error.message
-    });
+catch (error) {
 
-  }
+res.status(500).json({
+
+message: "Update failed",
+
+error: error.message
+
+});
+
+}
 
 };
 

@@ -167,13 +167,25 @@ export default function Categories() {
       className="group relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:border-[#144474] hover:-translate-y-1 transition-all duration-300 flex flex-col h-full"
     >
       {/* Icon Container */}
-      <div className="mb-5 flex items-center justify-center w-14 h-14 bg-slate-50 rounded-xl text-[#144474] group-hover:bg-[#144474] group-hover:text-white transition-colors duration-300">
-        {cat.icon ? (
-          <span className="text-3xl">{cat.icon}</span>
-        ) : (
-          <Squares2X2Icon className="w-7 h-7" />
-        )}
-      </div>
+   <div className="mb-5 flex items-center justify-center w-14 h-14 bg-slate-50 rounded-xl overflow-hidden group-hover:bg-[#144474] transition-colors duration-300">
+
+  {cat.icon ? (
+
+    <img
+      src={cat.icon}
+      alt={cat.name}
+      className="w-15 h-15 object-contain group-hover:scale-110 transition"
+    />
+
+  ) : (
+
+    <span className="text-2xl text-[#144474] group-hover:text-white">
+      🏢
+    </span>
+
+  )}
+
+</div>
 
       {/* Content */}
       <h3 className="font-semibold text-lg text-slate-800 mb-1">
