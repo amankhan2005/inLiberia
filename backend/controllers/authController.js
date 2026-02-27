@@ -121,7 +121,7 @@
 // };
 
 
- import User from "../models/User.js";
+  import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import crypto from "crypto";
 import { sendVerificationEmail } from "../utils/sendEmail.js";
@@ -141,22 +141,67 @@ try {
 
 const { name, email, password } = req.body;
 
-const userExists = await User.findOne({ email });
 
-if (userExists) {
+// check existing user
 
-return res.status(400).json({
-message: "User already exists",
+let user = await User.findOne({ email });
+
+if (user) {
+
+
+// ⭐ IF EXISTS BUT NOT VERIFIED → RESEND TOKEN
+
+if (!user.isVerified) {
+
+const verificationToken =
+crypto.randomBytes(32).toString("hex");
+
+user.verificationToken = verificationToken;
+
+await user.save();
+
+await sendVerificationEmail({
+
+userEmail: user.email,
+userName: user.name,
+token: verificationToken,
+
+});
+
+return res.status(200).json({
+
+_id: user._id,
+name: user.name,
+email: user.email,
+role: user.role,
+isVerified: user.isVerified,
+token: generateToken(user._id),
+
+message:
+"Account exists. Verification email resent."
+
 });
 
 }
 
 
+// already verified
+
+return res.status(400).json({
+message: "User already exists"
+});
+
+}
+
+
+
+// create new user
+
 const verificationToken =
 crypto.randomBytes(32).toString("hex");
 
 
-const user = await User.create({
+user = await User.create({
 
 name,
 email,
@@ -167,6 +212,8 @@ isVerified: false,
 });
 
 
+// send email
+
 await sendVerificationEmail({
 
 userEmail: user.email,
@@ -176,9 +223,9 @@ token: verificationToken,
 });
 
 
-// AUTO LOGIN RESPONSE
+// auto login
 
-res.status(201).json({
+return res.status(201).json({
 
 _id: user._id,
 name: user.name,
@@ -199,7 +246,9 @@ catch (error) {
 console.log(error);
 
 res.status(500).json({
-message: "Signup failed",
+
+message: "Signup failed"
+
 });
 
 }
@@ -213,7 +262,6 @@ message: "Signup failed",
 /*
 ========================================
 LOGIN
-ALLOW VERIFIED + UNVERIFIED
 ========================================
 */
 
@@ -223,25 +271,29 @@ try {
 
 const { email, password } = req.body;
 
-const user = await User.findOne({ email });
+const user =
+await User.findOne({ email });
 
-if (!user || !(await user.matchPassword(password))) {
+if (!user ||
+!(await user.matchPassword(password))) {
 
 return res.status(401).json({
-message: "Invalid email or password",
+
+message: "Invalid email or password"
+
 });
 
 }
 
 
-res.json({
+return res.json({
 
 _id: user._id,
 name: user.name,
 email: user.email,
 role: user.role,
 isVerified: user.isVerified,
-token: generateToken(user._id),
+token: generateToken(user._id)
 
 });
 
@@ -252,12 +304,15 @@ catch (error) {
 console.log(error);
 
 res.status(500).json({
-message: "Login failed",
+
+message: "Login failed"
+
 });
 
 }
 
 };
+
 
 
 
@@ -266,112 +321,92 @@ message: "Login failed",
 /*
 ========================================
 VERIFY EMAIL
-AUTO LOGIN ENABLED
+FIXED FINAL VERSION
 ========================================
 */
 
- export const verifyEmail = async (req, res) => {
+export const verifyEmail = async (req, res) => {
 
 try {
 
-const token = req.params.token;
+const token =
+req.params.token;
 
 
-// find user with token OR already verified user with same email token history
+// find user
 
-const user = await User.findOne({
+const user =
+await User.findOne({
 verificationToken: token
 });
 
 
-// ❌ TOKEN INVALID
+// ❌ invalid token
 
 if (!user) {
 
 return res.status(400).json({
 
-success: false,
-message: "Verification link invalid or expired"
+success:false,
+
+message:
+"This verification link is invalid or already used"
 
 });
 
 }
 
 
-// ⭐ IF ALREADY VERIFIED
-
-if (user.isVerified) {
-
-return res.status(200).json({
-
-success: true,
-
-user: {
-
-_id: user._id,
-name: user.name,
-email: user.email,
-role: user.role,
-isVerified: true
-
-},
-
-token: generateToken(user._id),
-
-message: "Already verified"
-
-});
-
-}
-
-
-// ⭐ VERIFY USER
+// ⭐ verify
 
 user.isVerified = true;
 
-user.verificationToken = null;
+user.verificationToken = undefined;
 
 await user.save();
 
 
-// ⭐ RETURN LOGIN DATA
+// ⭐ return login
 
 return res.status(200).json({
 
-success: true,
+success:true,
 
-user: {
-
-_id: user._id,
-name: user.name,
-email: user.email,
-role: user.role,
-isVerified: true
-
+user:{
+_id:user._id,
+name:user.name,
+email:user.email,
+role:user.role,
+isVerified:true
 },
 
-token: generateToken(user._id),
+token:
+generateToken(user._id),
 
-message: "Email verified successfully"
+message:
+"Email verified successfully"
 
 });
 
 }
 
-catch (error) {
+catch(error){
 
 console.log(error);
 
 return res.status(500).json({
 
-success: false,
-message: "Verification failed"
+success:false,
+
+message:"Verification failed"
 
 });
 
 }
 
 };
+
+
 
 
 
@@ -382,16 +417,20 @@ RESEND VERIFICATION
 ========================================
 */
 
-export const resendVerification = async (req, res) => {
+export const resendVerification =
+async (req, res) => {
 
 try {
 
-const user = await User.findById(req.user._id);
+const user =
+await User.findById(req.user._id);
 
 if (!user) {
 
 return res.status(404).json({
-message: "User not found"
+
+message:"User not found"
+
 });
 
 }
@@ -400,44 +439,55 @@ message: "User not found"
 if (user.isVerified) {
 
 return res.status(400).json({
-message: "Already verified"
+
+message:"Already verified"
+
 });
 
 }
 
+
+// generate new token
 
 const verificationToken =
 crypto.randomBytes(32).toString("hex");
 
 
-user.verificationToken = verificationToken;
+user.verificationToken =
+verificationToken;
 
 await user.save();
 
 
+// send email
+
 await sendVerificationEmail({
 
-userEmail: user.email,
-userName: user.name,
-token: verificationToken,
+userEmail:user.email,
+userName:user.name,
+token:verificationToken
 
 });
 
 
-res.json({
+return res.json({
 
-message: "Verification email sent"
+message:
+"Verification email sent"
 
 });
 
 }
 
-catch (error) {
+catch(error){
 
 console.log(error);
 
 res.status(500).json({
-message: "Failed to send email"
+
+message:
+"Failed to send email"
+
 });
 
 }
@@ -455,9 +505,10 @@ GET CURRENT USER
 ========================================
 */
 
-export const getMe = async (req, res) => {
+export const getMe =
+async (req,res)=>{
 
-try {
+try{
 
 const user =
 await User.findById(req.user._id)
@@ -466,22 +517,24 @@ await User.findById(req.user._id)
 
 res.json({
 
-_id: user._id,
-name: user.name,
-email: user.email,
-role: user.role,
-isVerified: user.isVerified,
+_id:user._id,
+name:user.name,
+email:user.email,
+role:user.role,
+isVerified:user.isVerified
 
 });
 
 }
 
-catch (error) {
+catch(error){
 
 console.log(error);
 
 res.status(500).json({
-message: "Failed"
+
+message:"Failed"
+
 });
 
 }
