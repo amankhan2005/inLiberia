@@ -49,20 +49,30 @@ export default function Footer() {
               <li className="flex items-center gap-2 group">
                 <FaChevronRight className="text-[#144474] text-xs transition-transform duration-300 group-hover:translate-x-1" />
                 <a
-                  href="/categories/Residence"
+                  href="/about-us"
                   className="hover:text-white transition-colors duration-300"
                 >
-                  Residence
+                  About
                 </a>
               </li>
 
               <li className="flex items-center gap-2 group">
                 <FaChevronRight className="text-[#144474] text-xs transition-transform duration-300 group-hover:translate-x-1" />
                 <a
-                  href="/categories/Business"
+                  href="/categories"
                   className="hover:text-white transition-colors duration-300"
                 >
-                  Business
+                  Categories
+                </a>
+              </li>
+              
+               <li className="flex items-center gap-2 group">
+                <FaChevronRight className="text-[#144474] text-xs transition-transform duration-300 group-hover:translate-x-1" />
+                <a
+                  href="/helpdesk"
+                  className="hover:text-white transition-colors duration-300"
+                >
+                  Support Team
                 </a>
               </li>
 

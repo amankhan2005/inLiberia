@@ -1,5 +1,7 @@
  import { Routes, Route } from "react-router-dom";
 
+import RouteScrollTop from "./components/RouteScrollTop";
+
 
 // Layouts
 import MainLayout from "./layouts/MainLayout";
@@ -10,12 +12,11 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import Home from "./pages/public/Home";
 import BrowseListings from "./pages/public/BrowseListings";
 import ListingDetail from "./pages/public/ListingDetail";
-import Categories from "./pages/public/Categories";
-import Helpdesk from  "./pages/HelpDesk"
+import Categories from "./pages/public/categories";
+import Helpdesk from "./pages/HelpDesk"
 import AboutPage from "./pages/About"
-
 import CategoryPage from "./pages/public/CategoryPage";
- import SearchResult from "./pages/public/SearchResult";
+import SearchResult from "./pages/public/SearchResult";
 import NotFound from "./pages/public/NotFound";
 
 
@@ -33,75 +34,78 @@ import Profile from "./pages/dashboard/Profile";
 import EditListing from "./pages/dashboard/EditListing";
 
 
-
 export default function App() {
 
   return (
 
-    <Routes>
+    <>
+
+      {/* ⭐ ADD HERE */}
+      <RouteScrollTop />
+
+      <Routes>
+
+        {/* PUBLIC WEBSITE ROUTES */}
+
+        <Route element={<MainLayout />}>
+
+          <Route path="/" element={<Home />} />
+
+          <Route path="/browse" element={<BrowseListings />} />
+
+          <Route path="/helpdesk" element={<Helpdesk />} />
+
+          <Route path="/about-us" element={<AboutPage/>}/>
+
+          <Route path="/listing/:slug" element={<ListingDetail />} />
+
+          <Route path="/categories" element={<Categories />} />
+
+          <Route path="/categories/:category" element={<CategoryPage />} />
+
+          <Route path="/search" element={<SearchResult />} />
+
+        </Route>
 
 
-      {/* PUBLIC WEBSITE ROUTES */}
+        {/* AUTH ROUTES */}
 
-      <Route element={<MainLayout />}>
+        <Route element={<MainLayout />}>
 
-        <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route path="/browse" element={<BrowseListings />} />
-        <Route path="/helpdesk" element={<Helpdesk />} />
-        <Route path="/about-us" element={<AboutPage/>}/>
+          <Route path="/signup" element={<Signup />} />
 
-        {/* <Route path="/listing/:id" element={<ListingDetail />} /> */}
-        <Route path="/listing/:slug" element={<ListingDetail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
-     <Route path="/categories" element={<Categories />} />
-
-<Route path="/categories/:category" element={<CategoryPage />} />
-
-        <Route path="/search" element={<SearchResult />} />
-
-      </Route>
+        </Route>
 
 
+        {/* DASHBOARD */}
 
-      {/* AUTH ROUTES */}
+        <Route element={<DashboardLayout />}>
 
-      <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
 
-        <Route path="/login" element={<Login />} />
+          <Route path="/dashboard/add" element={<AddListing />} />
 
-        <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard/my" element={<MyListings />} />
 
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/dashboard/profile" element={<Profile />} />
 
-      </Route>
+          <Route path="/dashboard/edit/:id" element={<EditListing />} />
 
-
-
-      {/* DASHBOARD ROUTES (PROTECTED INSIDE DashboardLayout) */}
-
-      <Route element={<DashboardLayout />}>
-
-        <Route path="/dashboard" element={<Dashboard />} />
-
-        <Route path="/dashboard/add" element={<AddListing />} />
-
-        <Route path="/dashboard/my" element={<MyListings />} />
-
-        <Route path="/dashboard/profile" element={<Profile />} />
-
-        <Route path="/dashboard/edit/:id" element={<EditListing />} />
-
-      </Route>
+        </Route>
 
 
+        {/* 404 */}
 
-      {/* 404 PAGE */}
-
-      <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
 
 
-    </Routes>
+      </Routes>
+
+    </>
 
   );
 
