@@ -1,7 +1,7 @@
  import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import axios from "../services/api";
+import api from "../services/api";
 
 export default function VerifyEmail() {
 
@@ -18,21 +18,16 @@ export default function VerifyEmail() {
 
   useEffect(() => {
 
-    const verify = async () => {
+    const verifyEmail = async () => {
 
       try {
 
-        const res =
-          await axios.get(`/auth/verify/${token}`);
+        // ✅ FINAL CORRECT API CALL
+        const res = await api.get(`/api/auth/verify/${token}`);
 
 
-        /*
-        ==========================
-        SAVE TOKEN SAFELY
-        ==========================
-        */
-
-        if(res.data.token){
+        // save token
+        if (res.data.token) {
 
           localStorage.setItem(
             "token",
@@ -42,13 +37,8 @@ export default function VerifyEmail() {
         }
 
 
-        /*
-        ==========================
-        SAVE USER SAFELY
-        ==========================
-        */
-
-        if(res.data.user){
+        // save user
+        if (res.data.user) {
 
           localStorage.setItem(
             "user",
@@ -60,26 +50,10 @@ export default function VerifyEmail() {
         }
 
 
-        /*
-        ==========================
-        SHOW BACKEND MESSAGE
-        ==========================
-        */
-
-        setMessage(
-          res.data.message ||
-          "Email verified successfully"
-        );
-
+        setMessage(res.data.message);
 
         setStatus("success");
 
-
-        /*
-        ==========================
-        REDIRECT
-        ==========================
-        */
 
         setTimeout(() => {
 
@@ -91,6 +65,8 @@ export default function VerifyEmail() {
       }
 
       catch (err) {
+
+        console.log(err);
 
         setStatus("error");
 
@@ -107,39 +83,27 @@ export default function VerifyEmail() {
     };
 
 
-    verify();
+    verifyEmail();
 
-
-  }, [token, navigate, setUser]);
-
+  }, [token]);
 
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center">
 
       {status === "verifying" && (
 
-        <div className="text-gray-600 text-lg font-medium">
-
-          Verifying your email...
-
-        </div>
+        <div>Verifying your email...</div>
 
       )}
 
 
       {status === "success" && (
 
-        <div className="text-green-600 text-lg font-semibold">
+        <div className="text-green-600 font-semibold">
 
           ✅ {message}
-
-          <div className="text-sm text-gray-400 mt-2">
-
-            Redirecting to dashboard...
-
-          </div>
 
         </div>
 
@@ -148,7 +112,7 @@ export default function VerifyEmail() {
 
       {status === "error" && (
 
-        <div className="text-red-600 text-lg font-semibold">
+        <div className="text-red-600 font-semibold">
 
           ❌ {message}
 
