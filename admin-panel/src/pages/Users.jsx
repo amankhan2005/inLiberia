@@ -1,4 +1,4 @@
- import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserTable from "../components/users/UserTable";
 
 import {
@@ -57,8 +57,6 @@ export default function Users() {
 
 
 
-  // ⭐ NEW
-
   const handleMakeAdmin = async (id) => {
 
     await makeAdmin(id);
@@ -68,8 +66,6 @@ export default function Users() {
   };
 
 
-
-  // ⭐ NEW
 
   const handleRemoveAdmin = async (id) => {
 
@@ -81,33 +77,27 @@ export default function Users() {
 
 
 
+  // ⭐ NEW STATS
 
-  // Professional Loading Skeleton
+  const verifiedUsers = users.filter(
+    user => user.isVerified
+  ).length;
+
+
+  const unverifiedUsers = users.filter(
+    user => !user.isVerified
+  ).length;
+
+
+
+
   if (loading) {
 
     return (
 
       <div className="min-h-screen bg-slate-50 p-6 md:p-8">
 
-        <div className="animate-pulse">
-
-          <div className="h-10 bg-slate-200 rounded w-1/4 mb-6"></div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-
-            <div className="space-y-4">
-
-              {[...Array(5)].map((_, i) => (
-
-                <div key={i} className="h-12 bg-slate-100 rounded w-full"></div>
-
-              ))}
-
-            </div>
-
-          </div>
-
-        </div>
+        Loading...
 
       </div>
 
@@ -120,114 +110,91 @@ export default function Users() {
 
   return (
 
-    <div className="min-h-screen bg-slate-50 font-sans text-gray-800">
-
-      {/* Header Section */}
-
-      <div className="relative bg-gradient-to-r from-[#144474] to-[#0f345a] text-white overflow-hidden">
-
-        <div className="absolute inset-0 overflow-hidden">
-
-          <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        </div>
+<div className="min-h-screen bg-slate-50">
 
 
+{/* HEADER */}
 
-        <div className="relative p-6 md:p-8">
+<div className="bg-gradient-to-r from-[#144474] to-[#0f345a] text-white p-8">
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-            <div>
+<h1 className="text-3xl font-bold">
 
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+User Management
 
-                User Management
-
-              </h1>
-
-              <p className="text-blue-100 mt-1 text-sm md:text-base max-w-2xl">
-
-                View, manage, and oversee all registered platform users.
-
-              </p>
-
-            </div>
+</h1>
 
 
 
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-xl border border-white/20 shadow-lg">
+<div className="flex gap-6 mt-4 flex-wrap">
 
-              <span className="text-xs font-semibold uppercase tracking-wider text-blue-100">
 
-                Total Users
 
-              </span>
+{/* TOTAL */}
 
-              <span className="bg-white text-[#144474] text-lg font-bold px-3 py-1 rounded-lg shadow-sm">
+<div className="bg-white text-[#144474] px-4 py-2 rounded-lg">
 
-                {users.length}
+Total: <b>{users.length}</b>
 
-              </span>
+</div>
 
-            </div>
 
-          </div>
 
-        </div>
+{/* VERIFIED */}
 
-      </div>
+<div className="bg-green-500 text-white px-4 py-2 rounded-lg">
+
+Verified: <b>{verifiedUsers}</b>
+
+</div>
+
+
+
+{/* UNVERIFIED */}
+
+<div className="bg-red-500 text-white px-4 py-2 rounded-lg">
+
+Unverified: <b>{unverifiedUsers}</b>
+
+</div>
+
+
+
+</div>
+
+
+</div>
 
 
 
 
-      {/* Main Content */}
 
-      <div className="p-6 md:p-8 pt-0 -mt-4">
+{/* TABLE */}
 
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+<div className="p-6">
 
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-
-            <h3 className="text-lg font-bold text-gray-800">
-
-              Registered Users
-
-            </h3>
-
-            <div className="text-sm text-gray-500">
-
-              Showing {users.length} results
-
-            </div>
-
-          </div>
+<div className="bg-white rounded-xl shadow">
 
 
+<UserTable
 
-          <div className="overflow-x-auto">
+users={users}
 
-            <UserTable
+onDelete={handleDelete}
 
-              users={users}
+onMakeAdmin={handleMakeAdmin}
 
-              onDelete={handleDelete}
+onRemoveAdmin={handleRemoveAdmin}
 
-              onMakeAdmin={handleMakeAdmin}
+/>
 
-              onRemoveAdmin={handleRemoveAdmin}
 
-            />
+</div>
 
-          </div>
+</div>
 
-        </div>
 
-      </div>
-
-    </div>
+</div>
 
   );
 

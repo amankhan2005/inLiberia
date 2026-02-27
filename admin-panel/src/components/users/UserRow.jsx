@@ -1,4 +1,4 @@
-export default function UserRow({
+ export default function UserRow({
 
   user,
 
@@ -8,50 +8,82 @@ export default function UserRow({
 
   return (
 
-    <tr className="border-b">
+<tr className="border-b hover:bg-gray-50">
 
 
-      <td className="p-3">
+<td className="p-3">
 
-        {user.name}
+{user.name}
 
-      </td>
-
-
-      <td>
-
-        {user.email}
-
-      </td>
+</td>
 
 
-      <td>
 
-        {user.role}
+<td>
 
-      </td>
+{user.email}
 
-
-      <td>
+</td>
 
 
-        <button
 
-          onClick={() => onDelete(user._id)}
+<td>
 
-          className="bg-red-600 text-white px-3 py-1 rounded"
+{user.role}
 
-        >
-
-          Delete
-
-        </button>
+</td>
 
 
-      </td>
+
+{/* ⭐ NEW COLUMN → VERIFY STATUS */}
+
+<td>
+
+{user.isVerified ? (
+
+<span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+
+✅ Verified
+
+</span>
+
+) : (
+
+<span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
+
+❌ Unverified
+
+</span>
+
+)}
+
+</td>
 
 
-    </tr>
+
+
+
+<td>
+
+
+<button
+
+onClick={() => onDelete(user._id)}
+
+className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+
+>
+
+Delete
+
+</button>
+
+
+</td>
+
+
+
+</tr>
 
   );
 

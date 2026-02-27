@@ -63,7 +63,7 @@ export default function App() {
 
           <Route path="/categories" element={<Categories />} />
 
-          <Route path="/categories/:category" element={<CategoryPage />} />
+          {/* <Route path="/categories/:category" element={<CategoryPage />} /> */}
 
           <Route path="/search" element={<SearchResult />} />
           <Route path="/verify-success" element={<VerifySuccess />} />
