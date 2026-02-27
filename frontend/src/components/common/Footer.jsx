@@ -4,7 +4,12 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaChevronRight
+  FaChevronRight,
+  // Changed FaXTwitter to FaTwitter for compatibility
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTwitter
 } from "react-icons/fa";
 
 export default function Footer() {
@@ -21,7 +26,7 @@ export default function Footer() {
               <img
                 src={logo}
                 alt="inLiberia Logo"
-                className="h-25 object-contain" // Removed bg-white block for a cleaner native look, or keep bg-white if logo requires it. Assuming logo has transparency or light background.
+                className="h-25 object-contain"
               />
             </div>
             <p className="text-gray-500 leading-relaxed max-w-sm text-base">
@@ -88,7 +93,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* CONTACT */}
+          {/* CONTACT & SOCIAL */}
           <div>
             <h3 className="text-white text-lg font-bold mb-6 relative inline-block after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-8 after:h-1 after:bg-[#144474] after:rounded-full">
               Contact Us
@@ -106,6 +111,55 @@ export default function Footer() {
                 <span>info@knowliberia.com</span>
               </a>
             </div>
+
+            {/* SOCIAL LINKS SECTION */}
+            <div className="mt-8">
+              <p className="text-gray-500 text-sm mb-4">Follow us on social media</p>
+              <div className="flex gap-3">
+                
+                {/* Facebook */}
+                <a 
+                  href="https://www.facebook.com/profile.php?id=61588604921029" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-[#144474] hover:bg-[#144474] hover:text-white transition-all duration-300"
+                >
+                  <FaFacebookF />
+                </a>
+
+                {/* Instagram */}
+                <a 
+                  href="https://www.instagram.com/knowliberia/?hl=en" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-[#144474] hover:bg-[#144474] hover:text-white transition-all duration-300"
+                >
+                  <FaInstagram />
+                </a>
+
+                {/* LinkedIn */}
+                <a 
+                  href="https://www.linkedin.com/in/know-liberia-6b695b3b3" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-[#144474] hover:bg-[#144474] hover:text-white transition-all duration-300"
+                >
+                  <FaLinkedinIn />
+                </a>
+
+                {/* Twitter (X) */}
+                <a 
+                  href="https://x.com/knowliberia" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-[#144474] hover:bg-[#144474] hover:text-white transition-all duration-300"
+                >
+                  <FaTwitter />
+                </a>
+
+              </div>
+            </div>
+
           </div>
 
         </div>
