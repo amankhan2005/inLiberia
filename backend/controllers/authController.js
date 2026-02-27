@@ -137,78 +137,72 @@ AUTO LOGIN ENABLED
 
 export const registerUser = async (req, res) => {
 
-  try {
+try {
 
-    const { name, email, password } = req.body;
+const { name, email, password } = req.body;
 
-    const userExists = await User.findOne({ email });
+const userExists = await User.findOne({ email });
 
-    if (userExists) {
+if (userExists) {
 
-      return res.status(400).json({
-        message: "User already exists",
-      });
+return res.status(400).json({
+message: "User already exists",
+});
 
-    }
-
-
-    const verificationToken =
-      crypto.randomBytes(32).toString("hex");
+}
 
 
-    const user = await User.create({
-
-      name,
-      email,
-      password,
-      verificationToken,
-      isVerified: false,
-
-    });
+const verificationToken =
+crypto.randomBytes(32).toString("hex");
 
 
-    await sendVerificationEmail({
+const user = await User.create({
 
-      userEmail: user.email,
-      userName: user.name,
-      token: verificationToken,
+name,
+email,
+password,
+verificationToken,
+isVerified: false,
 
-    });
+});
 
 
+await sendVerificationEmail({
 
-    // ⭐ AUTO LOGIN HERE
+userEmail: user.email,
+userName: user.name,
+token: verificationToken,
 
-    res.status(201).json({
+});
 
-      _id: user._id,
 
-      name: user.name,
+// AUTO LOGIN RESPONSE
 
-      email: user.email,
+res.status(201).json({
 
-      role: user.role,
+_id: user._id,
+name: user.name,
+email: user.email,
+role: user.role,
+isVerified: user.isVerified,
+token: generateToken(user._id),
 
-      isVerified: user.isVerified,
+message:
+"Registration successful. Verification email sent."
 
-      token: generateToken(user._id),
+});
 
-      message:
-        "Registration successful. Verification email sent."
+}
 
-    });
+catch (error) {
 
-  }
+console.log(error);
 
-  catch {
+res.status(500).json({
+message: "Signup failed",
+});
 
-    res.status(500).json({
-
-      message: "Signup failed",
-
-    });
-
-  }
+}
 
 };
 
@@ -225,50 +219,43 @@ ALLOW VERIFIED + UNVERIFIED
 
 export const loginUser = async (req, res) => {
 
-  try {
+try {
 
-    const { email, password } = req.body;
+const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+const user = await User.findOne({ email });
 
-    if (!user || !(await user.matchPassword(password))) {
+if (!user || !(await user.matchPassword(password))) {
 
-      return res.status(401).json({
+return res.status(401).json({
+message: "Invalid email or password",
+});
 
-        message: "Invalid email or password",
-
-      });
-
-    }
+}
 
 
-    res.json({
+res.json({
 
-      _id: user._id,
+_id: user._id,
+name: user.name,
+email: user.email,
+role: user.role,
+isVerified: user.isVerified,
+token: generateToken(user._id),
 
-      name: user.name,
+});
 
-      email: user.email,
+}
 
-      role: user.role,
+catch (error) {
 
-      isVerified: user.isVerified,
+console.log(error);
 
-      token: generateToken(user._id),
+res.status(500).json({
+message: "Login failed",
+});
 
-    });
-
-  }
-
-  catch {
-
-    res.status(500).json({
-
-      message: "Login failed",
-
-    });
-
-  }
+}
 
 };
 
@@ -279,57 +266,74 @@ export const loginUser = async (req, res) => {
 /*
 ========================================
 VERIFY EMAIL
+AUTO LOGIN ENABLED
 ========================================
 */
 
 export const verifyEmail = async (req, res) => {
 
-  try {
+try {
 
-    const user = await User.findOne({
+const user = await User.findOne({
 
-      verificationToken: req.params.token,
+verificationToken: req.params.token,
 
-    });
-
-
-    if (!user) {
-
-      return res.redirect(
-
-        `${process.env.FRONTEND_URL}/verify-error`
-
-      );
-
-    }
+});
 
 
-    user.isVerified = true;
+if (!user) {
 
-    user.verificationToken = undefined;
+return res.status(400).json({
+message: "Invalid or expired token"
+});
 
-    await user.save();
+}
 
 
-    res.redirect(
+// verify user
 
-      `${process.env.FRONTEND_URL}/verify-success`
+user.isVerified = true;
 
-    );
+user.verificationToken = undefined;
 
-  }
+await user.save();
 
-  catch {
 
-    res.redirect(
+// SEND LOGIN DATA
 
-      `${process.env.FRONTEND_URL}/verify-error`
+res.json({
 
-    );
+user: {
 
-  }
+_id: user._id,
+name: user.name,
+email: user.email,
+role: user.role,
+isVerified: true
+
+},
+
+token: generateToken(user._id),
+
+message: "Email verified successfully"
+
+});
+
+
+}
+
+catch (error) {
+
+console.log(error);
+
+res.status(500).json({
+message: "Verification failed"
+});
+
+}
 
 };
+
 
 
 
@@ -343,65 +347,66 @@ RESEND VERIFICATION
 
 export const resendVerification = async (req, res) => {
 
-  try {
+try {
 
-    const user = await User.findById(req.user._id);
+const user = await User.findById(req.user._id);
 
-    if (!user) {
+if (!user) {
 
-      return res.status(404).json({
-        message: "User not found",
-      });
+return res.status(404).json({
+message: "User not found"
+});
 
-    }
-
-
-    if (user.isVerified) {
-
-      return res.status(400).json({
-        message: "Already verified",
-      });
-
-    }
+}
 
 
-    const verificationToken =
-      crypto.randomBytes(32).toString("hex");
+if (user.isVerified) {
+
+return res.status(400).json({
+message: "Already verified"
+});
+
+}
 
 
-    user.verificationToken = verificationToken;
-
-    await user.save();
-
-
-    await sendVerificationEmail({
-
-      userEmail: user.email,
-      userName: user.name,
-      token: verificationToken,
-
-    });
+const verificationToken =
+crypto.randomBytes(32).toString("hex");
 
 
-    res.json({
+user.verificationToken = verificationToken;
 
-      message: "Verification email sent",
+await user.save();
 
-    });
 
-  }
+await sendVerificationEmail({
 
-  catch {
+userEmail: user.email,
+userName: user.name,
+token: verificationToken,
 
-    res.status(500).json({
+});
 
-      message: "Failed to send email",
 
-    });
+res.json({
 
-  }
+message: "Verification email sent"
+
+});
+
+}
+
+catch (error) {
+
+console.log(error);
+
+res.status(500).json({
+message: "Failed to send email"
+});
+
+}
 
 };
+
 
 
 
@@ -415,36 +420,33 @@ GET CURRENT USER
 
 export const getMe = async (req, res) => {
 
-  try {
+try {
 
-    const user = await User.findById(req.user._id)
-      .select("-password");
+const user =
+await User.findById(req.user._id)
+.select("-password");
 
 
-    res.json({
+res.json({
 
-      _id: user._id,
+_id: user._id,
+name: user.name,
+email: user.email,
+role: user.role,
+isVerified: user.isVerified,
 
-      name: user.name,
+});
 
-      email: user.email,
+}
 
-      role: user.role,
+catch (error) {
 
-      isVerified: user.isVerified,
+console.log(error);
 
-    });
+res.status(500).json({
+message: "Failed"
+});
 
-  }
-
-  catch {
-
-    res.status(500).json({
-
-      message: "Failed",
-
-    });
-
-  }
+}
 
 };
