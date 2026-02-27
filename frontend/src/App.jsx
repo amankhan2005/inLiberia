@@ -18,6 +18,8 @@ import AboutPage from "./pages/About"
 import CategoryPage from "./pages/public/CategoryPage";
 import SearchResult from "./pages/public/SearchResult";
 import NotFound from "./pages/public/NotFound";
+import VerifySuccess from "./pages/VerifySuccess";
+import VerifyEmail from "./pages/VerifyEmail";
 
 
 // Auth Pages
@@ -64,6 +66,8 @@ export default function App() {
           <Route path="/categories/:category" element={<CategoryPage />} />
 
           <Route path="/search" element={<SearchResult />} />
+          <Route path="/verify-success" element={<VerifySuccess />} />
+          <Route path="/verify/:token" element={<VerifyEmail />} />
 
         </Route>
 

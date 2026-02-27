@@ -183,3 +183,82 @@ export const sendListingStatusEmail = async ({
   }
 
 };
+
+// ✅ EMAIL VERIFICATION MAIL
+
+export const sendVerificationEmail = async ({
+
+  userEmail,
+  userName,
+  token
+
+}) => {
+
+  try {
+
+    const verifyLink =
+      `${process.env.FRONTEND_URL}/verify/${token}`;
+
+
+    const html = `
+
+      <div style="font-family:Arial;padding:20px">
+
+        <h2>Email Verification</h2>
+
+        <p>Hello ${userName},</p>
+
+        <p>
+          Please click below button to verify your account:
+        </p>
+
+        <a href="${verifyLink}"
+           style="
+             background:#144474;
+             color:white;
+             padding:10px 20px;
+             text-decoration:none;
+             border-radius:5px;
+             display:inline-block;
+           "
+        >
+          Verify Email
+        </a>
+
+        <br><br>
+
+        <p>
+          If you did not create account, ignore this email.
+        </p>
+
+      </div>
+
+    `;
+
+
+    await resend.emails.send({
+
+      from: process.env.EMAIL_FROM,
+
+      to: userEmail,
+
+      subject: "Verify your email",
+
+      html
+
+    });
+
+
+    console.log("📧 VERIFICATION EMAIL SENT:", userEmail);
+
+  }
+
+  catch (error) {
+
+    console.error("❌ VERIFICATION EMAIL FAILED");
+
+    console.error(error.message);
+
+  }
+
+};
