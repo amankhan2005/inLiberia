@@ -111,9 +111,19 @@ const imageUrl =
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-gray-600">
-              <MapPinIcon className="w-5 h-5 text-[#144474]" />
-              <span className="font-medium">{listing.location}</span>
-            </div>
+  <MapPinIcon className="w-5 h-5 text-[#144474]" />
+
+  <span className="font-medium">
+    {listing.location}
+
+    {listing.zipCode && (
+      <span className="ml-2 text-gray-500">
+        ({listing.zipCode})
+      </span>
+    )}
+
+  </span>
+</div>
 
             {/* Quick Stats/Badges can go here if needed */}
           </div>
@@ -170,49 +180,69 @@ const imageUrl =
           </p>
         </div>
 
-        {/* ================= CONTACT SECTION ================= */}
-        <div className="border-t border-gray-100 pt-8">
-          <h3 className="text-lg font-bold text-gray-800 mb-5 flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-[#144474] rounded-full"></span>
-            Contact Information
-          </h3>
+         {/* ================= CONTACT SECTION ================= */}
+{(listing.contactEmail || listing.contactPhone) && (
 
-          <div className="grid sm:grid-cols-2 gap-5">
-            
-            {/* EMAIL CARD */}
-            <a
-              href={listing.contactEmail ? `mailto:${listing.contactEmail}` : "#"}
-              className="group flex items-center gap-4 bg-gray-50 rounded-xl p-5 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300"
-            >
-              <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm group-hover:bg-[#144474] group-hover:border-transparent transition-all duration-300">
-                <EnvelopeIcon className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Email Address</p>
-                <p className="font-bold text-gray-800 group-hover:text-[#144474] transition-colors mt-0.5">
-                  {listing.contactEmail || "Not provided"}
-                </p>
-              </div>
-            </a>
+<div className="border-t border-gray-100 pt-8">
 
-            {/* PHONE CARD */}
-            <a
-              href={listing.contactPhone ? `tel:${listing.contactPhone}` : "#"}
-              className="group flex items-center gap-4 bg-gray-50 rounded-xl p-5 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300"
-            >
-              <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm group-hover:bg-[#144474] group-hover:border-transparent transition-all duration-300">
-                <PhoneIcon className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">Phone Number</p>
-                <p className="font-bold text-gray-800 group-hover:text-[#144474] transition-colors mt-0.5">
-                  {listing.contactPhone || "Not provided"}
-                </p>
-              </div>
-            </a>
+  <h3 className="text-lg font-bold text-gray-800 mb-5 flex items-center gap-2">
+    <span className="w-1.5 h-6 bg-[#144474] rounded-full"></span>
+    Contact Information
+  </h3>
 
-          </div>
+  <div className="grid sm:grid-cols-2 gap-5">
+
+    {/* EMAIL CARD */}
+    {listing.contactEmail && (
+      <a
+        href={`mailto:${listing.contactEmail}`}
+        className="group flex items-center gap-4 bg-gray-50 rounded-xl p-5 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300"
+      >
+        <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm group-hover:bg-[#144474] group-hover:border-transparent transition-all duration-300">
+          <EnvelopeIcon className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
         </div>
+
+        <div>
+          <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">
+            Email Address
+          </p>
+
+          <p className="font-bold text-gray-800 group-hover:text-[#144474] transition-colors mt-0.5">
+            {listing.contactEmail}
+          </p>
+
+        </div>
+      </a>
+    )}
+
+    {/* PHONE CARD */}
+    {listing.contactPhone && (
+      <a
+        href={`tel:${listing.contactPhone}`}
+        className="group flex items-center gap-4 bg-gray-50 rounded-xl p-5 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-300"
+      >
+        <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm group-hover:bg-[#144474] group-hover:border-transparent transition-all duration-300">
+          <PhoneIcon className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
+        </div>
+
+        <div>
+          <p className="text-xs text-gray-400 uppercase font-semibold tracking-wide">
+            Phone Number
+          </p>
+
+          <p className="font-bold text-gray-800 group-hover:text-[#144474] transition-colors mt-0.5">
+            {listing.contactPhone}
+          </p>
+
+        </div>
+      </a>
+    )}
+
+  </div>
+
+</div>
+
+)}
 
       </div>
     </div>

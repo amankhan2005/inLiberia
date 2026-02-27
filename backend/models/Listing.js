@@ -18,6 +18,10 @@ const listingSchema = new mongoose.Schema(
     required: true,
   },
 
+   zipCode: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
   },
@@ -35,10 +39,12 @@ const listingSchema = new mongoose.Schema(
 
   contactEmail: {
     type: String,
+    default: "",
   },
 
-  contactPhone: {
+   contactPhone: {
     type: String,
+    default: "",
   },
 
   status: {

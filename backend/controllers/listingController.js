@@ -1,12 +1,14 @@
-  import Listing from "../models/Listing.js";
+ 
+
+
+import Listing from "../models/Listing.js";
 import Category from "../models/Category.js";
 
 
 
- 
+// ================= CREATE LISTING =================
 
- 
- export const createListing = async (req, res) => {
+export const createListing = async (req, res) => {
 
   try {
 
@@ -14,7 +16,6 @@ import Category from "../models/Category.js";
     const images = req.files?.map(
       file => file.path
     ) || [];
-
 
 
     // ⭐ SLUG LOGIC
@@ -31,7 +32,6 @@ import Category from "../models/Category.js";
     }
 
 
-
     // duplicate check
     const exists = await Listing.findOne({ slug });
 
@@ -40,6 +40,13 @@ import Category from "../models/Category.js";
         message: "Slug already exists"
       });
 
+
+    // ⭐ ZIP CODE REQUIRED VALIDATION (ONLY FIX ADDED)
+    if (!req.body.zipCode) {
+      return res.status(400).json({
+        message: "Zip code is required"
+      });
+    }
 
 
     // CREATE LISTING
@@ -51,6 +58,8 @@ import Category from "../models/Category.js";
 
       location: req.body.location,
 
+      zipCode: req.body.zipCode,
+
       description: req.body.description,
 
       category: req.body.category,
@@ -59,7 +68,7 @@ import Category from "../models/Category.js";
 
       contactPhone: req.body.contactPhone,
 
-      images: images, // ✅ Cloudinary URLs
+      images: images,
 
       user: req.user._id,
 
@@ -83,6 +92,8 @@ import Category from "../models/Category.js";
 };
 
 
+
+
 // ================= GET ALL LISTINGS =================
 
 export const getListings = async (req, res) => {
@@ -90,130 +101,102 @@ export const getListings = async (req, res) => {
   try {
 
     const {
-
       category,
-
       categoryName,
-
       search,
-
       location,
-
+      zipCode,
       sort,
-
       page = 1,
-
       limit = 12
-
     } = req.query;
 
 
-
     let query = {
-
       status: "approved"
-
     };
 
 
-
-    // FILTER BY CATEGORY ID
-
+    // CATEGORY FILTER
     if (category) {
-
       query.category = category;
+    }
+
+
+    // CATEGORY NAME FILTER
+    if (categoryName) {
+
+      const categoryDoc = await Category.findOne({
+        name: { $regex: `^${categoryName}$`, $options: "i" }
+      });
+
+      if (!categoryDoc) {
+        return res.json([]);
+      }
+
+      query.category = categoryDoc._id;
 
     }
 
 
+   // LOCATION FILTER
+if (location && location.trim() !== "") {
 
-    // ⭐ FILTER BY CATEGORY NAME (Residence / Business)
-
-if (categoryName) {
-
-  const categoryDoc = await Category.findOne({
-
-    name: { $regex: `^${categoryName}$`, $options: "i" }
-
-  });
-
-  if (!categoryDoc) {
-
-    return res.json([]);
-
-  }
-
-  query.category = categoryDoc._id;
+  query.location = {
+    $regex: location.trim(),
+    $options: "i"
+  };
 
 }
 
 
+// ZIP CODE FILTER
+if (zipCode && zipCode.trim() !== "") {
 
-    // LOCATION FILTER
+  query.zipCode = {
+    $regex: zipCode.trim(),
+    $options: "i"
+  };
 
-    if (location) {
-
-      query.location = location;
-
-    }
-
+}
 
 
-    // SEARCH FILTER
-
+    // SEARCH TITLE
     if (search) {
 
       query.title = {
-
         $regex: search,
-
         $options: "i"
-
       };
 
     }
 
 
-
-    // QUERY BUILD
-
+    // QUERY
     let listingsQuery = Listing.find(query)
-
       .populate("category", "name icon")
-
       .populate("user", "name email");
 
 
-
     // SORT
-
     if (sort === "newest") {
 
       listingsQuery = listingsQuery.sort({
-
         createdAt: -1
-
       });
 
     }
 
 
-
     // PAGINATION
-
     const skip = (Number(page) - 1) * Number(limit);
 
-
     listingsQuery = listingsQuery
-
       .skip(skip)
-
       .limit(Number(limit));
 
 
-
     const listings = await listingsQuery;
-
 
 
     res.json(listings);
@@ -223,9 +206,7 @@ if (categoryName) {
   catch (error) {
 
     res.status(500).json({
-
       message: error.message
-
     });
 
   }
@@ -242,18 +223,13 @@ export const getListingById = async (req, res) => {
   try {
 
     const listing = await Listing.findById(req.params.id)
-
       .populate("category", "name icon")
-
       .populate("user", "name email");
 
 
     if (!listing)
-
       return res.status(404).json({
-
         message: "Listing not found"
-
       });
 
 
@@ -264,14 +240,14 @@ export const getListingById = async (req, res) => {
   catch (error) {
 
     res.status(500).json({
-
       message: error.message
-
     });
 
   }
 
 };
+
+
 
 
 // ================= GET BY SLUG =================
@@ -307,6 +283,9 @@ export const getListingBySlug = async (req, res) => {
 
 };
 
+
+
+
 // ================= GET MY LISTINGS =================
 
 export const getMyListings = async (req, res) => {
@@ -314,17 +293,11 @@ export const getMyListings = async (req, res) => {
   try {
 
     const listings = await Listing.find({
-
       user: req.user._id
-
     })
-
       .populate("category", "name icon")
-
       .sort({
-
         createdAt: -1
-
       });
 
 
@@ -335,9 +308,7 @@ export const getMyListings = async (req, res) => {
   catch (error) {
 
     res.status(500).json({
-
       message: error.message
-
     });
 
   }
@@ -354,17 +325,11 @@ export const getLocations = async (req, res) => {
   try {
 
     const locations = await Listing.distinct(
-
       "location",
-
       {
-
         status: "approved"
-
       }
-
     );
-
 
     res.json(locations);
 
@@ -373,9 +338,7 @@ export const getLocations = async (req, res) => {
   catch (error) {
 
     res.status(500).json({
-
       message: error.message
-
     });
 
   }
@@ -391,34 +354,21 @@ export const deleteListing = async (req, res) => {
 
   try {
 
-    const listing = await Listing.findById(
-
-      req.params.id
-
-    );
+    const listing = await Listing.findById(req.params.id);
 
 
     if (!listing)
-
       return res.status(404).json({
-
         message: "Listing not found"
-
       });
 
 
     if (
-
       listing.user.toString()
-
       !== req.user._id.toString()
-
     )
-
       return res.status(403).json({
-
         message: "Not authorized"
-
       });
 
 
@@ -426,9 +376,7 @@ export const deleteListing = async (req, res) => {
 
 
     res.json({
-
       message: "Listing deleted"
-
     });
 
   }
@@ -436,9 +384,7 @@ export const deleteListing = async (req, res) => {
   catch (error) {
 
     res.status(500).json({
-
       message: error.message
-
     });
 
   }
