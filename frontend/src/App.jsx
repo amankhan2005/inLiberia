@@ -12,11 +12,10 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import Home from "./pages/public/Home";
 import BrowseListings from "./pages/public/BrowseListings";
 import ListingDetail from "./pages/public/ListingDetail";
-import Categories from "./pages/public/categories";
+import Categories from "./pages/public/Categories";
 import Helpdesk from "./pages/HelpDesk"
 import AboutPage from "./pages/About"
-import CategoryPage from "./pages/public/CategoryPage";
-import SearchResult from "./pages/public/SearchResult";
+ import SearchResult from "./pages/public/SearchResult";
 import NotFound from "./pages/public/NotFound";
 import VerifySuccess from "./pages/VerifySuccess";
 import VerifyEmail from "./pages/VerifyEmail";
