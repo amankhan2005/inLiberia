@@ -1,542 +1,332 @@
-// import User from "../models/User.js";
-
-
-
-
-
-
-// import generateToken from "../utils/generateToken.js";
-
-
-// // SIGNUP
-
-// export const registerUser = async (req, res) => {
-
-//   const { name, email, password } = req.body;
-
-//   try {
-
-//     const userExists = await User.findOne({ email });
-
-//     if (userExists)
-
-//       return res.status(400).json({
-
-//         message: "User already exists",
-
-//       });
-
-//     const user = await User.create({
-
-//       name,
-
-//       email,
-
-//       password,
-
-//     });
-
-//     res.status(201).json({
-
-//       _id: user._id,
-
-//       name: user.name,
-
-//       email: user.email,
-
-//       role: user.role,
-
-//       token: generateToken(user._id),
-
-//     });
-
-//   } catch (error) {
-
-//     res.status(500).json({
-
-//       message: "Signup failed",
-
-//     });
-
-//   }
-
-// };
-
-
-// // LOGIN
-
-// export const loginUser = async (req, res) => {
-
-//   const { email, password } = req.body;
-
-//   try {
-
-//     const user = await User.findOne({ email });
-
-//     if (user && (await user.matchPassword(password))) {
-
-//       res.json({
-
-//         _id: user._id,
-
-//         name: user.name,
-
-//         email: user.email,
-
-//         role: user.role,
-
-//         token: generateToken(user._id),
-
-//       });
-
-//     } else {
-
-//       res.status(401).json({
-
-//         message: "Invalid email or password",
-
-//       });
-
-//     }
-
-//   } catch {
-
-//     res.status(500).json({
-
-//       message: "Login failed",
-
-//     });
-
-//   }
-
-// };
-
-
-// // GET CURRENT USER
-
-// export const getMe = async (req, res) => {
-
-//   res.json(req.user);
-
-// };
-
-
-  import User from "../models/User.js";
+ import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import crypto from "crypto";
-import { sendVerificationEmail } from "../utils/sendEmail.js";
+
+import {
+  sendVerificationEmail
+} from "../utils/sendEmail.js";
 
 
 
-/*
-========================================
-SIGNUP
-AUTO LOGIN ENABLED
-========================================
-*/
+// ================= SIGNUP =================
 
 export const registerUser = async (req, res) => {
 
-try {
+  const { name, email, password } = req.body;
 
-const { name, email, password } = req.body;
+  try {
 
+    const userExists =
+      await User.findOne({ email });
 
-// check existing user
-
-let user = await User.findOne({ email });
-
-if (user) {
-
-
-// ⭐ IF EXISTS BUT NOT VERIFIED → RESEND TOKEN
-
-if (!user.isVerified) {
-
-const verificationToken =
-crypto.randomBytes(32).toString("hex");
-
-user.verificationToken = verificationToken;
-
-await user.save();
-
-await sendVerificationEmail({
-
-userEmail: user.email,
-userName: user.name,
-token: verificationToken,
-
-});
-
-return res.status(200).json({
-
-_id: user._id,
-name: user.name,
-email: user.email,
-role: user.role,
-isVerified: user.isVerified,
-token: generateToken(user._id),
-
-message:
-"Account exists. Verification email resent."
-
-});
-
-}
+    if (userExists)
+      return res.status(400).json({
+        message: "User already exists",
+      });
 
 
-// already verified
+    // create token
 
-return res.status(400).json({
-message: "User already exists"
-});
+    const verificationToken =
+      crypto.randomBytes(32).toString("hex");
 
-}
+
+    // create user
+
+    const user = await User.create({
+
+      name,
+      email,
+      password,
+
+      verificationToken,
+      isVerified: false,
+
+    });
 
 
 
-// create new user
+    // ✅ SEND VERIFICATION EMAIL
 
-const verificationToken =
-crypto.randomBytes(32).toString("hex");
+    await sendVerificationEmail({
 
+      userEmail: user.email,
 
-user = await User.create({
+      userName: user.name,
 
-name,
-email,
-password,
-verificationToken,
-isVerified: false,
+      token: verificationToken,
 
-});
+    });
 
 
-// send email
 
-await sendVerificationEmail({
+    // login also
 
-userEmail: user.email,
-userName: user.name,
-token: verificationToken,
+    res.status(201).json({
 
-});
+      _id: user._id,
+
+      name: user.name,
+
+      email: user.email,
+
+      role: user.role,
+
+      isVerified: user.isVerified,
+
+      token: generateToken(user._id),
+
+      message:
+        "Signup successful. Verification email sent",
+
+    });
 
 
-// auto login
+  }
 
-return res.status(201).json({
+  catch (error) {
 
-_id: user._id,
-name: user.name,
-email: user.email,
-role: user.role,
-isVerified: user.isVerified,
-token: generateToken(user._id),
+    console.error(error);
 
-message:
-"Registration successful. Verification email sent."
+    res.status(500).json({
 
-});
+      message: "Signup failed",
 
-}
+    });
 
-catch (error) {
-
-console.log(error);
-
-res.status(500).json({
-
-message: "Signup failed"
-
-});
-
-}
+  }
 
 };
 
 
 
-
-
-/*
-========================================
-LOGIN
-========================================
-*/
+// ================= LOGIN =================
 
 export const loginUser = async (req, res) => {
 
-try {
+  const { email, password } = req.body;
 
-const { email, password } = req.body;
+  try {
 
-const user =
-await User.findOne({ email });
+    const user =
+      await User.findOne({ email });
 
-if (!user ||
-!(await user.matchPassword(password))) {
+    if (!user)
+      return res.status(401).json({
 
-return res.status(401).json({
+        message:
+          "Invalid email or password",
 
-message: "Invalid email or password"
-
-});
-
-}
+      });
 
 
-return res.json({
 
-_id: user._id,
-name: user.name,
-email: user.email,
-role: user.role,
-isVerified: user.isVerified,
-token: generateToken(user._id)
+    if (!(await user.matchPassword(password)))
+      return res.status(401).json({
 
-});
+        message:
+          "Invalid email or password",
 
-}
+      });
 
-catch (error) {
 
-console.log(error);
 
-res.status(500).json({
+    res.json({
 
-message: "Login failed"
+      _id: user._id,
 
-});
+      name: user.name,
 
-}
+      email: user.email,
+
+      role: user.role,
+
+      isVerified: user.isVerified,
+
+      token:
+        generateToken(user._id),
+
+    });
+
+
+  }
+
+  catch {
+
+    res.status(500).json({
+
+      message: "Login failed",
+
+    });
+
+  }
 
 };
 
 
 
 
-
-
-/*
-========================================
-VERIFY EMAIL
-FIXED FINAL VERSION
-========================================
-*/
+// ================= VERIFY EMAIL =================
 
 export const verifyEmail = async (req, res) => {
 
-try {
+  try {
 
-const token =
-req.params.token;
+    const { token } = req.params;
 
+    const user =
+      await User.findOne({
 
-// find user
+        verificationToken: token
 
-const user =
-await User.findOne({
-verificationToken: token
-});
+      });
 
 
-// ❌ invalid token
+    if (!user)
+      return res.status(400).json({
 
-if (!user) {
+        message:
+          "Invalid or expired token",
 
-return res.status(400).json({
-
-success:false,
-
-message:
-"This verification link is invalid or already used"
-
-});
-
-}
+      });
 
 
-// ⭐ verify
 
-user.isVerified = true;
+    user.isVerified = true;
 
-user.verificationToken = undefined;
+    user.verificationToken = undefined;
 
-await user.save();
+    await user.save();
 
 
-// ⭐ return login
 
-return res.status(200).json({
+    res.json({
 
-success:true,
+      message:
+        "Email verified successfully",
 
-user:{
-_id:user._id,
-name:user.name,
-email:user.email,
-role:user.role,
-isVerified:true
-},
+      token:
+        generateToken(user._id),
 
-token:
-generateToken(user._id),
+    });
 
-message:
-"Email verified successfully"
+  }
 
-});
+  catch {
 
-}
+    res.status(500).json({
 
-catch(error){
+      message:
+        "Verification failed",
 
-console.log(error);
+    });
 
-return res.status(500).json({
-
-success:false,
-
-message:"Verification failed"
-
-});
-
-}
+  }
 
 };
 
 
 
 
+// ================= RESEND EMAIL =================
+
+ export const resendVerification = async (req, res) => {
+
+  try {
+
+    // ✅ CHECK USER EXISTS
+
+    if (!req.user) {
+
+      return res.status(401).json({
+
+        message: "Not authorized"
+
+      });
+
+    }
 
 
-/*
-========================================
-RESEND VERIFICATION
-========================================
-*/
-
-export const resendVerification =
-async (req, res) => {
-
-try {
-
-const user =
-await User.findById(req.user._id);
-
-if (!user) {
-
-return res.status(404).json({
-
-message:"User not found"
-
-});
-
-}
+    const user = await User.findById(req.user._id);
 
 
-if (user.isVerified) {
+    if (!user)
 
-return res.status(400).json({
+      return res.status(404).json({
 
-message:"Already verified"
+        message: "User not found"
 
-});
-
-}
+      });
 
 
-// generate new token
 
-const verificationToken =
-crypto.randomBytes(32).toString("hex");
+    if (user.isVerified)
 
+      return res.json({
 
-user.verificationToken =
-verificationToken;
+        message: "Already verified"
 
-await user.save();
+      });
 
 
-// send email
-
-await sendVerificationEmail({
-
-userEmail:user.email,
-userName:user.name,
-token:verificationToken
-
-});
 
 
-return res.json({
+    const verificationToken =
 
-message:
-"Verification email sent"
+      crypto.randomBytes(32).toString("hex");
 
-});
 
-}
 
-catch(error){
+    user.verificationToken = verificationToken;
 
-console.log(error);
+    await user.save();
 
-res.status(500).json({
 
-message:
-"Failed to send email"
 
-});
 
-}
+    await sendVerificationEmail({
+
+      userEmail: user.email,
+
+      userName: user.name,
+
+      token: verificationToken
+
+    });
+
+
+
+    res.json({
+
+      message: "Verification email sent"
+
+    });
+
+  }
+
+
+  catch (error) {
+
+    console.error(error);   // ⭐ VERY IMPORTANT
+
+    res.status(500).json({
+
+      message: "Failed to resend email"
+
+    });
+
+  }
 
 };
 
 
 
 
-
-
-/*
-========================================
-GET CURRENT USER
-========================================
-*/
+// ================= GET ME =================
 
 export const getMe =
-async (req,res)=>{
+  async (req, res) => {
 
-try{
+    res.json(req.user);
 
-const user =
-await User.findById(req.user._id)
-.select("-password");
-
-
-res.json({
-
-_id:user._id,
-name:user.name,
-email:user.email,
-role:user.role,
-isVerified:user.isVerified
-
-});
-
-}
-
-catch(error){
-
-console.log(error);
-
-res.status(500).json({
-
-message:"Failed"
-
-});
-
-}
-
-};
+  };

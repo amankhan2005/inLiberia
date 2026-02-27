@@ -66,8 +66,10 @@ export default function App() {
 
           <Route path="/search" element={<SearchResult />} />
           <Route path="/verify-success" element={<VerifySuccess />} />
-          <Route path="/verify/:token" element={<VerifyEmail />} />
-
+<Route
+ path="/verify-email/:token"
+ element={<VerifyEmail />}
+/>
         </Route>
 
 

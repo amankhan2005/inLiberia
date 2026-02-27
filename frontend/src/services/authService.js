@@ -1,80 +1,4 @@
-//  import api from "./api";
-
-
-
-// // ✅ LOGIN
-
-// export const loginUser = async (data) => {
-
-//   const res = await api.post(
-
-//     "/auth/login",
-
-//     data
-
-//   );
-
-//   return res.data;
-
-// };
-
-
-
-
-// // ✅ SIGNUP
-
-// export const signupUser = async (data) => {
-
-//   const res = await api.post(
-
-//     "/auth/signup",
-
-//     data
-
-//   );
-
-//   return res.data;
-
-// };
-
-
-
-
-// // ✅ GET CURRENT USER
-
-// export const getCurrentUser = async () => {
-
-//   const res = await api.get(
-
-//     "/auth/me"
-
-//   );
-
-//   return res.data;
-
-// };
-
-
-
-
-// // ✅ LOGOUT (FIXED)
-
-// export const logoutUser = () => {
-
-//   localStorage.removeItem("token");
-
-//   localStorage.removeItem("user"); // ⭐ IMPORTANT
-
-// };
-
-
-
-
-
-
-
-
-  import api from "./api";
+ import api from "./api";
 
 
 
@@ -86,18 +10,26 @@ LOGIN
 
 export const loginUser = async (data) => {
 
-  const res = await api.post("/auth/login", data);
+  const res =
+    await api.post("/auth/login", data);
 
-  localStorage.setItem("token", res.data.token);
+
+  localStorage.setItem(
+    "token",
+    res.data.token
+  );
+
 
   localStorage.setItem(
     "user",
     JSON.stringify(res.data)
   );
 
+
   return res.data;
 
 };
+
 
 
 
@@ -112,24 +44,8 @@ export const signupUser = async (data) => {
   const res =
     await api.post("/auth/signup", data);
 
-  return res.data;
 
-};
-
-
-
-/*
-================================
-VERIFY EMAIL ⭐ FIXED
-================================
-*/
-
-export const verifyEmail = async (token) => {
-
-  const res =
-    await api.get(`/auth/verify/${token}`);
-
-  // save token
+  // ✅ also save token (Later option login)
 
   if(res.data.token){
 
@@ -138,24 +54,63 @@ export const verifyEmail = async (token) => {
       res.data.token
     );
 
-  }
-
-
-  // save user
-
-  if(res.data.user){
 
     localStorage.setItem(
       "user",
-      JSON.stringify(res.data.user)
+      JSON.stringify(res.data)
     );
 
   }
+
 
   return res.data;
 
 };
 
+
+
+
+/*
+================================
+VERIFY EMAIL ✅ FIXED
+================================
+*/
+
+ export const verifyEmail = async (token) => {
+
+  const res =
+    await api.get(
+      `/auth/verify-email/${token}`
+    );
+
+
+  // ✅ auto login after verify
+
+  if (res.data.token) {
+
+    localStorage.setItem(
+      "token",
+      res.data.token
+    );
+
+
+    // ⭐ ADD THIS (VERY IMPORTANT)
+
+    const userRes =
+      await api.get("/auth/me");
+
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userRes.data)
+    );
+
+  }
+
+
+  return res.data;
+
+};
 
 
 
@@ -178,6 +133,7 @@ export const resendVerification = async () => {
 
 
 
+
 /*
 ================================
 GET CURRENT USER
@@ -192,6 +148,7 @@ export const getCurrentUser = async () => {
   return res.data;
 
 };
+
 
 
 
