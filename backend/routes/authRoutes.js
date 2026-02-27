@@ -5,6 +5,7 @@ import {
   registerUser,
   loginUser,
   getMe,
+updateProfile,
 
   verifyEmail,
   resendVerification,
@@ -47,7 +48,13 @@ router.post(
   resendVerification
 );
 
+// ⭐ THIS IS PROFILE UPDATE ROUTE
 
+router.put(
+"/update-profile",
+protect,
+updateProfile
+);
 // ================= GET CURRENT USER =================
 
 router.get(

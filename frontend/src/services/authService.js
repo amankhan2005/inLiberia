@@ -112,7 +112,32 @@ VERIFY EMAIL ✅ FIXED
 
 };
 
+/*
+================================
+UPDATE PROFILE ⭐ NEW
+================================
+*/
 
+export const updateProfile = async (data) => {
+
+  const res =
+    await api.put(
+      "/auth/update-profile",
+      data
+    );
+
+
+  // ✅ update localStorage
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify(res.data)
+  );
+
+
+  return res.data;
+
+};
 
 /*
 ================================
