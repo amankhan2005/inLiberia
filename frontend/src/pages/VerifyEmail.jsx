@@ -1,11 +1,7 @@
-  import { useEffect, useState } from "react";
-
+ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import useAuth from "../hooks/useAuth";
-
 import axios from "../services/api";
-
 
 export default function VerifyEmail() {
 
@@ -18,7 +14,6 @@ const { setUser } = useAuth();
 const [status, setStatus] = useState("verifying");
 
 
-
 useEffect(() => {
 
 const verify = async () => {
@@ -28,32 +23,58 @@ try {
 const res = await axios.get(`/auth/verify/${token}`);
 
 
-// backend should return user + token
-// example:
-// { user, token }
+// ⭐ CASE 1: already verified
 
+if (res.data.alreadyVerified) {
+
+setStatus("success");
+
+setTimeout(() => {
+
+navigate("/dashboard");
+
+}, 1500);
+
+return;
+
+}
+
+
+// ⭐ CASE 2: normal verify
+
+if (res.data.token) {
 
 localStorage.setItem("token", res.data.token);
 
+}
+
+if (res.data.user) {
+
+localStorage.setItem(
+"user",
+JSON.stringify(res.data.user)
+);
 
 setUser(res.data.user);
+
+}
 
 
 setStatus("success");
 
 
-// redirect after 2 sec
-
 setTimeout(() => {
 
-navigate("/verify-success");
+navigate("/dashboard");
 
-}, 2000);
+}, 1500);
 
 
 }
 
 catch (err) {
+
+console.log(err);
 
 setStatus("error");
 
@@ -64,27 +85,29 @@ setStatus("error");
 
 verify();
 
-}, []);
-
+}, [token]);
 
 
 return (
 
 <div className="min-h-screen flex items-center justify-center">
 
-
 {status === "verifying" && (
 
-<div>Verifying your email...</div>
+<div className="text-gray-600 text-lg">
+
+Verifying your email...
+
+</div>
 
 )}
 
 
 {status === "success" && (
 
-<div className="text-green-600">
+<div className="text-green-600 text-lg font-semibold">
 
-Email verified successfully. Logging you in...
+✅ Email verified successfully
 
 </div>
 
@@ -93,14 +116,13 @@ Email verified successfully. Logging you in...
 
 {status === "error" && (
 
-<div className="text-red-600">
+<div className="text-red-600 text-lg font-semibold">
 
-Verification failed
+❌ Verification failed or expired
 
 </div>
 
 )}
-
 
 </div>
 

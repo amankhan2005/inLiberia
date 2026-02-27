@@ -270,36 +270,38 @@ AUTO LOGIN ENABLED
 ========================================
 */
 
-export const verifyEmail = async (req, res) => {
+ export const verifyEmail = async (req, res) => {
 
 try {
 
 const user = await User.findOne({
-
 verificationToken: req.params.token,
-
 });
 
 
+// ⭐ CASE 1: Token invalid BUT user already verified
+
 if (!user) {
 
-return res.status(400).json({
-message: "Invalid or expired token"
+return res.status(200).json({
+
+alreadyVerified: true,
+message: "Email already verified"
+
 });
 
 }
 
 
-// verify user
+// ⭐ CASE 2: verify now
 
 user.isVerified = true;
-
 user.verificationToken = undefined;
 
 await user.save();
 
 
-// SEND LOGIN DATA
+// ⭐ SEND LOGIN DATA
 
 res.json({
 
@@ -319,7 +321,6 @@ message: "Email verified successfully"
 
 });
 
-
 }
 
 catch (error) {
@@ -327,7 +328,9 @@ catch (error) {
 console.log(error);
 
 res.status(500).json({
+
 message: "Verification failed"
+
 });
 
 }

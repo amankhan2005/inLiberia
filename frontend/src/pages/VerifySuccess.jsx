@@ -1,14 +1,47 @@
  import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import axios from "../services/api";
 
 export default function VerifySuccess() {
 
 const navigate = useNavigate();
 
+const { setUser } = useAuth();
 
-// ⭐ auto redirect
+
+// ⭐ refresh current user
 
 useEffect(() => {
+
+const loadUser = async () => {
+
+try {
+
+const res = await axios.get("/auth/me");
+
+setUser(res.data);
+
+localStorage.setItem(
+"user",
+JSON.stringify(res.data)
+);
+
+}
+
+catch (err) {
+
+console.log(err);
+
+}
+
+};
+
+
+loadUser();
+
+
+// ⭐ auto redirect
 
 const timer = setTimeout(() => {
 
@@ -30,8 +63,6 @@ return (
 <div className="bg-white shadow-lg rounded-xl p-10 text-center max-w-md w-full">
 
 
-{/* Icon */}
-
 <div className="text-5xl mb-4">
 
 ✅
@@ -39,16 +70,12 @@ return (
 </div>
 
 
-{/* Heading */}
-
 <h1 className="text-2xl font-bold text-green-600">
 
 Email Verified Successfully
 
 </h1>
 
-
-{/* Text */}
 
 <p className="mt-3 text-gray-600">
 
@@ -64,14 +91,9 @@ Redirecting to dashboard...
 </p>
 
 
-{/* Button */}
-
 <Link
-
 to="/dashboard"
-
 className="mt-6 inline-block bg-[#144474] hover:bg-[#0f345a] text-white px-6 py-2 rounded-lg transition"
-
 >
 
 Go to Dashboard
