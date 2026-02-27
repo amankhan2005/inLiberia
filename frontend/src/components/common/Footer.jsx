@@ -1,5 +1,5 @@
  import Container from "./Container";
-import logo from "../../assets/inliberia-logo.png";
+import logo from "../../assets/footer-logo.png";
 import {
   FaEnvelope,
   FaPhone,
@@ -13,15 +13,15 @@ export default function Footer() {
     <footer className="bg-slate-900 text-gray-400 pt-16 pb-8">
       <Container>
         
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
+        <div className="grid md:grid-cols-3 gap-12 mb-10">
           
           {/* BRAND */}
           <div>
-            <div className="mb-6">
+            <div className="mb-4">
               <img
                 src={logo}
                 alt="inLiberia Logo"
-                className="h-18 object-contain" // Removed bg-white block for a cleaner native look, or keep bg-white if logo requires it. Assuming logo has transparency or light background.
+                className="h-25 object-contain" // Removed bg-white block for a cleaner native look, or keep bg-white if logo requires it. Assuming logo has transparency or light background.
               />
             </div>
             <p className="text-gray-500 leading-relaxed max-w-sm text-base">
