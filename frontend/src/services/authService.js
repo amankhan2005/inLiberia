@@ -74,25 +74,22 @@
 
 
 
- import api from "./api";
+  import api from "./api";
 
 
-// LOGIN
+
+/*
+================================
+LOGIN
+================================
+*/
 
 export const loginUser = async (data) => {
 
-  const res = await api.post(
-    "/auth/login",
-    data
-  );
+  const res = await api.post("/auth/login", data);
 
-  // save token
-  localStorage.setItem(
-    "token",
-    res.data.token
-  );
+  localStorage.setItem("token", res.data.token);
 
-  // save user
   localStorage.setItem(
     "user",
     JSON.stringify(res.data)
@@ -104,15 +101,56 @@ export const loginUser = async (data) => {
 
 
 
-
-// SIGNUP
+/*
+================================
+SIGNUP
+================================
+*/
 
 export const signupUser = async (data) => {
 
-  const res = await api.post(
-    "/auth/signup",
-    data
-  );
+  const res =
+    await api.post("/auth/signup", data);
+
+  return res.data;
+
+};
+
+
+
+/*
+================================
+VERIFY EMAIL ⭐ FIXED
+================================
+*/
+
+export const verifyEmail = async (token) => {
+
+  const res =
+    await api.get(`/auth/verify/${token}`);
+
+  // save token
+
+  if(res.data.token){
+
+    localStorage.setItem(
+      "token",
+      res.data.token
+    );
+
+  }
+
+
+  // save user
+
+  if(res.data.user){
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(res.data.user)
+    );
+
+  }
 
   return res.data;
 
@@ -121,25 +159,18 @@ export const signupUser = async (data) => {
 
 
 
-// VERIFY EMAIL
-
-export const verifyEmail = (token) => {
-
-  window.location.href =
-    `${import.meta.env.VITE_API_URL}/auth/verify/${token}`;
-
-};
-
-
-
-
-// RESEND VERIFICATION
+/*
+================================
+RESEND VERIFICATION
+================================
+*/
 
 export const resendVerification = async () => {
 
-  const res = await api.post(
-    "/auth/resend-verification"
-  );
+  const res =
+    await api.post(
+      "/auth/resend-verification"
+    );
 
   return res.data;
 
@@ -147,14 +178,16 @@ export const resendVerification = async () => {
 
 
 
-
-// GET CURRENT USER
+/*
+================================
+GET CURRENT USER
+================================
+*/
 
 export const getCurrentUser = async () => {
 
-  const res = await api.get(
-    "/auth/me"
-  );
+  const res =
+    await api.get("/auth/me");
 
   return res.data;
 
@@ -162,8 +195,11 @@ export const getCurrentUser = async () => {
 
 
 
-
-// LOGOUT
+/*
+================================
+LOGOUT
+================================
+*/
 
 export const logoutUser = () => {
 

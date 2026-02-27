@@ -5,12 +5,22 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// ⭐ HARDCODED DOMAIN (NO ENV BUG)
+const FRONTEND_URL = "https://www.knowliberia.com";
+
+
+
+/*
+========================================
+CONTACT / ENQUIRY EMAIL
+========================================
+*/
+
 const sendEmail = async ({
 
   ownerEmail,
   visitorName,
   visitorEmail,
-  subject,
   message,
   listingTitle,
   listingId
@@ -20,7 +30,7 @@ const sendEmail = async ({
   try {
 
     const listingLink =
-      `${process.env.FRONTEND_URL}/listing/${listingId}`;
+      `${FRONTEND_URL}/listing/${listingId}`;
 
 
     const response = await resend.emails.send({
@@ -39,34 +49,42 @@ const sendEmail = async ({
 
       html: `
 
-        <h2>New Enquiry</h2>
+        <div style="font-family:Arial;padding:20px">
 
-        <p>Name: ${visitorName}</p>
+          <h2>New Enquiry</h2>
 
-        <p>Email: ${visitorEmail}</p>
+          <p><b>Name:</b> ${visitorName}</p>
 
-        <p>${message}</p>
+          <p><b>Email:</b> ${visitorEmail}</p>
 
-        <a href="${listingLink}">View Listing</a>
+          <p><b>Message:</b></p>
+
+          <p>${message}</p>
+
+          <br>
+
+          <a href="${listingLink}"
+          style="
+          background:#144474;
+          color:white;
+          padding:10px 20px;
+          text-decoration:none;
+          border-radius:5px;
+          display:inline-block;
+          ">
+          View Listing
+          </a>
+
+        </div>
 
       `
 
     });
 
 
-    // ✅ SUCCESS LOG
-
-    console.log("📧 EMAIL SENT SUCCESSFULLY");
-
+    console.log("✅ EMAIL SENT");
     console.log("To:", ownerEmail);
-
-    console.log("From Visitor:", visitorEmail);
-
-    console.log("Listing:", listingTitle);
-
-    console.log("Resend ID:", response.data?.id);
-
-    console.log("-----------------------------");
+    console.log("Link:", listingLink);
 
 
     return response;
@@ -75,11 +93,9 @@ const sendEmail = async ({
 
   catch (error) {
 
-    console.error("❌ EMAIL FAILED");
+    console.log("❌ EMAIL FAILED");
 
-    console.error(error.message);
-
-    console.error("-----------------------------");
+    console.log(error.message);
 
     throw error;
 
@@ -87,9 +103,16 @@ const sendEmail = async ({
 
 };
 
+
 export default sendEmail;
 
-// ✅ LISTING STATUS EMAIL
+
+
+/*
+========================================
+LISTING STATUS EMAIL
+========================================
+*/
 
 export const sendListingStatusEmail = async ({
 
@@ -104,15 +127,17 @@ export const sendListingStatusEmail = async ({
   try {
 
     const listingLink =
-      `${process.env.FRONTEND_URL}/listing/${listingId}`;
+      `${FRONTEND_URL}/listing/${listingId}`;
 
 
-    const isApproved = status === "approved";
+    const isApproved =
+      status === "approved";
 
 
-    const subject = isApproved
-      ? "✅ Your listing has been approved"
-      : "❌ Your listing has been rejected";
+    const subject =
+      isApproved
+        ? "✅ Listing Approved"
+        : "❌ Listing Rejected";
 
 
     const html = `
@@ -120,37 +145,37 @@ export const sendListingStatusEmail = async ({
       <div style="font-family:Arial;padding:20px">
 
         <h2>
-          ${
-            isApproved
-              ? "Your listing has been approved 🎉"
-              : "Your listing has been rejected"
-          }
+
+        ${
+          isApproved
+            ? "Your listing has been approved 🎉"
+            : "Your listing has been rejected"
+        }
+
         </h2>
 
         <p>Hello ${ownerName},</p>
 
         <p>
-          Listing:
-          <strong>${listingTitle}</strong>
+
+        Listing:
+        <b>${listingTitle}</b>
+
         </p>
 
-        <p>
-          ${
-            isApproved
-              ? "Your listing is now live on Know Liberia."
-              : "Your listing did not meet our guidelines."
-          }
-        </p>
+        <br>
 
-        <a href="${listingLink}">
-          View Listing
+        <a href="${listingLink}"
+        style="
+        background:#144474;
+        color:white;
+        padding:10px 20px;
+        text-decoration:none;
+        border-radius:5px;
+        display:inline-block;
+        ">
+        View Listing
         </a>
-
-        <br><br>
-
-        <p>
-          Know Liberia Team
-        </p>
 
       </div>
 
@@ -165,26 +190,33 @@ export const sendListingStatusEmail = async ({
 
       subject,
 
-      html,
+      html
 
     });
 
 
-    console.log("📧 STATUS EMAIL SENT:", ownerEmail);
+    console.log("✅ STATUS EMAIL SENT");
 
   }
 
   catch (error) {
 
-    console.error("❌ STATUS EMAIL FAILED");
+    console.log("❌ STATUS EMAIL FAILED");
 
-    console.error(error.message);
+    console.log(error.message);
 
   }
 
 };
 
-// ✅ EMAIL VERIFICATION MAIL
+
+
+
+/*
+========================================
+EMAIL VERIFICATION EMAIL
+========================================
+*/
 
 export const sendVerificationEmail = async ({
 
@@ -197,7 +229,7 @@ export const sendVerificationEmail = async ({
   try {
 
     const verifyLink =
-      `${process.env.FRONTEND_URL}/verify/${token}`;
+      `${FRONTEND_URL}/verify/${token}`;
 
 
     const html = `
@@ -209,26 +241,40 @@ export const sendVerificationEmail = async ({
         <p>Hello ${userName},</p>
 
         <p>
-          Please click below button to verify your account:
+
+        Click below to verify your account:
+
         </p>
 
+        <br>
+
         <a href="${verifyLink}"
-           style="
-             background:#144474;
-             color:white;
-             padding:10px 20px;
-             text-decoration:none;
-             border-radius:5px;
-             display:inline-block;
-           "
-        >
-          Verify Email
+        style="
+        background:#144474;
+        color:white;
+        padding:12px 25px;
+        text-decoration:none;
+        border-radius:6px;
+        display:inline-block;
+        font-weight:bold;
+        ">
+
+        Verify Email
+
         </a>
 
         <br><br>
 
+        <p>Or copy this link:</p>
+
+        <p>${verifyLink}</p>
+
+        <br>
+
         <p>
-          If you did not create account, ignore this email.
+
+        If you did not create account, ignore.
+
         </p>
 
       </div>
@@ -249,15 +295,17 @@ export const sendVerificationEmail = async ({
     });
 
 
-    console.log("📧 VERIFICATION EMAIL SENT:", userEmail);
+    console.log("✅ VERIFICATION EMAIL SENT");
+
+    console.log("Link:", verifyLink);
 
   }
 
   catch (error) {
 
-    console.error("❌ VERIFICATION EMAIL FAILED");
+    console.log("❌ VERIFICATION EMAIL FAILED");
 
-    console.error(error.message);
+    console.log(error.message);
 
   }
 

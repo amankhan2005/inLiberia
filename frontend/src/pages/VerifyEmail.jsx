@@ -5,121 +5,159 @@ import axios from "../services/api";
 
 export default function VerifyEmail() {
 
-const { token } = useParams();
+  const { token } = useParams();
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const { setUser } = useAuth();
+  const { setUser } = useAuth();
 
-const [status, setStatus] = useState("verifying");
+  const [status, setStatus] = useState("verifying");
 
-const [message, setMessage] = useState("");
-
-useEffect(() => {
-
-const verify = async () => {
-
-try {
-
-const res = await axios.get(`/auth/verify/${token}`);
+  const [message, setMessage] = useState("");
 
 
-// ⭐ SAVE TOKEN
+  useEffect(() => {
 
-localStorage.setItem(
-"token",
-res.data.token
-);
+    const verify = async () => {
 
+      try {
 
-// ⭐ SAVE USER
-
-localStorage.setItem(
-"user",
-JSON.stringify(res.data.user)
-);
+        const res =
+          await axios.get(`/auth/verify/${token}`);
 
 
-setUser(res.data.user);
+        /*
+        ==========================
+        SAVE TOKEN SAFELY
+        ==========================
+        */
+
+        if(res.data.token){
+
+          localStorage.setItem(
+            "token",
+            res.data.token
+          );
+
+        }
 
 
-// ⭐ SHOW MESSAGE FROM BACKEND
+        /*
+        ==========================
+        SAVE USER SAFELY
+        ==========================
+        */
 
-setMessage(res.data.message);
+        if(res.data.user){
 
+          localStorage.setItem(
+            "user",
+            JSON.stringify(res.data.user)
+          );
 
-setStatus("success");
+          setUser(res.data.user);
 
-
-// ⭐ REDIRECT
-
-setTimeout(() => {
-
-navigate("/dashboard");
-
-}, 2000);
-
-}
-
-catch (err) {
-
-setStatus("error");
-
-setMessage(
-
-err.response?.data?.message ||
-
-"Verification failed or expired"
-
-);
-
-}
-
-};
-
-verify();
-
-}, [token]);
+        }
 
 
-return (
+        /*
+        ==========================
+        SHOW BACKEND MESSAGE
+        ==========================
+        */
 
-<div className="min-h-screen flex items-center justify-center">
-
-{status === "verifying" && (
-
-<div className="text-gray-600 text-lg">
-
-Verifying your email...
-
-</div>
-
-)}
+        setMessage(
+          res.data.message ||
+          "Email verified successfully"
+        );
 
 
-{status === "success" && (
-
-<div className="text-green-600 text-lg font-semibold">
-
-✅ {message}
-
-</div>
-
-)}
+        setStatus("success");
 
 
-{status === "error" && (
+        /*
+        ==========================
+        REDIRECT
+        ==========================
+        */
 
-<div className="text-red-600 text-lg font-semibold">
+        setTimeout(() => {
 
-❌ {message}
+          navigate("/dashboard");
 
-</div>
+        }, 2000);
 
-)}
 
-</div>
+      }
 
-);
+      catch (err) {
+
+        setStatus("error");
+
+        setMessage(
+
+          err.response?.data?.message ||
+
+          "Verification failed or expired"
+
+        );
+
+      }
+
+    };
+
+
+    verify();
+
+
+  }, [token, navigate, setUser]);
+
+
+
+  return (
+
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+
+      {status === "verifying" && (
+
+        <div className="text-gray-600 text-lg font-medium">
+
+          Verifying your email...
+
+        </div>
+
+      )}
+
+
+      {status === "success" && (
+
+        <div className="text-green-600 text-lg font-semibold">
+
+          ✅ {message}
+
+          <div className="text-sm text-gray-400 mt-2">
+
+            Redirecting to dashboard...
+
+          </div>
+
+        </div>
+
+      )}
+
+
+      {status === "error" && (
+
+        <div className="text-red-600 text-lg font-semibold">
+
+          ❌ {message}
+
+        </div>
+
+      )}
+
+    </div>
+
+  );
 
 }
