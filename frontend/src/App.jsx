@@ -12,6 +12,7 @@ import BrowseListings from "./pages/public/BrowseListings";
 import ListingDetail from "./pages/public/ListingDetail";
 import Categories from "./pages/public/Categories";
 import Helpdesk from  "./pages/HelpDesk"
+import AboutPage from "./pages/About"
 
 import CategoryPage from "./pages/public/CategoryPage";
  import SearchResult from "./pages/public/SearchResult";
@@ -48,6 +49,7 @@ export default function App() {
 
         <Route path="/browse" element={<BrowseListings />} />
         <Route path="/helpdesk" element={<Helpdesk />} />
+        <Route path="/about-us" element={<AboutPage/>}/>
 
         {/* <Route path="/listing/:id" element={<ListingDetail />} /> */}
         <Route path="/listing/:slug" element={<ListingDetail />} />

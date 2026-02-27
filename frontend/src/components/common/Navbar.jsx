@@ -523,18 +523,25 @@ export default function Navbar() {
               />
             </Link>
           </div>
-
+ 
           {/* DESKTOP MENU - Hidden on smaller screens */}
           <nav className="hidden lg:flex gap-1 text-white text-[15px] font-medium items-center">
             <Link to="/browse" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
               Browse
             </Link>
-            <Link to="/categories/Residences" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
+            <Link to="/categories" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
+              Categories
+            </Link>
+            {/* <Link to="/categories/Residences" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
               Residences
             </Link>
             <Link to="/categories/Business" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
               Business
+            </Link> */}
+            <Link to="/about-us" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
+              About 
             </Link>
+             
             <Link to="/helpdesk" className="px-4 py-2 rounded-lg hover:bg-white/10 transition">
               Support
             </Link>
@@ -733,8 +740,10 @@ export default function Navbar() {
         <div className="flex-1 overflow-y-auto py-2">
           <MenuItem to="/" text="Home" close={setOpen} />
           <MenuItem to="/browse" text="Browse" close={setOpen} />
-          <MenuItem to="/categories/Residence" text="Residences" close={setOpen} />
-          <MenuItem to="/categories/Business" text="Business" close={setOpen} />
+          <MenuItem to="/categories" text="Categories" close={setOpen} />
+          <MenuItem to="/about-us" text="About" close={setOpen} />
+          {/* <MenuItem to="/categories/Residence" text="Residences" close={setOpen} />
+          <MenuItem to="/categories/Business" text="Business" close={setOpen} /> */}
           <MenuItem to="/helpdesk" text="Support" close={setOpen} />
         </div>
 
