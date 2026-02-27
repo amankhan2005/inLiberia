@@ -13,6 +13,7 @@ const { setUser } = useAuth();
 
 const [status, setStatus] = useState("verifying");
 
+const [message, setMessage] = useState("");
 
 useEffect(() => {
 
@@ -23,65 +24,58 @@ try {
 const res = await axios.get(`/auth/verify/${token}`);
 
 
-// ⭐ CASE 1: already verified
+// ⭐ SAVE TOKEN
 
-if (res.data.alreadyVerified) {
-
-setStatus("success");
-
-setTimeout(() => {
-
-navigate("/dashboard");
-
-}, 1500);
-
-return;
-
-}
+localStorage.setItem(
+"token",
+res.data.token
+);
 
 
-// ⭐ CASE 2: normal verify
-
-if (res.data.token) {
-
-localStorage.setItem("token", res.data.token);
-
-}
-
-if (res.data.user) {
+// ⭐ SAVE USER
 
 localStorage.setItem(
 "user",
 JSON.stringify(res.data.user)
 );
 
+
 setUser(res.data.user);
 
-}
+
+// ⭐ SHOW MESSAGE FROM BACKEND
+
+setMessage(res.data.message);
 
 
 setStatus("success");
 
 
+// ⭐ REDIRECT
+
 setTimeout(() => {
 
 navigate("/dashboard");
 
-}, 1500);
-
+}, 2000);
 
 }
 
 catch (err) {
 
-console.log(err);
-
 setStatus("error");
+
+setMessage(
+
+err.response?.data?.message ||
+
+"Verification failed or expired"
+
+);
 
 }
 
 };
-
 
 verify();
 
@@ -107,7 +101,7 @@ Verifying your email...
 
 <div className="text-green-600 text-lg font-semibold">
 
-✅ Email verified successfully
+✅ {message}
 
 </div>
 
@@ -118,7 +112,7 @@ Verifying your email...
 
 <div className="text-red-600 text-lg font-semibold">
 
-❌ Verification failed or expired
+❌ {message}
 
 </div>
 

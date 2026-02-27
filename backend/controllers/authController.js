@@ -270,7 +270,7 @@ AUTO LOGIN ENABLED
 ========================================
 */
 
- export const verifyEmail = async (req, res) => {
+export const verifyEmail = async (req, res) => {
 
 try {
 
@@ -279,13 +279,37 @@ verificationToken: req.params.token,
 });
 
 
-// ⭐ CASE 1: Token invalid BUT user already verified
+// TOKEN NOT FOUND
 
 if (!user) {
 
+return res.status(400).json({
+
+message: "Invalid or expired verification link"
+
+});
+
+}
+
+
+// ALREADY VERIFIED CASE
+
+if (user.isVerified) {
+
 return res.status(200).json({
 
-alreadyVerified: true,
+user: {
+
+_id: user._id,
+name: user.name,
+email: user.email,
+role: user.role,
+isVerified: true
+
+},
+
+token: generateToken(user._id),
+
 message: "Email already verified"
 
 });
@@ -293,17 +317,18 @@ message: "Email already verified"
 }
 
 
-// ⭐ CASE 2: verify now
+// VERIFY USER
 
 user.isVerified = true;
+
 user.verificationToken = undefined;
 
 await user.save();
 
 
-// ⭐ SEND LOGIN DATA
+// RETURN LOGIN
 
-res.json({
+res.status(200).json({
 
 user: {
 
@@ -335,8 +360,7 @@ message: "Verification failed"
 
 }
 
-};
-
+};;
 
 
 
