@@ -118,7 +118,8 @@ app.use(
       "http://localhost:5174",
       "https://knowliberia.com",
       "https://www.knowliberia.com",
-      "https://knowliberia.netlify.app"
+      "https://knowliberia.netlify.app",
+      "https://thriving-cuchufli-b92f04.netlify.app"
     ],
     credentials: true,
   })
